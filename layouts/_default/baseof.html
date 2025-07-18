@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>{{ .Title }}</title>
+        <link rel="stylesheet" href="{{ "css/output.css" | relURL }}">
+    </head>
+    <body class="w-screen text-white px-16">
+        <nav
+                class="fixed top-0 right-0 p-4 flex gap-6 text-sm underline uppercase tracking-wide"
+                >
+                <a
+                        href="https://github.com/PS-Wizard"
+                        target="_blank"
+                        rel="noopener"
+                        class="hover:underline"
+                        >
+                        GITHUB
+                </a>
+                    <a
+                            href="https://www.linkedin.com/in/swoyam-pokharel-557779340/"
+                            target="_blank"
+                            rel="noopener"
+                            class="hover:underline"
+                            >
+                            LINKEDIN
+                    </a>
+        </nav>
+
+            <div class="main-content w-full pt-16 text-white ">
+                {{ block "main" . }}{{ end }}
+            </div>
+    </body>
+</html>
+

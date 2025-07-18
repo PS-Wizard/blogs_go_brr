@@ -1,0 +1,79 @@
+html,body {
+    background-color:#000;
+    overflow:none;
+}
+
+:root {
+    --text-10-16: clamp(0.625rem, 0.5179rem + 0.4286vw, 1rem);
+    --text-14-24: clamp(0.875rem, 0.6964rem + 0.7143vw, 1.5rem);
+    --text-16-32: clamp(1rem, 0.7143rem + 1.1429vw, 2rem);
+    --text-20-24: clamp(1.25rem, 1.1786rem + 0.2857vw, 1.5rem);
+    --text-24-36: clamp(1.5rem, 1.2857rem + 0.8571vw, 2.25rem);
+    --text-40-64: clamp(2.5rem, 2.0714rem + 1.7143vw, 4rem);
+    --text-48-126: clamp(3rem, 1.6071rem + 5.5714vw, 7.875rem);
+    --text-64-448: clamp(4rem, -2.8571rem + 27.4286vw, 28rem);
+}
+
+.text-10-16 {
+  font-size: var(--text-10-16);
+}
+
+.text-14-24 {
+  font-size: var(--text-14-24);
+}
+
+.text-16-32 {
+  font-size: var(--text-16-32);
+}
+
+.text-20-24 {
+  font-size: var(--text-20-24);
+}
+
+.text-24-36 {
+  font-size: var(--text-24-36);
+}
+
+.text-40-64 {
+  font-size: var(--text-40-64);
+}
+
+.text-48-126 {
+  font-size: var(--text-48-126);
+}
+
+.text-64-448 {
+  font-size: var(--text-64-448);
+}
+@font-face {
+    font-family: 'Geist';
+    src: url('/fonts/Geist.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Graffity';
+    src: url('/fonts/Graffity-fill.otf') format('opentype');
+}
+
+.geist {
+    font-family:"Geist",sans-serif;
+}
+
+.graffity {
+    font-family:"Graffity", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-smooth: always;
+
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family: 'Geist', sans-serif;
+}
+
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
