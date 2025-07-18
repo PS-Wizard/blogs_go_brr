@@ -73,9 +73,9 @@
             
             / <span class="text-white">Chess Engine</span>
         </nav>
-        <div class="flex flex-col gap-6 max-w-7xl mt-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-7xl mt-6">
             
-            <a href="/posts/chess_engine/setup/" class="block collection-card" data-title="board representation">
+            <a href="/posts/chess_engine/introduction/" class="block collection-card" data-title="introduction">
                 <article class="w-full bg-white/5 border border-white/10 rounded-2xl overflow-hidden shadow-sm transition hover:shadow-md hover:border-white/20 p-4 space-y-4 cursor-pointer">
 
                     
@@ -83,24 +83,57 @@
 
                     <div class="flex items-center justify-between ">
                         <h2 class="text-xl font-semibold text-white flex flex-wrap items-center gap-3">
-                            <span class="text-blue-300">#1</span> Board Representation
+                            <span class="text-blue-300">#1</span> Introduction
                         </h2>
                         <span class="text-sm text-gray-400 whitespace-nowrap">Jul 18, 2025</span>
                     </div>
 
                     <div class="text-sm text-gray-300 prose prose-invert max-w-none truncate sm:whitespace-normal">
-                        Setting up this project, I’m using Rust bitboards to represent the chessboard. Each piece is stored in a single byte — 3 bits for the type, 1 bit for color — to keep it simple and compact. The board is just a 64-bit integer where each bit means if a square’s occupied. Using repr(u8) forces Rust to store enums as one byte, which might help later when messing with FFI bindings. This is mostly me experimenting, figuring out the best way to pack and check pieces without overcomplicating.
+                        The Why?; Why Am I Even Trying To Build A Chess Engine?
                     </div>
 
                     
                     <div class="w-full flex justify-end flex-wrap gap-2">
                         
                         <span class="block bg-white/90 text-black text-xs font-medium px-2 py-1 rounded-lg">
-                            #Bitboards
+                            #rust
                         </span>
                         
                         <span class="block bg-white/90 text-black text-xs font-medium px-2 py-1 rounded-lg">
-                            #Enums
+                            #chess
+                        </span>
+                        
+                    </div>
+                    
+                </article>
+            </a>
+            
+            <a href="/posts/chess_engine/initial_setup/" class="block collection-card" data-title="initial setup">
+                <article class="w-full bg-white/5 border border-white/10 rounded-2xl overflow-hidden shadow-sm transition hover:shadow-md hover:border-white/20 p-4 space-y-4 cursor-pointer">
+
+                    
+                    <img src="/images/default_blogs.jpg" alt="Card image" class="w-full h-48 object-cover rounded-xl" />
+
+                    <div class="flex items-center justify-between ">
+                        <h2 class="text-xl font-semibold text-white flex flex-wrap items-center gap-3">
+                            <span class="text-blue-300">#2</span> Initial setup
+                        </h2>
+                        <span class="text-sm text-gray-400 whitespace-nowrap">Jul 18, 2025</span>
+                    </div>
+
+                    <div class="text-sm text-gray-300 prose prose-invert max-w-none truncate sm:whitespace-normal">
+                        Figuring Out Board &#43; Piece Representation For A Bitboard Implementation
+                    </div>
+
+                    
+                    <div class="w-full flex justify-end flex-wrap gap-2">
+                        
+                        <span class="block bg-white/90 text-black text-xs font-medium px-2 py-1 rounded-lg">
+                            #rust
+                        </span>
+                        
+                        <span class="block bg-white/90 text-black text-xs font-medium px-2 py-1 rounded-lg">
+                            #chess
                         </span>
                         
                     </div>

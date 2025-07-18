@@ -1,17 +1,19 @@
 +++
-date = '2025-07-18T10:11:08+05:45'
-title = 'Board Representation'
-description = 'Setting up this project, I’m using Rust bitboards to represent the chessboard. Each piece is stored in a single byte — 3 bits for the type, 1 bit for color — to keep it simple and compact. The board is just a 64-bit integer where each bit means if a square’s occupied. Using repr(u8) forces Rust to store enums as one byte, which might help later when messing with FFI bindings. This is mostly me experimenting, figuring out the best way to pack and check pieces without overcomplicating.' 
-tags=["Bitboards","Enums"]
+date = '2025-07-18T21:17:57+05:45'
 draft = false
+title = 'Initial setup'
+description = 'Figuring Out Board + Piece Representation For A Bitboard Implementation'
+tags = ["rust", "chess"]
 +++
 
 # Board Representation:
+
 The boards are of course Bit Boards, but this time around the pieces are a bit different. Instead of structs, this time I opted for a more compact representation.
+
 
 ### The Actual Board:
 
-```rust
+```rust {title = "board.rs"}
 pub struct Board(pub(crate) u64);
 
 impl Board {
@@ -72,14 +74,18 @@ The game representation is just bitboards and other game states such as castling
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Color {
     White = 0,
-    Black = 1,
+          Black = 1,
 }
 ```
 
-{{<question>}}
-**Why `repr(u8)` It?**: The obvious answer is tight packing, thus more memory saved, but apparantly this helps if we are generating bindings for FFI (Foreign Function Interface) later down the line, which I plan to do. 
-{{</question>}}
+>[!INFO]
+> **The Only Confusing Part Might Be The `repr(u8)`**
+> Basically, this just tells rust, "Yo store this enum as a u8 (1 byte) in memory" . By default, rust chooses how to store enums in memory based on safety/debug info. This forces it to just 1 byte -- clean & compact.
 
+> [!QUESTION]
+> **Why Use It?**
+> 1. Tight Packing
+> 2. And apparantly, this helps if I am generating bindings for FFI (Foreign Function Interface); which I plan to do later.
 
 ```rust
 #[repr(u8)]

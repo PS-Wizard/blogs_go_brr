@@ -10,14 +10,18 @@
   <main class="prose prose-invert max-w-7xl flex-grow">
     {{ .Content }}
   </main>
+</div>
+<div class="w-full flex justify-center mt-12 border-t border-white/10 pt-6 text-sm text-white gap-2 flex-wrap">
+    {{ with .Prev }}
+    <a href="{{ .RelPermalink }}" rel="prev" class="hover:underline px-3 py-2 bg-white text-black font-bold rounded-md text-xs sm:text-sm">
+        ← {{ .Title }}
+    </a>
+    {{ end }}
 
-  {{ if .TableOfContents }}
-  <aside class="hidden lg:block fixed right-8 top-1/2 w-56 max-h-[80vh] overflow-y-auto text-md border-l border-white/10 pl-4">
-    <div class="font-semibold text-neutral-400 mb-2">On this page</div>
-    <nav class="[ul]:list-none [ul]:pl-0 [li]:mb-1 [a]:text-neutral-300 hover:[a]:underline text-sm leading-relaxed">
-      {{ .TableOfContents | safeHTML }}
-    </nav>
-  </aside>
-  {{ end }}
+    {{ with .Next }}
+    <a href="{{ .RelPermalink }}" rel="next" class="hover:underline px-3 py-2 bg-white text-black font-bold rounded-md text-xs sm:text-sm">
+        {{ .Title }} →
+    </a>
+    {{ end }}
 </div>
 {{ end }}
