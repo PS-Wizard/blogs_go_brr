@@ -1,5 +1,11 @@
 {{ define "main" }}
-<div class="title w-full flex justify-center items-center">
-    <h1 class="graffity text-48-126 text-center tracking-wide"> Welcome To Blogs </h1>
+<div class="title w-full h-[70vh] flex flex-col gap-4 justify-center items-center">
+    <div class="w-full flex justify-center items-center">
+        <h1 class="text-48-126 text-center graffity"> Dev Blogs </h1>
+    </div>
+    <div class="flex gap-4">
+    <a class="bg-white text-black gesit uppercase px-4 py-2 rounded-lg cursor-pointer" href="/posts/"> View Blogs &rarr;</a>
+    <button class="border-2 border-gray-500 text-white gesit uppercase px-4 py-2 rounded-lg cursor-pointer"> Surprise Me </button>
+    </div>
 </div>
 {{ end }}

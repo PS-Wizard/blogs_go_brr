@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-	<meta name="generator" content="Hugo 0.147.9"><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
         <meta charset="UTF-8" />
-        <title>My New Hugo Site</title>
+        <title>Chess Engine</title>
 
         
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -14,16 +13,16 @@
         <meta name="keywords" content="blog, dev, swoyam, hugo, minimal" />
 
         
-        <meta property="og:title" content="My New Hugo Site">
+        <meta property="og:title" content="Chess Engine">
         <meta property="og:description" content="A clean and minimal site.">
         <meta property="og:type" content="website">
-        <meta property="og:url" content="http://localhost:1313/">
+        <meta property="og:url" content="http://localhost:1313/posts/chess_engine1/">
         
         <meta property="og:image" content="http://localhost:1313/images/preview.png">
 
         
         <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:title" content="My New Hugo Site">
+        <meta name="twitter:title" content="Chess Engine">
         <meta name="twitter:description" content="A clean and minimal site.">
 
         
@@ -58,15 +57,109 @@
 
         <div class="min-h-screen main-content w-full pb-16 text-white ">
             
-<div class="title w-full h-[70vh] flex flex-col gap-4 justify-center items-center">
-    <div class="w-full flex justify-center items-center">
-        <h1 class="text-48-126 text-center graffity"> Dev Blogs </h1>
+
+<div class="h-full flex flex-col justify-center items-center gap-8">
+    
+
+    <h1 class="text-48-126 graffity tracking-widest mb-6">Chess Engine</h1>
+
+    
+    <div class="min-h-screen w-full max-w-7xl px-4">
+
+        <nav class="text-sm text-neutral-400 mb-4">
+            <a href="/" class="hover:underline">Home</a>
+            
+            / <a href="/posts/" class="hover:underline">All Posts</a>
+            
+            / <span class="text-white">Chess Engine</span>
+        </nav>
+        <div class="flex flex-col gap-6 max-w-7xl mt-6">
+            
+            <a href="/posts/chess_engine1/try_01/" class="block collection-card" data-title="board representation">
+                <article class="w-full bg-white/5 border border-white/10 rounded-2xl overflow-hidden shadow-sm transition hover:shadow-md hover:border-white/20 p-4 space-y-4 cursor-pointer">
+
+                    
+                    <img src="/images/default_blogs.jpg" alt="Card image" class="w-full h-48 object-cover rounded-xl" />
+
+                    <div class="flex items-center justify-between ">
+                        <h2 class="text-xl font-semibold text-white flex flex-wrap items-center gap-3">
+                            <span class="text-blue-300">#1</span> Board Representation
+                        </h2>
+                        <span class="text-sm text-gray-400 whitespace-nowrap">Jul 18, 2025</span>
+                    </div>
+
+                    <div class="text-sm text-gray-300 prose prose-invert max-w-none truncate sm:whitespace-normal">
+                        Setting up this project, I’m using Rust bitboards to represent the chessboard. Each piece is stored in a single byte — 3 bits for the type, 1 bit for color — to keep it simple and compact. The board is just a 64-bit integer where each bit means if a square’s occupied. Using repr(u8) forces Rust to store enums as one byte, which might help later when messing with FFI bindings. This is mostly me experimenting, figuring out the best way to pack and check pieces without overcomplicating.
+                    </div>
+
+                    
+                    <div class="w-full flex justify-end flex-wrap gap-2">
+                        
+                        <span class="block bg-white/90 text-black text-xs font-medium px-2 py-1 rounded-lg">
+                            #Bitboards
+                        </span>
+                        
+                        <span class="block bg-white/90 text-black text-xs font-medium px-2 py-1 rounded-lg">
+                            #Enums
+                        </span>
+                        
+                    </div>
+                    
+                </article>
+            </a>
+            
+
+        </div>
     </div>
-    <div class="flex gap-4">
-    <a class="bg-white text-black gesit uppercase px-4 py-2 rounded-lg cursor-pointer" href="/posts/"> View Blogs &rarr;</a>
-    <button class="border-2 border-gray-500 text-white gesit uppercase px-4 py-2 rounded-lg cursor-pointer"> Surprise Me </button>
-    </div>
+    
+
 </div>
+
+
+<script>
+    (() => {
+        const searchInput = document.getElementById('search-input');
+        const tagButtons = document.querySelectorAll('.tag-btn');
+        const cards = document.querySelectorAll('.collection-card');
+        const activeTags = new Set();
+
+        function filterCards() {
+            const query = searchInput.value.toLowerCase();
+
+            cards.forEach(card => {
+                const title = card.dataset.title;
+                const tags = card.dataset.tags ? card.dataset.tags.toLowerCase().split(' ') : [];
+
+                
+                const matchesQuery = title.includes(query);
+
+                
+                const matchesTag = activeTags.size === 0 || [...activeTags].some(t => tags.includes(t.toLowerCase()));
+
+                card.style.display = matchesQuery && matchesTag ? '' : 'none';
+            });
+        }
+
+        tagButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tag = btn.dataset.tag;
+
+                if (activeTags.has(tag)) {
+                    activeTags.delete(tag);
+                    btn.classList.remove('border-white', 'bg-white/20');
+                } else {
+                    activeTags.add(tag);
+                    btn.classList.add('border-white', 'bg-white/20');
+                }
+
+                filterCards();
+            });
+        });
+
+        searchInput.addEventListener('input', filterCards);
+    })();
+</script>
+
 
         </div>
         <div class="w-full flex items-center bg-[#fa4b1e] h-[30vh] text-black px-10" >
@@ -106,14 +199,6 @@
                                 </a>
                     </div>
                     <div class="flex gap-2">
-                        <a
-                                href="https://pswoyam.com.np/"
-                                target="_blank"
-                                rel="noopener"
-                                class="bg-black text-white w-fit text-16-32 px-4 py-2 rounded-lg hover:opacity-80 transition"
-                                >
-                                Portfolio
-                        </a>
                         <a
                                 href="mailto:p.swoyam.1@gmail.com"
                                 target="_blank"

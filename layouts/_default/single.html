@@ -1,0 +1,23 @@
+{{ define "main" }}
+<div class="relative max-w-7xl mx-auto px-4 flex flex-col">
+    <nav class="text-sm text-neutral-400 mb-4">
+        <a href="/posts" class="hover:underline">Posts</a>
+        {{ with .Parent }}
+        / <a href="{{ .RelPermalink }}" class="hover:underline">{{ .Title }}</a>
+        {{ end }}
+        / <span class="text-white">{{ .Title }}</span>
+    </nav>
+  <main class="prose prose-invert max-w-7xl flex-grow">
+    {{ .Content }}
+  </main>
+
+  {{ if .TableOfContents }}
+  <aside class="hidden lg:block fixed right-8 top-1/2 w-56 max-h-[80vh] overflow-y-auto text-md border-l border-white/10 pl-4">
+    <div class="font-semibold text-neutral-400 mb-2">On this page</div>
+    <nav class="[ul]:list-none [ul]:pl-0 [li]:mb-1 [a]:text-neutral-300 hover:[a]:underline text-sm leading-relaxed">
+      {{ .TableOfContents | safeHTML }}
+    </nav>
+  </aside>
+  {{ end }}
+</div>
+{{ end }}

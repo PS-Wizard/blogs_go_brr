@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+        <meta charset="UTF-8" />
+        <title>Board Representation</title>
+
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        
+        <meta name="description" content="Setting up this project, I’m using Rust bitboards to represent the chessboard. Each piece is stored in a single byte — 3 bits for the type, 1 bit for color — to keep it simple and compact. The board is just a 64-bit integer where each bit means if a square’s occupied. Using repr(u8) forces Rust to store enums as one byte, which might help later when messing with FFI bindings. This is mostly me experimenting, figuring out the best way to pack and check pieces without overcomplicating.">
+        <meta name="author" content="Swoyam Pokharel" />
+        <meta name="keywords" content="blog, dev, swoyam, hugo, minimal" />
+
+        
+        <meta property="og:title" content="Board Representation">
+        <meta property="og:description" content="Setting up this project, I’m using Rust bitboards to represent the chessboard. Each piece is stored in a single byte — 3 bits for the type, 1 bit for color — to keep it simple and compact. The board is just a 64-bit integer where each bit means if a square’s occupied. Using repr(u8) forces Rust to store enums as one byte, which might help later when messing with FFI bindings. This is mostly me experimenting, figuring out the best way to pack and check pieces without overcomplicating.">
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="http://localhost:1313/posts/chess_engine2/try_01/">
+        
+        <meta property="og:image" content="http://localhost:1313/images/preview.png">
+
+        
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="Board Representation">
+        <meta name="twitter:description" content="Setting up this project, I’m using Rust bitboards to represent the chessboard. Each piece is stored in a single byte — 3 bits for the type, 1 bit for color — to keep it simple and compact. The board is just a 64-bit integer where each bit means if a square’s occupied. Using repr(u8) forces Rust to store enums as one byte, which might help later when messing with FFI bindings. This is mostly me experimenting, figuring out the best way to pack and check pieces without overcomplicating.">
+
+        
+        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+        
+        <link rel="stylesheet" href="/css/output.css">
+    </head>
+    <body class="w-screen text-white">
+        <header class="flex justify-between items-center p-12">
+            <a class="uppercase font-bold text-xl tracking-widest" href="/">(._.)</a>
+            <nav class="flex gap-6 text-sm underline uppercase tracking-wide"
+                 >
+                 <a
+                         href="https://github.com/PS-Wizard"
+                         target="_blank"
+                         rel="noopener"
+                         class="hover:underline"
+                         >
+                         GITHUB
+                 </a>
+                     <a
+                             href="https://www.linkedin.com/in/swoyam-pokharel-557779340/"
+                             target="_blank"
+                             rel="noopener"
+                             class="hover:underline"
+                             >
+                             LINKEDIN
+                     </a>
+            </nav>
+        </header>
+
+        <div class="min-h-screen main-content w-full pb-16 text-white ">
+            
+<div class="relative max-w-7xl mx-auto px-4 flex flex-col">
+    <nav class="text-sm text-neutral-400 mb-4">
+        <a href="/posts" class="hover:underline">Posts</a>
+        
+        / <a href="/posts/chess_engine2/" class="hover:underline">Chess Engine</a>
+        
+        / <span class="text-white">Board Representation</span>
+    </nav>
+  <main class="prose prose-invert max-w-7xl flex-grow">
+    <h1 id="board-representation">Board Representation:</h1>
+<p>The boards are of course Bit Boards, but this time around the pieces are a bit different. Instead of structs, this time I opted for a more compact representation.
+<img src="/images/default_collections.avif" alt="Alt Text"></p>
+<h3 id="the-actual-board">The Actual Board:</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">Board</span>(<span style="color:#66d9ef">pub</span>(<span style="color:#66d9ef">crate</span>) <span style="color:#66d9ef">u64</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">impl</span> Board {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">has_bit</span>(<span style="color:#f92672">&amp;</span>self, idx: <span style="color:#66d9ef">u8</span>) -&gt; <span style="color:#66d9ef">bool</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> idx <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">64</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        (self.<span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> idx)) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">set_bit</span>(<span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> self, idx: <span style="color:#66d9ef">usize</span>) {
+</span></span><span style="display:flex;"><span>        self.<span style="color:#ae81ff">0</span> <span style="color:#f92672">|=</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> idx;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>That&rsquo;s the board, the helper functions are there to well &hellip; help.</p>
+<h3 id="the-game">The Game:</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">Game</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">pub</span> white_pawns: <span style="color:#a6e22e">Board</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pub</span> white_rooks: <span style="color:#a6e22e">Board</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pub</span> white_knights: <span style="color:#a6e22e">Board</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pub</span> white_bishops: <span style="color:#a6e22e">Board</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pub</span> white_queens: <span style="color:#a6e22e">Board</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pub</span> white_king: <span style="color:#a6e22e">Board</span>,
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pub</span> black_pawns: <span style="color:#a6e22e">Board</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pub</span> black_rooks: <span style="color:#a6e22e">Board</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pub</span> black_knights: <span style="color:#a6e22e">Board</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pub</span> black_bishops: <span style="color:#a6e22e">Board</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pub</span> black_queens: <span style="color:#a6e22e">Board</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pub</span> black_king: <span style="color:#a6e22e">Board</span>,
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pub</span> castling_rights: <span style="color:#66d9ef">u8</span>, <span style="color:#75715e">// 4 bits: WK, WQ, BK, BQ
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">pub</span> side_to_move: <span style="color:#66d9ef">bool</span>,  <span style="color:#75715e">// false = white, true = black
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//TODO:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#75715e">// - Enpassant flag
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#75715e">// Move Counters
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p>The game representation is just bitboards and other game states such as castling rights and a bool representing who&rsquo;s turn it is to move. It has 3 functions:</p>
+<ol>
+<li><code>new (constructor)</code> : Creates a new game, sets all the pieces in their default position</li>
+<li><code>all_pieces()</code> : Returns all the pieces by simply: <code>all_white_pieces() | all_black_pieces()</code>.</li>
+<li><code>get_piece_at(idx: u8)</code> : Given an index, this function returns an <code>Option&lt;Piece&gt;</code> depending if there is a given piece at the said <code>idx</code></li>
+</ol>
+<h3 id="the-pieces">The Pieces:</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">#[repr(u8)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#[derive(Debug, Clone, Copy, PartialEq, Eq)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">enum</span> <span style="color:#a6e22e">Color</span> {
+</span></span><span style="display:flex;"><span>    White <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>,
+</span></span><span style="display:flex;"><span>          Black <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>,
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="my-2 p-4 border border-red-500/30 bg-red-500/10 rounded-lg text-red-200">
+  <div class="flex items-start justify-end gap-3 pb-4">
+    <strong class="underline">Danger:</strong>
+    <svg class="w-5 h-5 mt-1 text-red-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/>
+    </svg>
+  </div>
+  Basically, this just tells rust, &ldquo;Yo store this enum as a u8 (1 byte) in memory&rdquo; . By default, rust chooses how to store enums in memory based on safety/debug info. This forces it to just 1 byte &ndash; clean &amp; compact.
+</div>
+
+<div class="my-2 p-4 border border-green-500/30 bg-green-500/10 rounded-lg text-green-200">
+  <div class="flex items-start justify-end gap-3">
+    <strong class="underline">Note:</strong>
+    <svg class="w-5 h-5 mt-1 text-green-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 1 1-10 10A10 10 0 0 1 12 2z"/>
+    </svg>
+  </div>
+  <p><strong>Why Use It?</strong></p>
+<ol>
+<li>Tight Packing</li>
+<li>And apparantly, this helps if I am generating bindings for FFI (Foreign Function Interface); which I plan to do later.</li>
+</ol>
+</div>
+
+<div class="my-2 p-4 border border-green-500/30 bg-yellow-100/10 rounded-lg text-green-200">
+    <div class="flex items-start justify-end gap-3">
+        <strong class="underline">Question</strong>
+        <svg class="w-5 h-5 mt-1 text-yellow-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8a2 2 0 0 1 1.99 2.2c0 1.2-1.2 1.8-1.99 2.3M12 17h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/>
+        </svg>
+    </div>
+    <p><strong>Why Use It?</strong></p>
+<ol>
+<li>Tight Packing</li>
+<li>And apparantly, this helps if I am generating bindings for FFI (Foreign Function Interface); which I plan to do later.</li>
+</ol>
+</div>
+
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">#[repr(u8)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#[derive(Debug, Clone, Copy, PartialEq, Eq)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">enum</span> <span style="color:#a6e22e">PieceType</span> {
+</span></span><span style="display:flex;"><span>    Pawn <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>,
+</span></span><span style="display:flex;"><span>         Knight <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>,
+</span></span><span style="display:flex;"><span>         Bishop <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>,
+</span></span><span style="display:flex;"><span>         Rook <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>,
+</span></span><span style="display:flex;"><span>         Queen <span style="color:#f92672">=</span> <span style="color:#ae81ff">4</span>,
+</span></span><span style="display:flex;"><span>         King <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span>,
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#[derive(Clone, Copy, PartialEq, Eq)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">Piece</span>(<span style="color:#66d9ef">u8</span>);
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">impl</span> Piece {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">new</span>(piece_type: <span style="color:#a6e22e">PieceType</span>, color: <span style="color:#a6e22e">Color</span>) -&gt; <span style="color:#a6e22e">Self</span> {
+</span></span><span style="display:flex;"><span>        Self((piece_type <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">u8</span>) <span style="color:#f92672">|</span> ((color <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">u8</span>) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">3</span>))
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">piece_type</span>(self) -&gt; <span style="color:#a6e22e">PieceType</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">match</span> self.<span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0b111</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#ae81ff">0</span> <span style="color:#f92672">=&gt;</span> PieceType::Pawn,
+</span></span><span style="display:flex;"><span>              <span style="color:#ae81ff">1</span> <span style="color:#f92672">=&gt;</span> PieceType::Knight,
+</span></span><span style="display:flex;"><span>              <span style="color:#ae81ff">2</span> <span style="color:#f92672">=&gt;</span> PieceType::Bishop,
+</span></span><span style="display:flex;"><span>              <span style="color:#ae81ff">3</span> <span style="color:#f92672">=&gt;</span> PieceType::Rook,
+</span></span><span style="display:flex;"><span>              <span style="color:#ae81ff">4</span> <span style="color:#f92672">=&gt;</span> PieceType::Queen,
+</span></span><span style="display:flex;"><span>              <span style="color:#ae81ff">5</span> <span style="color:#f92672">=&gt;</span> PieceType::King,
+</span></span><span style="display:flex;"><span>              _ <span style="color:#f92672">=&gt;</span> <span style="color:#a6e22e">unreachable!</span>(),
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">color</span>(self) -&gt; <span style="color:#a6e22e">Color</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (self.<span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0b1000</span>) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span> {
+</span></span><span style="display:flex;"><span>            Color::Black
+</span></span><span style="display:flex;"><span>        } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>            Color::White
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">is_white</span>(self) -&gt; <span style="color:#66d9ef">bool</span> {
+</span></span><span style="display:flex;"><span>        self.color() <span style="color:#f92672">==</span> Color::White
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">is_black</span>(self) -&gt; <span style="color:#66d9ef">bool</span> {
+</span></span><span style="display:flex;"><span>        self.color() <span style="color:#f92672">==</span> Color::Black
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>In this representation the <code>Piece</code> is a <code>u8</code>. So, something like <code>00000000</code>. The first 3 bits represent the piece type eg: <code>00000101 = King</code>. and the 4th bit represents the color. So, <code>00000101 = King</code> is a black king, and <code>00001101 = King</code> is a white king.</p>
+
+  </main>
+
+  
+  <aside class="hidden lg:block fixed right-8 top-1/2 w-56 max-h-[80vh] overflow-y-auto text-md border-l border-white/10 pl-4">
+    <div class="font-semibold text-neutral-400 mb-2">On this page</div>
+    <nav class="[ul]:list-none [ul]:pl-0 [li]:mb-1 [a]:text-neutral-300 hover:[a]:underline text-sm leading-relaxed">
+      <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#the-actual-board">The Actual Board:</a></li>
+        <li><a href="#the-game">The Game:</a></li>
+        <li><a href="#the-pieces">The Pieces:</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </nav>
+  </aside>
+  
+</div>
+
+        </div>
+        <div class="w-full flex items-center bg-[#fa4b1e] h-[30vh] text-black px-10" >
+            <div class="lg:w-1/2 h-full geist flex flex-col justify-end"> <h2
+                 class="hidden lg:block text-48-126 font-semibold cursor-pointer"
+                 bind:this={name_footer}
+                 >
+                 Wizard.
+                </h2>
+            </div>
+            <div class="w-full lg:w-1/2 h-full geist flex flex-row justify-center gap-4" >
+                <div class="flex flex-col h-full w-full justify-center items-center lg:items-end gap-4" >
+                    <div class="flex gap-2">
+                        <a
+                                href="https://www.linkedin.com/in/swoyam-pokharel-557779340/"
+                                target="_blank"
+                                rel="noopener"
+                                class="bg-black text-white w-fit text-16-32 px-4 py-2 rounded-lg hover:opacity-80 transition"
+                                >
+                                Linkedin
+                        </a>
+                            <a
+                                    href="https://github.com/PS-Wizard"
+                                    target="_blank"
+                                    rel="noopener"
+                                    class="bg-black text-white w-fit text-16-32 px-4 py-2 rounded-lg hover:opacity-80 transition"
+                                    >
+                                    Github
+                            </a>
+                                <a
+                                        href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                                        target="_blank"
+                                        rel="noopener"
+                                        class="hidden md:block bg-black text-white w-fit text-16-32 px-4 py-2 rounded-lg hover:opacity-80 transition"
+                                        >
+                                        Hopefully More lol
+                                </a>
+                    </div>
+                    <div class="flex gap-2">
+                        <a
+                                href="mailto:p.swoyam.1@gmail.com"
+                                target="_blank"
+                                rel="noopener"
+                                class="bg-black text-white w-fit text-16-32 px-4 py-2 rounded-lg hover:opacity-80 transition"
+                                >
+                                p.swoyam.1@gmail.com
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+

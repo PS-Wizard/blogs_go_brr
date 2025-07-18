@@ -1,8 +1,8 @@
 html,body {
     background-color:#000;
     overflow:none;
+    cursor: url('/images/cursor.png') 0 0, auto !important;
 }
-
 :root {
     --text-10-16: clamp(0.625rem, 0.5179rem + 0.4286vw, 1rem);
     --text-14-24: clamp(0.875rem, 0.6964rem + 0.7143vw, 1.5rem);
@@ -15,35 +15,35 @@ html,body {
 }
 
 .text-10-16 {
-  font-size: var(--text-10-16);
+    font-size: var(--text-10-16);
 }
 
 .text-14-24 {
-  font-size: var(--text-14-24);
+    font-size: var(--text-14-24);
 }
 
 .text-16-32 {
-  font-size: var(--text-16-32);
+    font-size: var(--text-16-32);
 }
 
 .text-20-24 {
-  font-size: var(--text-20-24);
+    font-size: var(--text-20-24);
 }
 
 .text-24-36 {
-  font-size: var(--text-24-36);
+    font-size: var(--text-24-36);
 }
 
 .text-40-64 {
-  font-size: var(--text-40-64);
+    font-size: var(--text-40-64);
 }
 
 .text-48-126 {
-  font-size: var(--text-48-126);
+    font-size: var(--text-48-126);
 }
 
 .text-64-448 {
-  font-size: var(--text-64-448);
+    font-size: var(--text-64-448);
 }
 @font-face {
     font-family: 'Geist';
@@ -52,6 +52,7 @@ html,body {
     font-style: normal;
 }
 
+
 @font-face {
     font-family: 'Graffity';
     src: url('/fonts/Graffity-fill.otf') format('opentype');
@@ -59,6 +60,9 @@ html,body {
 
 .geist {
     font-family:"Geist",sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-smooth: always;
 }
 
 .graffity {
@@ -75,5 +79,28 @@ body {
     font-family: 'Geist', sans-serif;
 }
 
+select#tag-filter {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: none;
+}
+
+code {
+    color: #f8f8f2;
+    background:#292929 !important;
+    overflow-x: auto;
+    padding: 1px 2px;
+}
+
+pre {
+    padding: 1em;
+    border: 1px solid #252525 !important;
+    background: #000 !important;
+}
+img {
+    width:100%;
+}
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+

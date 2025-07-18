@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+        <meta charset="UTF-8" />
+        <title>All Posts</title>
+
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        
+        <meta name="description" content="Check Out What I&#39;ve Been Up To">
+        <meta name="author" content="Swoyam Pokharel" />
+        <meta name="keywords" content="blog, dev, swoyam, hugo, minimal" />
+
+        
+        <meta property="og:title" content="All Posts">
+        <meta property="og:description" content="Check Out What I&#39;ve Been Up To">
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="http://localhost:1313/posts/">
+        
+        <meta property="og:image" content="http://localhost:1313/images/preview.png">
+
+        
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="All Posts">
+        <meta name="twitter:description" content="Check Out What I&#39;ve Been Up To">
+
+        
+        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+        
+        <link rel="stylesheet" href="/css/output.css">
+    </head>
+    <body class="w-screen text-white">
+        <header class="flex justify-between items-center p-12">
+            <a class="uppercase font-bold text-xl tracking-widest" href="/">(._.)</a>
+            <nav class="flex gap-6 text-sm underline uppercase tracking-wide"
+                 >
+                 <a
+                         href="https://github.com/PS-Wizard"
+                         target="_blank"
+                         rel="noopener"
+                         class="hover:underline"
+                         >
+                         GITHUB
+                 </a>
+                     <a
+                             href="https://www.linkedin.com/in/swoyam-pokharel-557779340/"
+                             target="_blank"
+                             rel="noopener"
+                             class="hover:underline"
+                             >
+                             LINKEDIN
+                     </a>
+            </nav>
+        </header>
+
+        <div class="min-h-screen main-content w-full pb-16 text-white ">
+            
+
+<div class="h-full flex flex-col justify-center items-center gap-8">
+    
+    <h1 class="text-48-126 graffity tracking-widest"> Collections </h1>
+
+    
+    <div class="w-full max-w-7xl px-4 flex flex-col gap-3">
+
+        <input
+                id="search-input"
+                type="text"
+                placeholder="Search collections..."
+                class="w-full rounded-lg border border-white/20 px-4 py-2 text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                />
+
+        
+        <div id="tag-filters" class="flex flex-wrap gap-3 mt-2">
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <button type="button" class="tag-btn border-1 border-white/40 rounded-lg px-3 py-1 text-sm text-white hover:border-white cursor-pointer select-none font-bold" data-tag="chess" >
+                + chess
+            </button>
+                
+            <button type="button" class="tag-btn border-1 border-white/40 rounded-lg px-3 py-1 text-sm text-white hover:border-white cursor-pointer select-none font-bold" data-tag="rust" >
+                + rust
+            </button>
+                
+        </div>
+
+    </div>
+
+    
+    <div class="min-h-screen w-full max-w-7xl px-4 mt-6">
+        <div id="collections-grid" class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            <a href="/posts/chess_engine/" class="block collection-card flex justify-center items-center" data-tags="rust chess" data-title="chess engine">
+                <article class="bg-white/5 border border-white/10 rounded-2xl overflow-hidden shadow-sm transition hover:shadow-md hover:border-white/20 p-4 space-y-4 cursor-pointer">
+                    
+                    <img src="/images/default_collections.avif" alt="Card image" class="w-full h-48 object-cover rounded-xl" />
+
+                    <div class="flex items-center justify-between gap-2">
+                        <h2 class="text-xl font-semibold text-white">Chess Engine</h2>
+                        <span class="text-sm text-gray-400 whitespace-nowrap">Jul 1, 2025</span>
+                    </div>
+
+                    <div class="text-sm text-gray-300 prose prose-invert max-w-none">
+                        <p>A bunch of blog posts about building a <strong>chess engine</strong> in Rust.</p>
+
+                    </div>
+
+                    
+                    <div class="flex flex-wrap gap-2">
+                        
+                        <span class="inline-block bg-white/10 text-gray-200 text-xs font-medium px-2 py-1 rounded-full hover:bg-white/20 transition">
+                            #rust
+                        </span>
+                        
+                        <span class="inline-block bg-white/10 text-gray-200 text-xs font-medium px-2 py-1 rounded-full hover:bg-white/20 transition">
+                            #chess
+                        </span>
+                        
+                    </div>
+                    
+
+                </article>
+            </a>
+            
+
+        </div>
+    </div>
+
+    
+
+</div>
+
+
+<script>
+    (() => {
+        const searchInput = document.getElementById('search-input');
+        const tagButtons = document.querySelectorAll('.tag-btn');
+        const cards = document.querySelectorAll('.collection-card');
+        const activeTags = new Set();
+
+        function filterCards() {
+            const query = searchInput.value.toLowerCase();
+
+            cards.forEach(card => {
+                const title = card.dataset.title;
+                const tags = card.dataset.tags ? card.dataset.tags.toLowerCase().split(' ') : [];
+
+                
+                const matchesQuery = title.includes(query);
+
+                
+                const matchesTag = activeTags.size === 0 || [...activeTags].some(t => tags.includes(t.toLowerCase()));
+
+                card.style.display = matchesQuery && matchesTag ? '' : 'none';
+            });
+        }
+
+        tagButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tag = btn.dataset.tag;
+
+                if (activeTags.has(tag)) {
+                    activeTags.delete(tag);
+                    btn.classList.remove('border-white', 'bg-white/20');
+                } else {
+                    activeTags.add(tag);
+                    btn.classList.add('border-white', 'bg-white/20');
+                }
+
+                filterCards();
+            });
+        });
+
+        searchInput.addEventListener('input', filterCards);
+    })();
+</script>
+
+
+        </div>
+        <div class="w-full flex items-center bg-[#fa4b1e] h-[30vh] text-black px-10" >
+            <div class="lg:w-1/2 h-full geist flex flex-col justify-end"> <h2
+                 class="hidden lg:block text-48-126 font-semibold cursor-pointer"
+                 bind:this={name_footer}
+                 >
+                 Wizard.
+                </h2>
+            </div>
+            <div class="w-full lg:w-1/2 h-full geist flex flex-row justify-center gap-4" >
+                <div class="flex flex-col h-full w-full justify-center items-center lg:items-end gap-4" >
+                    <div class="flex gap-2">
+                        <a
+                                href="https://www.linkedin.com/in/swoyam-pokharel-557779340/"
+                                target="_blank"
+                                rel="noopener"
+                                class="bg-black text-white w-fit text-16-32 px-4 py-2 rounded-lg hover:opacity-80 transition"
+                                >
+                                Linkedin
+                        </a>
+                            <a
+                                    href="https://github.com/PS-Wizard"
+                                    target="_blank"
+                                    rel="noopener"
+                                    class="bg-black text-white w-fit text-16-32 px-4 py-2 rounded-lg hover:opacity-80 transition"
+                                    >
+                                    Github
+                            </a>
+                                <a
+                                        href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                                        target="_blank"
+                                        rel="noopener"
+                                        class="hidden md:block bg-black text-white w-fit text-16-32 px-4 py-2 rounded-lg hover:opacity-80 transition"
+                                        >
+                                        Hopefully More lol
+                                </a>
+                    </div>
+                    <div class="flex gap-2">
+                        <a
+                                href="https://pswoyam.com.np/"
+                                target="_blank"
+                                rel="noopener"
+                                class="bg-black text-white w-fit text-16-32 px-4 py-2 rounded-lg hover:opacity-80 transition"
+                                >
+                                Portfolio
+                        </a>
+                        <a
+                                href="mailto:p.swoyam.1@gmail.com"
+                                target="_blank"
+                                rel="noopener"
+                                class="bg-black text-white w-fit text-16-32 px-4 py-2 rounded-lg hover:opacity-80 transition"
+                                >
+                                p.swoyam.1@gmail.com
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+
