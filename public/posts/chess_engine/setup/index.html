@@ -69,58 +69,58 @@
     <h1 id="board-representation">Board Representation:</h1>
 <p>The boards are of course Bit Boards, but this time around the pieces are a bit different. Instead of structs, this time I opted for a more compact representation.</p>
 <h3 id="the-actual-board">The Actual Board:</h3>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-rust" data-lang="rust"><span class="line"><span class="cl"><span class="k">pub</span><span class="w"> </span><span class="k">struct</span> <span class="nc">Board</span><span class="p">(</span><span class="k">pub</span><span class="p">(</span><span class="k">crate</span><span class="p">)</span><span class="w"> </span><span class="kt">u64</span><span class="p">);</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">impl</span><span class="w"> </span><span class="n">Board</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span> <span class="nf">has_bit</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">idx</span>: <span class="kt">u8</span><span class="p">)</span><span class="w"> </span>-&gt; <span class="kt">bool</span> <span class="p">{</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="n">idx</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">64</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="mi">0</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">idx</span><span class="p">))</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span> <span class="nf">set_bit</span><span class="p">(</span><span class="o">&amp;</span><span class="k">mut</span><span class="w"> </span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">idx</span>: <span class="kt">usize</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="mi">0</span><span class="w"> </span><span class="o">|=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">idx</span><span class="p">;</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
-</span></span></span></code></pre></div><p>That&rsquo;s the board, the helper functions are there to well &hellip; help.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">Board</span>(<span style="color:#66d9ef">pub</span>(<span style="color:#66d9ef">crate</span>) <span style="color:#66d9ef">u64</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">impl</span> Board {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">has_bit</span>(<span style="color:#f92672">&amp;</span>self, idx: <span style="color:#66d9ef">u8</span>) -&gt; <span style="color:#66d9ef">bool</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> idx <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">64</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        (self.<span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> idx)) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">set_bit</span>(<span style="color:#f92672">&amp;</span><span style="color:#66d9ef">mut</span> self, idx: <span style="color:#66d9ef">usize</span>) {
+</span></span><span style="display:flex;"><span>        self.<span style="color:#ae81ff">0</span> <span style="color:#f92672">|=</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> idx;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>That&rsquo;s the board, the helper functions are there to well &hellip; help.</p>
 <h3 id="the-game">The Game:</h3>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-rust" data-lang="rust"><span class="line"><span class="cl"><span class="k">pub</span><span class="w"> </span><span class="k">struct</span> <span class="nc">Game</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="n">white_pawns</span>: <span class="nc">Board</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">pub</span><span class="w"> </span><span class="n">white_rooks</span>: <span class="nc">Board</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">pub</span><span class="w"> </span><span class="n">white_knights</span>: <span class="nc">Board</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">pub</span><span class="w"> </span><span class="n">white_bishops</span>: <span class="nc">Board</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">pub</span><span class="w"> </span><span class="n">white_queens</span>: <span class="nc">Board</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">pub</span><span class="w"> </span><span class="n">white_king</span>: <span class="nc">Board</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">pub</span><span class="w"> </span><span class="n">black_pawns</span>: <span class="nc">Board</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">pub</span><span class="w"> </span><span class="n">black_rooks</span>: <span class="nc">Board</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">pub</span><span class="w"> </span><span class="n">black_knights</span>: <span class="nc">Board</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">pub</span><span class="w"> </span><span class="n">black_bishops</span>: <span class="nc">Board</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">pub</span><span class="w"> </span><span class="n">black_queens</span>: <span class="nc">Board</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">pub</span><span class="w"> </span><span class="n">black_king</span>: <span class="nc">Board</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">pub</span><span class="w"> </span><span class="n">castling_rights</span>: <span class="kt">u8</span><span class="p">,</span><span class="w"> </span><span class="c1">// 4 bits: WK, WQ, BK, BQ
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">        </span><span class="k">pub</span><span class="w"> </span><span class="n">side_to_move</span>: <span class="kt">bool</span><span class="p">,</span><span class="w">  </span><span class="c1">// false = white, true = black
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">//TODO:
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">        </span><span class="c1">// - Enpassant flag
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="w">        </span><span class="c1">// Move Counters
-</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span><span class="w">
-</span></span></span></code></pre></div><p>The game representation is just bitboards and other game states such as castling rights and a bool representing who&rsquo;s turn it is to move. It has 3 functions:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">Game</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">pub</span> white_pawns: <span style="color:#a6e22e">Board</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pub</span> white_rooks: <span style="color:#a6e22e">Board</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pub</span> white_knights: <span style="color:#a6e22e">Board</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pub</span> white_bishops: <span style="color:#a6e22e">Board</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pub</span> white_queens: <span style="color:#a6e22e">Board</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pub</span> white_king: <span style="color:#a6e22e">Board</span>,
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pub</span> black_pawns: <span style="color:#a6e22e">Board</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pub</span> black_rooks: <span style="color:#a6e22e">Board</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pub</span> black_knights: <span style="color:#a6e22e">Board</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pub</span> black_bishops: <span style="color:#a6e22e">Board</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pub</span> black_queens: <span style="color:#a6e22e">Board</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pub</span> black_king: <span style="color:#a6e22e">Board</span>,
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pub</span> castling_rights: <span style="color:#66d9ef">u8</span>, <span style="color:#75715e">// 4 bits: WK, WQ, BK, BQ
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">pub</span> side_to_move: <span style="color:#66d9ef">bool</span>,  <span style="color:#75715e">// false = white, true = black
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">//TODO:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#75715e">// - Enpassant flag
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#75715e">// Move Counters
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p>The game representation is just bitboards and other game states such as castling rights and a bool representing who&rsquo;s turn it is to move. It has 3 functions:</p>
 <ol>
 <li><code>new (constructor)</code> : Creates a new game, sets all the pieces in their default position</li>
 <li><code>all_pieces()</code> : Returns all the pieces by simply: <code>all_white_pieces() | all_black_pieces()</code>.</li>
 <li><code>get_piece_at(idx: u8)</code> : Given an index, this function returns an <code>Option&lt;Piece&gt;</code> depending if there is a given piece at the said <code>idx</code></li>
 </ol>
 <h3 id="the-pieces">The Pieces:</h3>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-rust" data-lang="rust"><span class="line"><span class="cl"><span class="cp">#[repr(u8)]</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="cp">#[derive(Debug, Clone, Copy, PartialEq, Eq)]</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">pub</span><span class="w"> </span><span class="k">enum</span> <span class="nc">Color</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">White</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">Black</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
-</span></span></span></code></pre></div><div class="my-2 p-4 border border-green-500/30 bg-yellow-100/10 rounded-lg text-green-200">
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">#[repr(u8)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#[derive(Debug, Clone, Copy, PartialEq, Eq)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">enum</span> <span style="color:#a6e22e">Color</span> {
+</span></span><span style="display:flex;"><span>    White <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>,
+</span></span><span style="display:flex;"><span>    Black <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>,
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="my-2 p-4 border border-green-500/30 bg-yellow-100/10 rounded-lg text-green-200">
     <div class="flex items-start justify-end gap-3">
         <strong class="underline">Question</strong>
         <svg class="w-5 h-5 mt-1 text-yellow-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -130,53 +130,53 @@
     <strong>Why <code>repr(u8)</code> It?</strong>: The obvious answer is tight packing, thus more memory saved, but apparantly this helps if we are generating bindings for FFI (Foreign Function Interface) later down the line, which I plan to do.
 </div>
 
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-rust" data-lang="rust"><span class="line"><span class="cl"><span class="cp">#[repr(u8)]</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="cp">#[derive(Debug, Clone, Copy, PartialEq, Eq)]</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">pub</span><span class="w"> </span><span class="k">enum</span> <span class="nc">PieceType</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">Pawn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">         </span><span class="n">Knight</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">         </span><span class="n">Bishop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">         </span><span class="n">Rook</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">         </span><span class="n">Queen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">         </span><span class="n">King</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="cp">#[derive(Clone, Copy, PartialEq, Eq)]</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="k">pub</span><span class="w"> </span><span class="k">struct</span> <span class="nc">Piece</span><span class="p">(</span><span class="kt">u8</span><span class="p">);</span><span class="w">
-</span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-rust" data-lang="rust"><span class="line"><span class="cl"><span class="k">impl</span><span class="w"> </span><span class="n">Piece</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span> <span class="nf">new</span><span class="p">(</span><span class="n">piece_type</span>: <span class="nc">PieceType</span><span class="p">,</span><span class="w"> </span><span class="n">color</span>: <span class="nc">Color</span><span class="p">)</span><span class="w"> </span>-&gt; <span class="nc">Self</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="bp">Self</span><span class="p">((</span><span class="n">piece_type</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">u8</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="p">((</span><span class="n">color</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">u8</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">3</span><span class="p">))</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span> <span class="nf">piece_type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span>-&gt; <span class="nc">PieceType</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">match</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="mi">0</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mb">0b111</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="mi">0</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">PieceType</span>::<span class="n">Pawn</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">              </span><span class="mi">1</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">PieceType</span>::<span class="n">Knight</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">              </span><span class="mi">2</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">PieceType</span>::<span class="n">Bishop</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">              </span><span class="mi">3</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">PieceType</span>::<span class="n">Rook</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">              </span><span class="mi">4</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">PieceType</span>::<span class="n">Queen</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">              </span><span class="mi">5</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">PieceType</span>::<span class="n">King</span><span class="p">,</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">              </span><span class="n">_</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="fm">unreachable!</span><span class="p">(),</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span> <span class="nf">color</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span>-&gt; <span class="nc">Color</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="mi">0</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mb">0b1000</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">Color</span>::<span class="n">Black</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="n">Color</span>::<span class="n">White</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="p">}</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span> <span class="nf">is_white</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span>-&gt; <span class="kt">bool</span> <span class="p">{</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">color</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">Color</span>::<span class="n">White</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span> <span class="nf">is_black</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span>-&gt; <span class="kt">bool</span> <span class="p">{</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">color</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">Color</span>::<span class="n">Black</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
-</span></span></span></code></pre></div><p>In this representation the <code>Piece</code> is a <code>u8</code>. So, something like <code>00000000</code>. The first 3 bits represent the piece type eg: <code>00000101 = King</code>. and the 4th bit represents the color. So, <code>00000101 = King</code> is a black king, and <code>00001101 = King</code> is a white king.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">#[repr(u8)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#[derive(Debug, Clone, Copy, PartialEq, Eq)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">enum</span> <span style="color:#a6e22e">PieceType</span> {
+</span></span><span style="display:flex;"><span>    Pawn <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>,
+</span></span><span style="display:flex;"><span>         Knight <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>,
+</span></span><span style="display:flex;"><span>         Bishop <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>,
+</span></span><span style="display:flex;"><span>         Rook <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>,
+</span></span><span style="display:flex;"><span>         Queen <span style="color:#f92672">=</span> <span style="color:#ae81ff">4</span>,
+</span></span><span style="display:flex;"><span>         King <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span>,
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#[derive(Clone, Copy, PartialEq, Eq)]</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">Piece</span>(<span style="color:#66d9ef">u8</span>);
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">impl</span> Piece {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">new</span>(piece_type: <span style="color:#a6e22e">PieceType</span>, color: <span style="color:#a6e22e">Color</span>) -&gt; <span style="color:#a6e22e">Self</span> {
+</span></span><span style="display:flex;"><span>        Self((piece_type <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">u8</span>) <span style="color:#f92672">|</span> ((color <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">u8</span>) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">3</span>))
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">piece_type</span>(self) -&gt; <span style="color:#a6e22e">PieceType</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">match</span> self.<span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0b111</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#ae81ff">0</span> <span style="color:#f92672">=&gt;</span> PieceType::Pawn,
+</span></span><span style="display:flex;"><span>              <span style="color:#ae81ff">1</span> <span style="color:#f92672">=&gt;</span> PieceType::Knight,
+</span></span><span style="display:flex;"><span>              <span style="color:#ae81ff">2</span> <span style="color:#f92672">=&gt;</span> PieceType::Bishop,
+</span></span><span style="display:flex;"><span>              <span style="color:#ae81ff">3</span> <span style="color:#f92672">=&gt;</span> PieceType::Rook,
+</span></span><span style="display:flex;"><span>              <span style="color:#ae81ff">4</span> <span style="color:#f92672">=&gt;</span> PieceType::Queen,
+</span></span><span style="display:flex;"><span>              <span style="color:#ae81ff">5</span> <span style="color:#f92672">=&gt;</span> PieceType::King,
+</span></span><span style="display:flex;"><span>              _ <span style="color:#f92672">=&gt;</span> <span style="color:#a6e22e">unreachable!</span>(),
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">color</span>(self) -&gt; <span style="color:#a6e22e">Color</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (self.<span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0b1000</span>) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span> {
+</span></span><span style="display:flex;"><span>            Color::Black
+</span></span><span style="display:flex;"><span>        } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>            Color::White
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">is_white</span>(self) -&gt; <span style="color:#66d9ef">bool</span> {
+</span></span><span style="display:flex;"><span>        self.color() <span style="color:#f92672">==</span> Color::White
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">is_black</span>(self) -&gt; <span style="color:#66d9ef">bool</span> {
+</span></span><span style="display:flex;"><span>        self.color() <span style="color:#f92672">==</span> Color::Black
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>In this representation the <code>Piece</code> is a <code>u8</code>. So, something like <code>00000000</code>. The first 3 bits represent the piece type eg: <code>00000101 = King</code>. and the 4th bit represents the color. So, <code>00000101 = King</code> is a black king, and <code>00001101 = King</code> is a white king.</p>
 
   </main>
 

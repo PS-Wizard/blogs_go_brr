@@ -4,4 +4,4 @@ title = "Swoyam's Dev Blogs"
 
 [markup]
   [markup.highlight]
-    noClasses = false
+    noClasses = true
