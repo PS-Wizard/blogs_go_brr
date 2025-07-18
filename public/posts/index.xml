@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>All Posts on My New Hugo Site</title>
+    <title>All Posts on Swoyam&#39;s Dev Blogs</title>
     <link>http://localhost:1313/posts/</link>
-    <description>Recent content in All Posts on My New Hugo Site</description>
+    <description>Recent content in All Posts on Swoyam&#39;s Dev Blogs</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate></lastBuildDate>

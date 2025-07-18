@@ -87,8 +87,6 @@ select#tag-filter {
 }
 
 code {
-    color: #f8f8f2;
-    background:#292929 !important;
     overflow-x: auto;
     padding: 1px 2px;
 }

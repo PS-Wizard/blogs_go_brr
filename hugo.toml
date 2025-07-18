@@ -1,3 +1,7 @@
-baseURL = 'https://example.org/'
+baseURL = 'https://blogs.pswoyam.com.np/'
 languageCode = 'en-us'
-title = 'My New Hugo Site'
+title = "Swoyam's Dev Blogs"
+
+[markup]
+  [markup.highlight]
+    noClasses = false
