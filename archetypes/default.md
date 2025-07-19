@@ -3,5 +3,7 @@ date = '{{ .Date }}'
 draft = false
 title = '{{ replace .File.ContentBaseName "-" " " | title }}'
 description = ''
-tags = ["rust", "chess"]
+tags = ['', '']
+repo_link=''
+code_link=''
 +++

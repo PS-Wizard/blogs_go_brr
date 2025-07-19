@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Magician on Swoyam&#39;s Dev Blogs</title>
+    <link>http://localhost:1313/tags/magician/</link>
+    <description>Recent content in Magician on Swoyam&#39;s Dev Blogs</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 19 Jul 2025 11:06:12 +0545</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/magician/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Magics</title>
+      <link>http://localhost:1313/posts/chess_engine/magics/</link>
+      <pubDate>Sat, 19 Jul 2025 11:06:12 +0545</pubDate>
+      <guid>http://localhost:1313/posts/chess_engine/magics/</guid>
+      <description></description>
+    </item>
+  </channel>
+</rss>

@@ -2,7 +2,7 @@
 <html lang="en">
     <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
         <meta charset="UTF-8" />
-        <title>Initial setup</title>
+        <title>Initial setup &amp; Board Representation</title>
 
         
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -13,7 +13,7 @@
         <meta name="keywords" content="blog, dev, swoyam, hugo, minimal" />
 
         
-        <meta property="og:title" content="Initial setup">
+        <meta property="og:title" content="Initial setup &amp; Board Representation">
         <meta property="og:description" content="Figuring Out Board &#43; Piece Representation For A Bitboard Implementation">
         <meta property="og:type" content="website">
         <meta property="og:url" content="http://localhost:1313/posts/chess_engine/initial_setup/">
@@ -22,7 +22,7 @@
 
         
         <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:title" content="Initial setup">
+        <meta name="twitter:title" content="Initial setup &amp; Board Representation">
         <meta name="twitter:description" content="Figuring Out Board &#43; Piece Representation For A Bitboard Implementation">
 
         
@@ -32,7 +32,7 @@
         <link rel="stylesheet" href="/css/output.css">
     </head>
     <body class="w-screen text-white">
-        <header class="flex justify-between items-center p-12">
+        <header class="flex justify-between items-center p-8">
             <a class="uppercase font-bold text-xl tracking-widest" href="/">(._.)</a>
             <nav class="flex gap-6 text-sm underline uppercase tracking-wide"
                  >
@@ -57,18 +57,215 @@
 
         <div class="min-h-screen main-content w-full pb-16 text-white ">
             
+
+<div class="w-full flex justify-center items-center p-4 my-8 flex-col">
+    <div class="w-full max-w-7xl pb-4 flex flex-col md:flex-row justify-between items-center">
+        <nav class="text-sm text-neutral-400 mb-4">
+            <a href="/posts" class="hover:underline">Posts</a>
+            
+            / <a href="/posts/chess_engine/" class="hover:underline">Chess Engine</a>
+            
+            / <span class="text-white">Initial setup &amp; Board Representation</span>
+        </nav>
+        
+        <a href="https://github.com/PS-Wizard/EvalDeez/tree/main/crates/arena" class="hidden md:block text-sm hover:underline" target="_blank" rel="noopener">
+            View In Github &rarr;
+        </a>
+        
+    </div>
+<img src="/images/default_blogs.jpg" alt="Card image" class="max-w-7xl h-69 object-cover rounded-xl" />
+</div>
 <div class="relative max-w-7xl mx-auto px-4 flex flex-col">
-    <nav class="text-sm text-neutral-400 mb-4">
-        <a href="/posts" class="hover:underline">Posts</a>
-        
-        / <a href="/posts/chess_engine/" class="hover:underline">Chess Engine</a>
-        
-        / <span class="text-white">Initial setup</span>
-    </nav>
-  <main class="prose prose-invert max-w-7xl flex-grow">
-    <h1 id="board-representation">Board Representation:</h1>
-<p>The boards are of course Bit Boards, but this time around the pieces are a bit different. Instead of structs, this time I opted for a more compact representation.</p>
-<h3 id="the-actual-board">The Actual Board:</h3>
+    
+    <main class="prose prose-invert max-w-7xl flex-grow break-words">
+        <h1 id="initial-setup">Initial Setup</h1>
+<p>Allrighty, so each of the different sections of this engine is going to be in their own seperate crate.
+<div class="my-2 p-4 border border-red-500/30 bg-red-500/10 rounded-lg text-red-200">
+  <div class="flex items-start gap-3 pb-4">
+    <svg class="w-5 h-5 mt-1 text-red-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/>
+    </svg>
+    <strong class="underline">A Quick Disclaimer</strong>
+  </div>
+  <p><strong>I don&rsquo;t know rust.</strong> So, some of the things I be doing might not be the best practice, or even remotely a good practice</p>
+<ul>
+<li>Have I went through the <a href="https://doc.rust-lang.org/book/">rust-lang&rsquo;s book</a>? <strong>Yes.</strong></li>
+<li>Have I made other projects in rust? <a href="https://github.com/PS-Wizard/GitSketch">Git Sketch</a> <a href="https://github.com/PS-Wizard/rust_down">Rust Down</a> <strong>Yes.</strong></li>
+<li><strong>But I don&rsquo;t fully know rust.</strong></li>
+</ul>
+</div>
+</p>
+<p>With that outa the way, the way I&rsquo;ve structured this project is that, I have a workspace setup.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#f92672">~</span> Cargo.toml 
+</span></span><span style="display:flex;"><span>[workspace]
+</span></span><span style="display:flex;"><span>resolver <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;3&#34;</span>
+</span></span><span style="display:flex;"><span>members <span style="color:#f92672">=</span> [ <span style="color:#e6db74">&#34;crates/arena&#34;</span>, <span style="color:#e6db74">&#34;crates/magician&#34;</span>, <span style="color:#e6db74">&#34;crates/prophet&#34;</span>,<span style="color:#e6db74">&#34;crates/tactition&#34;</span>, <span style="color:#e6db74">&#34;crates/translator&#34;</span>, <span style="color:#e6db74">&#34;crates/warden&#34;</span>]
+</span></span><span style="display:flex;"><span>[wizard<span style="color:#f92672">@</span>archlinux evaldeez]<span style="color:#75715e">$</span>
+</span></span></code></pre></div><pre tabindex="0"><code>.
+├── assets
+│   └── nnue-probe                                          // Pulled straight from: https://github.com/dshawul/nnue-probe. 
+|                                                           // For now compiling it and using it as a binary, later will probably 
+|                                                           // create own port in rust or FFI bindings
+├── Cargo.lock
+├── Cargo.toml
+├── crates
+│   ├── arena                                               // Will Handle Board Representation
+│   ├── magician                                            // Will Handles Magic Bitboards
+│   ├── prophet                                             // Will Handle evaluations
+│   ├── tactition                                           // Will Handle Move Gen (depends on `magician` for sliding pieces)
+│   ├── translator                                          // Will Handle Grammars ( eg. FEN, PGN, UCI ...)
+│   └── warden                                              // Will Handle Legalities ( stalemates, checkmates ... )
+├── README.md
+└── target
+    ├── CACHEDIR.TAG
+    └── debug
+</code></pre><hr>
+<h1 id="board-representation">Board Representation:</h1>
+<h3 id="bitboards--bitsets--bitmaps-">Bitboards / Bitsets / Bitmaps :</h3>
+<p>So, our first intuition when we are tasked to represent an <code>8x8</code> board is probably an array. That&rsquo;s Valid But turns out there is a better way to represent the boards, <strong>Bitboards</strong>.
+Bitboards are basically a <code>u64</code>, an unsigned 64 bit long integer that we use to represent board state. Makes sense &hellip; or does it?</p>
+<h4 id="how-does-a-integer-even-represent-a-board"><strong>How does a integer even represent a board?</strong></h4>
+<p>A chess board is <code>8x8</code>, 8 rows &amp; 8 columns, that is a total of 64 squares. A <code>u64</code> has 64 bits, and thus it is possible to represent the board with a <code>u64</code>. Okay, but wait,</p>
+<h4 id="how-do-u-place-pieces-in-an-integer"><strong>How do u place pieces in an integer?</strong>:</h4>
+<p>A <code>u64</code> is basically <code>0000000000000000...repeated 64 times</code> right? So if we were to draw it out as a board, we would get the following:</p>
+<pre tabindex="0"><code>8  0 0 0 0 0 0 0 0
+7  0 0 0 0 0 0 0 0
+6  0 0 0 0 0 0 0 0
+5  0 0 0 0 0 0 0 0
+4  0 0 0 0 0 0 0 0
+3  0 0 0 0 0 0 0 0
+2  0 0 0 0 0 0 0 0
+1  0 0 0 0 0 0 0 0
+   a b c d e f g h
+</code></pre><p>That&rsquo;s basically a <code>0u64</code>, where the MSB is is <code>a8</code> and the LSB is <code>a1</code>.</p>
+<p>Say you were to represent all the white pawns, that would be <code>0000000000000000000000000000000000000000000000001111111100000000</code> in binary, or <code>0x0000_0000_0000_FF00</code> in hexadecimal. That might start to make sense, but for better visualization, that corresponds to the following:</p>
+<pre tabindex="0"><code>8  0 0 0 0 0 0 0 0
+7  0 0 0 0 0 0 0 0
+6  0 0 0 0 0 0 0 0
+5  0 0 0 0 0 0 0 0
+4  0 0 0 0 0 0 0 0
+3  0 0 0 0 0 0 0 0
+2  1 1 1 1 1 1 1 1
+1  0 0 0 0 0 0 0 0
+   a b c d e f g h
+</code></pre><p>So, that&rsquo;s how Bitboards represent pieces, simply a <code>1</code> set in all the corresponding squares. Thus a starting position would look something like:</p>
+<pre tabindex="0"><code>8  1 1 1 1 1 1 1 1
+7  1 1 1 1 1 1 1 1
+6  0 0 0 0 0 0 0 0
+5  0 0 0 0 0 0 0 0
+4  0 0 0 0 0 0 0 0
+3  0 0 0 0 0 0 0 0
+2  1 1 1 1 1 1 1 1
+1  1 1 1 1 1 1 1 1
+   a b c d e f g h
+</code></pre><p>That makes sense!, but it&rsquo;s not quite how we do things. We typically don&rsquo;t set all the pieces in one <code>u64</code>. Could we do it? <strong>technically yes</strong> But is it a hassle? <strong>also yes.</strong>.
+Instead of having a single <code>u64</code> represent everything, we split it into a bunch of different boards based on piece type:</p>
+<ul>
+<li><code>white_pawns</code>: <code>u64(0x0000_0000_0000_FF00)</code>,</li>
+<li><code>white_knights</code>: <code>u64(0x0000_0000_0000_0042)</code>,</li>
+<li><code>white_bishops</code>: <code>u64(0x0000_0000_0000_0024)</code>,</li>
+<li><code>white_rooks</code>: <code>u64(0x0000_0000_0000_0081)</code>,</li>
+<li><code>white_queens</code>: <code>u64(0x0000_0000_0000_0008)</code>,</li>
+<li><code>white_king</code>: <code>u64(0x0000_0000_0000_0010)</code>,</li>
+<li><code>black_pawns</code>: <code>u64(0x00FF_0000_0000_0000)</code>,</li>
+<li><code>black_knights</code>: <code>u64(0x4200_0000_0000_0000)</code>,</li>
+<li><code>black_bishops</code>: <code>u64(0x2400_0000_0000_0000)</code>,</li>
+<li><code>black_rooks</code>: <code>u64(0x8100_0000_0000_0000)</code>,</li>
+<li><code>black_queens</code>: <code>u64(0x0800_0000_0000_0000)</code>,</li>
+<li><code>black_king</code>: <code>u64(0x1000_0000_0000_0000)</code>,</li>
+</ul>
+<h4 id="so--why-not-one-single-board">So &hellip; Why not one single board?</h4>
+<p>Because splitting just makes sense:
+
+
+
+<details open class="group w-full border-y border-white/20 overflow-hidden transition-all duration-200">
+  <summary class="cursor-pointer list-none px-4 py-3 bg-none flex justify-between items-center">
+    <span class="text-white h-full">
+      <span class="underline text-sm">Clean Logic</span>
+    </span>
+    <span class="transform transition-transform duration-200 group-open:rotate-180 text-white">
+      
+        <span>+</span>
+      
+    </span>
+  </summary>
+  <div class="px-4 py-3 text-sm text-white/80 bg-white/5">
+    A bitboard is a 64-bit integer where each bit represents a square on a chess board.
+  </div>
+</details>
+
+
+
+
+<details  class="group w-full border-y border-white/20 overflow-hidden transition-all duration-200">
+  <summary class="cursor-pointer list-none px-4 py-3 bg-none flex justify-between items-center">
+    <span class="text-white h-full">
+      <span class="underline text-sm">Piece Detection</span>
+    </span>
+    <span class="transform transition-transform duration-200 group-open:rotate-180 text-white">
+      
+        <span>+</span>
+      
+    </span>
+  </summary>
+  <div class="px-4 py-3 text-sm text-white/80 bg-white/5">
+    <p>Wanna know what piece is sitting on a square? Easy. You just do:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (white_pawns <span style="color:#f92672">|</span> white_knights <span style="color:#f92672">|</span> white_rooks <span style="color:#f92672">|</span> <span style="color:#f92672">..</span>.) <span style="color:#f92672">&amp;</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> e4_index) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>
+</span></span></code></pre></div><h5 id="bro-what-even-is-this"><strong>Bro what even is this?</strong></h5>
+<p>Basically, since each of our bitboards is a <code>u64</code>, meaning every square on the board maps to a bit — <code>a1</code> is bit 0, <code>b1</code> is bit 1, &hellip;, <code>h8</code> is bit 63.</p>
+<p>If you wanna check if a piece exists on, say, <code>e4</code>, you create a mask like <code>1 &lt;&lt; e4_index</code>, and then <code>AND</code> it with a bitboard. If the result isn’t zero, that piece exists on that square.</p>
+<p>Now, because we split bitboards by piece type (and color), if <code>white_pawns &amp; mask != 0</code>, then boom — it’s a white pawn. And since no two pieces ever share a square, this check is totally safe.</p>
+
+  </div>
+</details>
+
+
+
+
+<details  class="group w-full border-y border-white/20 overflow-hidden transition-all duration-200">
+  <summary class="cursor-pointer list-none px-4 py-3 bg-none flex justify-between items-center">
+    <span class="text-white h-full">
+      <span class="underline text-sm">Cleaner Occupancy Masks</span>
+    </span>
+    <span class="transform transition-transform duration-200 group-open:rotate-180 text-white">
+      
+        <span>+</span>
+      
+    </span>
+  </summary>
+  <div class="px-4 py-3 text-sm text-white/80 bg-white/5">
+    <p><strong>Want a map of all white pieces?</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">let</span> white_occupancy <span style="color:#f92672">=</span> white_pawns <span style="color:#f92672">|</span> white_knights <span style="color:#f92672">|</span> <span style="color:#f92672">..</span>. <span style="color:#f92672">|</span> white_king;
+</span></span></code></pre></div><p><strong>Want All Pieces?</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">let</span> all_pieces <span style="color:#f92672">=</span> white_occupancy <span style="color:#f92672">|</span> black_occupancy;
+</span></span></code></pre></div>
+  </div>
+</details>
+
+
+
+
+<details  class="group w-full border-y border-white/20 overflow-hidden transition-all duration-200">
+  <summary class="cursor-pointer list-none px-4 py-3 bg-none flex justify-between items-center">
+    <span class="text-white h-full">
+      <span class="underline text-sm">Move Generation Becomes Modular</span>
+    </span>
+    <span class="transform transition-transform duration-200 group-open:rotate-180 text-white">
+      
+        <span>+</span>
+      
+    </span>
+  </summary>
+  <div class="px-4 py-3 text-sm text-white/80 bg-white/5">
+    <p>Since each piece type has its own set of rules, If everything was crammed into one board, you&rsquo;d be constantly untangling who&rsquo;s who.</p>
+<p>Split boards = plug-and-play logic per piece, and it comes especially in handy later when we are doing move gen with magic bitboards.</p>
+
+  </div>
+</details>
+</p>
+<h3 id="the-code">The Code:</h3>
+<p>Okay so now that the basics are done, let&rsquo;s move on with the code:</p>
 <div class="highlight" title="board.rs"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">Board</span>(<span style="color:#66d9ef">pub</span>(<span style="color:#66d9ef">crate</span>) <span style="color:#66d9ef">u64</span>);
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">impl</span> Board {
@@ -83,8 +280,11 @@
 </span></span><span style="display:flex;"><span>        self.<span style="color:#ae81ff">0</span> <span style="color:#f92672">|=</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> idx;
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>That&rsquo;s the board, the helper functions are there to well &hellip; help.</p>
-<h3 id="the-game">The Game:</h3>
+</span></span></code></pre></div><p>In my case, I made the <code>Board</code> a tuple struct. This way, it is the same memory as a <code>u64</code>, but just wrapped so that I can add helper functions such as <code>has_bit</code>, <code>set_bit</code> and anything else I choose down the line.</p>
+<p>The <code>has_bit</code> and <code>set_bit</code> functions are pretty self explanatory, they both make use of logic gates, to either set a bit using <code>OR</code> or to check if a bit is set at a certain index using a combination of left shifts <code>&lt;&lt;</code> and <code>AND</code> gate</p>
+<h4 id="is-it-enough">Is it enough?</h4>
+<p>You might have noticed, that although bitboards help represent the piece&rsquo;s occupancies, there are other aspects of a board that don&rsquo;t concern the pieces exactly, thus, we need another wrapper around these boards:</p>
+<h3 id="the-game-state">The Game State:</h3>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">Game</span> {
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">pub</span> white_pawns: <span style="color:#a6e22e">Board</span>,
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pub</span> white_rooks: <span style="color:#a6e22e">Board</span>,
@@ -105,32 +305,173 @@
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
 </span></span><span style="display:flex;"><span>        <span style="color:#75715e">//TODO:
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#75715e">// - Enpassant flag
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#75715e">// Move Counters
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#75715e">// - Move Counters
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
-</span></span></code></pre></div><p>The game representation is just bitboards and other game states such as castling rights and a bool representing who&rsquo;s turn it is to move. It has 3 functions:</p>
-<ol>
-<li><code>new (constructor)</code> : Creates a new game, sets all the pieces in their default position</li>
-<li><code>all_pieces()</code> : Returns all the pieces by simply: <code>all_white_pieces() | all_black_pieces()</code>.</li>
-<li><code>get_piece_at(idx: u8)</code> : Given an index, this function returns an <code>Option&lt;Piece&gt;</code> depending if there is a given piece at the said <code>idx</code></li>
-</ol>
-<h3 id="the-pieces">The Pieces:</h3>
+</span></span></code></pre></div><p>The game state is simply the pieces + other stuff such as castling rights, En passant , side to move, etc. I am still yet to figure out how best to do En passant &amp; the Move Counters. So, I will set those off to the future for now. Apart from that, I&rsquo;ve also thrown in a few methods:</p>
+<p>
+
+
+<details  class="group w-full border-y border-white/20 overflow-hidden transition-all duration-200">
+  <summary class="cursor-pointer list-none px-4 py-3 bg-none flex justify-between items-center">
+    <span class="text-white h-full">
+      <span class="underline text-sm">Constructor</span>
+    </span>
+    <span class="transform transition-transform duration-200 group-open:rotate-180 text-white">
+      
+        <span class="font-mono text-violet-300 text-lg">ƒ</span>
+      
+    </span>
+  </summary>
+  <div class="px-4 py-3 text-sm text-white/80 bg-white/5">
+    <p>Creates a new game, sets all the pieces in their default position</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">new</span>() -&gt; <span style="color:#a6e22e">Self</span> {
+</span></span><span style="display:flex;"><span>    Game {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// White pieces on ranks 1 and 2
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        white_pawns: <span style="color:#a6e22e">Board</span>(<span style="color:#ae81ff">0x0000_0000_0000_FF00</span>),
+</span></span><span style="display:flex;"><span>        white_knights: <span style="color:#a6e22e">Board</span>(<span style="color:#ae81ff">0x0000_0000_0000_0042</span>),
+</span></span><span style="display:flex;"><span>        white_bishops: <span style="color:#a6e22e">Board</span>(<span style="color:#ae81ff">0x0000_0000_0000_0024</span>),
+</span></span><span style="display:flex;"><span>        white_rooks: <span style="color:#a6e22e">Board</span>(<span style="color:#ae81ff">0x0000_0000_0000_0081</span>),
+</span></span><span style="display:flex;"><span>        white_queens: <span style="color:#a6e22e">Board</span>(<span style="color:#ae81ff">0x0000_0000_0000_0008</span>),
+</span></span><span style="display:flex;"><span>        white_king: <span style="color:#a6e22e">Board</span>(<span style="color:#ae81ff">0x0000_0000_0000_0010</span>),
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Black pieces on ranks 7 and 8
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        black_pawns: <span style="color:#a6e22e">Board</span>(<span style="color:#ae81ff">0x00FF_0000_0000_0000</span>),
+</span></span><span style="display:flex;"><span>        black_knights: <span style="color:#a6e22e">Board</span>(<span style="color:#ae81ff">0x4200_0000_0000_0000</span>),
+</span></span><span style="display:flex;"><span>        black_bishops: <span style="color:#a6e22e">Board</span>(<span style="color:#ae81ff">0x2400_0000_0000_0000</span>),
+</span></span><span style="display:flex;"><span>        black_rooks: <span style="color:#a6e22e">Board</span>(<span style="color:#ae81ff">0x8100_0000_0000_0000</span>),
+</span></span><span style="display:flex;"><span>        black_queens: <span style="color:#a6e22e">Board</span>(<span style="color:#ae81ff">0x0800_0000_0000_0000</span>),
+</span></span><span style="display:flex;"><span>        black_king: <span style="color:#a6e22e">Board</span>(<span style="color:#ae81ff">0x1000_0000_0000_0000</span>),
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        castling_rights: <span style="color:#ae81ff">0</span>,
+</span></span><span style="display:flex;"><span>        side_to_move: <span style="color:#a6e22e">true</span>,
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div>
+  </div>
+</details>
+
+
+
+
+<details  class="group w-full border-y border-white/20 overflow-hidden transition-all duration-200">
+  <summary class="cursor-pointer list-none px-4 py-3 bg-none flex justify-between items-center">
+    <span class="text-white h-full">
+      <span class="underline text-sm">Get All Pieces</span>
+    </span>
+    <span class="transform transition-transform duration-200 group-open:rotate-180 text-white">
+      
+        <span class="font-mono text-violet-300 text-lg">ƒ</span>
+      
+    </span>
+  </summary>
+  <div class="px-4 py-3 text-sm text-white/80 bg-white/5">
+    <p>Simply uses an <code>OR</code> gate to get all pieces, particularly useful when printing the board</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span>    <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">all_pieces</span>(<span style="color:#f92672">&amp;</span>self) -&gt; <span style="color:#a6e22e">Board</span> {
+</span></span><span style="display:flex;"><span>        Board(
+</span></span><span style="display:flex;"><span>            self.white_pawns.<span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">|</span> self.white_knights.<span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">|</span> self.white_bishops.<span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">|</span> self.white_rooks.<span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">|</span> self.white_queens.<span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">|</span> self.white_king.<span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">|</span> self.black_pawns.<span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">|</span> self.black_knights.<span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">|</span> self.black_bishops.<span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">|</span> self.black_rooks.<span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">|</span> self.black_queens.<span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">|</span> self.black_king.<span style="color:#ae81ff">0</span>,
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>    }
+</span></span></code></pre></div>
+  </div>
+</details>
+
+
+
+
+<details  class="group w-full border-y border-white/20 overflow-hidden transition-all duration-200">
+  <summary class="cursor-pointer list-none px-4 py-3 bg-none flex justify-between items-center">
+    <span class="text-white h-full">
+      <span class="underline text-sm">Return A Piece At Certain Square</span>
+    </span>
+    <span class="transform transition-transform duration-200 group-open:rotate-180 text-white">
+      
+        <span class="font-mono text-violet-300 text-lg">ƒ</span>
+      
+    </span>
+  </summary>
+  <div class="px-4 py-3 text-sm text-white/80 bg-white/5">
+    <p>Takes in a <code>idx:u8</code> and returns and Optional <code>Piece</code>, The <code>Piece</code> is defined below.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span>    <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">get_piece_at</span>(<span style="color:#f92672">&amp;</span>self, idx: <span style="color:#66d9ef">u8</span>) -&gt; Option<span style="color:#f92672">&lt;</span>Piece<span style="color:#f92672">&gt;</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> idx <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">64</span> <span style="color:#f92672">||</span> (self.all_pieces().<span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> idx <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> None;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Helper closure to check if bit is set and create Piece
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">let</span> check <span style="color:#f92672">=</span> <span style="color:#f92672">|</span>board: <span style="color:#66d9ef">&amp;</span><span style="color:#a6e22e">Board</span>, piece_type: <span style="color:#a6e22e">PieceType</span>, color: <span style="color:#a6e22e">Color</span><span style="color:#f92672">|</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> board.has_bit(idx) {
+</span></span><span style="display:flex;"><span>                Some(Piece::new(piece_type, color))
+</span></span><span style="display:flex;"><span>            } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>                None
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        };
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Check white pieces
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#66d9ef">let</span> Some(p) <span style="color:#f92672">=</span> check(<span style="color:#f92672">&amp;</span>self.white_pawns, PieceType::Pawn, Color::White) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> Some(p);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#66d9ef">let</span> Some(p) <span style="color:#f92672">=</span> check(<span style="color:#f92672">&amp;</span>self.white_knights, PieceType::Knight, Color::White) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> Some(p);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#66d9ef">let</span> Some(p) <span style="color:#f92672">=</span> check(<span style="color:#f92672">&amp;</span>self.white_bishops, PieceType::Bishop, Color::White) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> Some(p);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#66d9ef">let</span> Some(p) <span style="color:#f92672">=</span> check(<span style="color:#f92672">&amp;</span>self.white_rooks, PieceType::Rook, Color::White) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> Some(p);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#66d9ef">let</span> Some(p) <span style="color:#f92672">=</span> check(<span style="color:#f92672">&amp;</span>self.white_queens, PieceType::Queen, Color::White) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> Some(p);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#66d9ef">let</span> Some(p) <span style="color:#f92672">=</span> check(<span style="color:#f92672">&amp;</span>self.white_king, PieceType::King, Color::White) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> Some(p);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Check black pieces
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#66d9ef">let</span> Some(p) <span style="color:#f92672">=</span> check(<span style="color:#f92672">&amp;</span>self.black_pawns, PieceType::Pawn, Color::Black) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> Some(p);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#66d9ef">let</span> Some(p) <span style="color:#f92672">=</span> check(<span style="color:#f92672">&amp;</span>self.black_knights, PieceType::Knight, Color::Black) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> Some(p);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#66d9ef">let</span> Some(p) <span style="color:#f92672">=</span> check(<span style="color:#f92672">&amp;</span>self.black_bishops, PieceType::Bishop, Color::Black) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> Some(p);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#66d9ef">let</span> Some(p) <span style="color:#f92672">=</span> check(<span style="color:#f92672">&amp;</span>self.black_rooks, PieceType::Rook, Color::Black) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> Some(p);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#66d9ef">let</span> Some(p) <span style="color:#f92672">=</span> check(<span style="color:#f92672">&amp;</span>self.black_queens, PieceType::Queen, Color::Black) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> Some(p);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#66d9ef">let</span> Some(p) <span style="color:#f92672">=</span> check(<span style="color:#f92672">&amp;</span>self.black_king, PieceType::King, Color::Black) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> Some(p);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        None
+</span></span><span style="display:flex;"><span>    }
+</span></span></code></pre></div>
+  </div>
+</details>
+</p>
+<hr>
+<h1 id="piece-representation">Piece Representation:</h1>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">#[repr(u8)]</span>
 </span></span><span style="display:flex;"><span><span style="color:#75715e">#[derive(Debug, Clone, Copy, PartialEq, Eq)]</span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">enum</span> <span style="color:#a6e22e">Color</span> {
 </span></span><span style="display:flex;"><span>    White <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>,
-</span></span><span style="display:flex;"><span>          Black <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>,
+</span></span><span style="display:flex;"><span>    Black <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>,
 </span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><blockquote>
-<p>[!INFO]
-<strong>The Only Confusing Part Might Be The <code>repr(u8)</code></strong>
-Basically, this just tells rust, &ldquo;Yo store this enum as a u8 (1 byte) in memory&rdquo; . By default, rust chooses how to store enums in memory based on safety/debug info. This forces it to just 1 byte &ndash; clean &amp; compact.</p></blockquote>
-<blockquote>
-<p>[!QUESTION]
-<strong>Why Use It?</strong></p>
-<ol>
-<li>Tight Packing</li>
-<li>And apparantly, this helps if I am generating bindings for FFI (Foreign Function Interface); which I plan to do later.</li>
-</ol></blockquote>
+</span></span></code></pre></div><p>The Only Confusing Part Might Be The <code>repr(u8)</code>. Basically turns out, this just tells rust, &ldquo;Yo store this enum as a u8 (1 byte) in memory&rdquo;. By default, rust chooses how to store enums in memory based on safety/debug info. This forces it to just 1 byte &ndash; clean &amp; compact.</p>
+<p>Furthermore, this apparantly helps if later I am generating bindings for FFI (Foreign Function Interface), which I&rsquo;m not too sure if I&rsquo;m gonna do, I kinda want to just port the <a href="https://github.com/dshawul/nnue-probe">disawul&rsquo;s nnue proble</a> into rust, but if that fails then I have to fall back to FFI.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">#[repr(u8)]</span>
 </span></span><span style="display:flex;"><span><span style="color:#75715e">#[derive(Debug, Clone, Copy, PartialEq, Eq)]</span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">enum</span> <span style="color:#a6e22e">PieceType</span> {
@@ -144,7 +485,8 @@ Basically, this just tells rust, &ldquo;Yo store this enum as a u8 (1 byte) in m
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#75715e">#[derive(Clone, Copy, PartialEq, Eq)]</span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">Piece</span>(<span style="color:#66d9ef">u8</span>);
-</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">impl</span> Piece {
+</span></span></code></pre></div><p>This is pretty self explanatory too.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">impl</span> Piece {
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">new</span>(piece_type: <span style="color:#a6e22e">PieceType</span>, color: <span style="color:#a6e22e">Color</span>) -&gt; <span style="color:#a6e22e">Self</span> {
 </span></span><span style="display:flex;"><span>        Self((piece_type <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">u8</span>) <span style="color:#f92672">|</span> ((color <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">u8</span>) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">3</span>))
 </span></span><span style="display:flex;"><span>    }
@@ -177,9 +519,11 @@ Basically, this just tells rust, &ldquo;Yo store this enum as a u8 (1 byte) in m
 </span></span><span style="display:flex;"><span>        self.color() <span style="color:#f92672">==</span> Color::Black
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>In this representation the <code>Piece</code> is a <code>u8</code>. So, something like <code>00000000</code>. The first 3 bits represent the piece type eg: <code>00000101 = King</code>. and the 4th bit represents the color. So, <code>00000101 = King</code> is a black king, and <code>00001101 = King</code> is a white king.</p>
+</span></span></code></pre></div><p>In this representation the <code>Piece</code> is a <code>u8</code>. So, something like <code>00000000</code>. The first 3 bits represent the piece type eg: <code>00000101 = King</code>. and the 4th bit represents the color. So, <code>00000101 = King</code> is a black king, and <code>00001101 = King</code> is a white king. The rest of the bits, are pretty useless.</p>
+<h5 id="alr-so-thats-pretty-much-everything">Alr, so that&rsquo;s pretty much everything</h5>
 
-  </main>
+    </main>
+    
 </div>
 <div class="w-full flex justify-center mt-12 border-t border-white/10 pt-6 text-sm text-white gap-2 flex-wrap">
     
@@ -189,16 +533,20 @@ Basically, this just tells rust, &ldquo;Yo store this enum as a u8 (1 byte) in m
     
 
     
+    <a href="/posts/chess_engine/magics/" rel="next" class="hover:underline px-3 py-2 bg-white text-black font-bold rounded-md text-xs sm:text-sm">
+        Magics →
+    </a>
+    
 </div>
 
         </div>
         <div class="w-full flex items-center bg-[#fa4b1e] h-[30vh] text-black px-10" >
-            <div class="lg:w-1/2 h-full geist flex flex-col justify-end"> <h2
+            <div class="lg:w-1/2 h-full geist flex flex-col justify-end"> <h5
                  class="hidden lg:block text-48-126 font-semibold cursor-pointer"
                  bind:this={name_footer}
                  >
                  Wizard.
-                </h2>
+                </h5>
             </div>
             <div class="w-full lg:w-1/2 h-full geist flex flex-row justify-center gap-4" >
                 <div class="flex flex-col h-full w-full justify-center items-center lg:items-end gap-4" >

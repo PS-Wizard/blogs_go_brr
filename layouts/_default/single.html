@@ -1,15 +1,37 @@
 {{ define "main" }}
-<div class="relative max-w-7xl mx-auto px-4 flex flex-col">
-    <nav class="text-sm text-neutral-400 mb-4">
-        <a href="/posts" class="hover:underline">Posts</a>
-        {{ with .Parent }}
-        / <a href="{{ .RelPermalink }}" class="hover:underline">{{ .Title }}</a>
+{{ $img := or .Params.image "/images/default_blogs.jpg" }}
+<div class="w-full flex justify-center items-center p-4 my-8 flex-col">
+    <div class="w-full max-w-7xl pb-4 flex flex-col md:flex-row justify-between items-center">
+        <nav class="text-sm text-neutral-400 mb-4">
+            <a href="/posts" class="hover:underline">Posts</a>
+            {{ with .Parent }}
+            / <a href="{{ .RelPermalink }}" class="hover:underline">{{ .Title }}</a>
+            {{ end }}
+            / <span class="text-white">{{ .Title }}</span>
+        </nav>
+        {{ with .Params.code_link}}
+        <a href="{{ . }}" class="hidden md:block text-sm hover:underline" target="_blank" rel="noopener">
+            View In Github &rarr;
+        </a>
         {{ end }}
-        / <span class="text-white">{{ .Title }}</span>
-    </nav>
-  <main class="prose prose-invert max-w-7xl flex-grow">
-    {{ .Content }}
-  </main>
+    </div>
+<img src="{{ $img }}" alt="Card image" class="max-w-7xl h-69 object-cover rounded-xl" />
+</div>
+<div class="relative max-w-7xl mx-auto px-4 flex flex-col">
+    {{ if .Content }}
+    <main class="prose prose-invert max-w-7xl flex-grow break-words">
+        {{ .Content }}
+    </main>
+    {{ else }}
+<div class="text-center py-20 space-y-10 select-none">
+    <div class="w-fit mx-auto text-white/69">
+        <h1 class="text-40-64">Pls Wait learning happening</h1>
+        <span class="text-14-24 text-center block md:text-right">... like real slow tho</span>
+    </div>
+
+    <img src="/images/default_no_content.gif" alt="No content" class="mx-auto max-w-xs !border-none" />
+</div>
+    {{ end }}
 </div>
 <div class="w-full flex justify-center mt-12 border-t border-white/10 pt-6 text-sm text-white gap-2 flex-wrap">
     {{ with .Prev }}

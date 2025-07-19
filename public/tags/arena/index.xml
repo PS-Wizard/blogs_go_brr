@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Arena on Swoyam&#39;s Dev Blogs</title>
+    <link>http://localhost:1313/tags/arena/</link>
+    <description>Recent content in Arena on Swoyam&#39;s Dev Blogs</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 18 Jul 2025 21:17:57 +0545</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/arena/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Initial setup &amp; Board Representation</title>
+      <link>http://localhost:1313/posts/chess_engine/initial_setup/</link>
+      <pubDate>Fri, 18 Jul 2025 21:17:57 +0545</pubDate>
+      <guid>http://localhost:1313/posts/chess_engine/initial_setup/</guid>
+      <description>&lt;h1 id=&#34;initial-setup&#34;&gt;Initial Setup&lt;/h1&gt;&#xA;&lt;p&gt;Allrighty, so each of the different sections of this engine is going to be in their own seperate crate.&#xA;&lt;div class=&#34;my-2 p-4 border border-red-500/30 bg-red-500/10 rounded-lg text-red-200&#34;&gt;&#xA;  &lt;div class=&#34;flex items-start gap-3 pb-4&#34;&gt;&#xA;    &lt;svg class=&#34;w-5 h-5 mt-1 text-red-400&#34; fill=&#34;none&#34; stroke=&#34;currentColor&#34; stroke-width=&#34;2&#34; viewBox=&#34;0 0 24 24&#34;&gt;&#xA;      &lt;path stroke-linecap=&#34;round&#34; stroke-linejoin=&#34;round&#34; d=&#34;M12 9v2m0 4h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z&#34;/&gt;&#xA;    &lt;/svg&gt;&#xA;    &lt;strong class=&#34;underline&#34;&gt;A Quick Disclaimer&lt;/strong&gt;&#xA;  &lt;/div&gt;&#xA;  &lt;p&gt;&lt;strong&gt;I don&amp;rsquo;t know rust.&lt;/strong&gt; So, some of the things I be doing might not be the best practice, or even remotely a good practice&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

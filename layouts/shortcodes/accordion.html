@@ -1,0 +1,25 @@
+{{ $type := .Get "type"}}
+{{ $open := .Get "open" }}
+
+<details {{ if $open }}open{{ end }} class="group w-full border-y border-white/20 overflow-hidden transition-all duration-200">
+  <summary class="cursor-pointer list-none px-4 py-3 bg-none flex justify-between items-center">
+    <span class="text-white h-full">
+      <span class="underline text-sm">{{ .Get "title" }}</span>
+    </span>
+    <span class="transform transition-transform duration-200 group-open:rotate-180 text-white">
+      {{ if eq $type "func" }}
+        <span class="font-mono text-violet-300 text-lg">ƒ</span>
+      {{ else if eq $type "info" }}
+        <!-- Info icon -->
+        <svg class="w-4 h-4 text-blue-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 1 1-10 10A10 10 0 0 1 12 2z"/>
+        </svg>
+      {{ else }}
+        <span>+</span>
+      {{ end }}
+    </span>
+  </summary>
+  <div class="px-4 py-3 text-sm text-white/80 bg-white/5">
+    {{ .Inner | markdownify }}
+  </div>
+</details>

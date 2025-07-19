@@ -1,6 +1,6 @@
 html,body {
     background-color:#000;
-    overflow:none;
+    overflow-x:hidden;
     cursor: url('/images/cursor.png') 0 0, auto !important;
 }
 :root {
@@ -12,6 +12,11 @@ html,body {
     --text-40-64: clamp(2.5rem, 2.0714rem + 1.7143vw, 4rem);
     --text-48-126: clamp(3rem, 1.6071rem + 5.5714vw, 7.875rem);
     --text-64-448: clamp(4rem, -2.8571rem + 27.4286vw, 28rem);
+    --text-40-120: clamp(2.5rem, 1.4286rem + 9.1429vw, 7.5rem);
+}
+
+.text-40-120 {
+    font-size: var(--text-40-120);
 }
 
 .text-10-16 {
@@ -99,7 +104,10 @@ pre {
 }
 img {
     width:100%;
+    border: 1px solid #252525;
+    border-radius: 5px;
 }
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+
 

@@ -8,13 +8,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
         
-        <meta name="description" content="The Why?; Why Am I Even Trying To Build A Chess Engine?">
+        <meta name="description" content="Rough sketch on the why and the how for building a chess engine">
         <meta name="author" content="Swoyam Pokharel" />
         <meta name="keywords" content="blog, dev, swoyam, hugo, minimal" />
 
         
         <meta property="og:title" content="Introduction">
-        <meta property="og:description" content="The Why?; Why Am I Even Trying To Build A Chess Engine?">
+        <meta property="og:description" content="Rough sketch on the why and the how for building a chess engine">
         <meta property="og:type" content="website">
         <meta property="og:url" content="http://localhost:1313/posts/chess_engine/introduction/">
         
@@ -23,7 +23,7 @@
         
         <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:title" content="Introduction">
-        <meta name="twitter:description" content="The Why?; Why Am I Even Trying To Build A Chess Engine?">
+        <meta name="twitter:description" content="Rough sketch on the why and the how for building a chess engine">
 
         
         <link rel="icon" href="/favicon.ico" type="image/x-icon" />
@@ -32,7 +32,7 @@
         <link rel="stylesheet" href="/css/output.css">
     </head>
     <body class="w-screen text-white">
-        <header class="flex justify-between items-center p-12">
+        <header class="flex justify-between items-center p-8">
             <a class="uppercase font-bold text-xl tracking-widest" href="/">(._.)</a>
             <nav class="flex gap-6 text-sm underline uppercase tracking-wide"
                  >
@@ -57,54 +57,94 @@
 
         <div class="min-h-screen main-content w-full pb-16 text-white ">
             
+
+<div class="w-full flex justify-center items-center p-4 my-8 flex-col">
+    <div class="w-full max-w-7xl pb-4 flex flex-col md:flex-row justify-between items-center">
+        <nav class="text-sm text-neutral-400 mb-4">
+            <a href="/posts" class="hover:underline">Posts</a>
+            
+            / <a href="/posts/chess_engine/" class="hover:underline">Chess Engine</a>
+            
+            / <span class="text-white">Introduction</span>
+        </nav>
+        
+    </div>
+<img src="/images/default_blogs.jpg" alt="Card image" class="max-w-7xl h-69 object-cover rounded-xl" />
+</div>
 <div class="relative max-w-7xl mx-auto px-4 flex flex-col">
-    <nav class="text-sm text-neutral-400 mb-4">
-        <a href="/posts" class="hover:underline">Posts</a>
-        
-        / <a href="/posts/chess_engine/" class="hover:underline">Chess Engine</a>
-        
-        / <span class="text-white">Introduction</span>
-    </nav>
-  <main class="prose prose-invert max-w-7xl flex-grow">
-    <h1 id="introduction">Introduction</h1>
-<p>Let&rsquo;s start things off with a why?. Out of everything why even start building a chess engine?. Well, for starters chess is cool, and for second the idea of me building something that could beat me is pretty cool.</p>
-<h2 id="learning-outcomes">Learning Outcomes:</h2>
-<p>Well, I wanna build a bot rated atlest 2000 elo, that supports:</p>
+    
+    <main class="prose prose-invert max-w-7xl flex-grow break-words">
+        <h1 id="introduction">Introduction</h1>
+<p>Welcome to a new series, of me figuring out how to build a chess engine. I&rsquo;m doing this because chess is something I grew up with and the idea of me building something that could consistently beat me is pretty cool. Kinda like the student becomes the master vibe.</p>
+<p>Furthermore, I need to do something for my Final Year Project too, so this serves that purpose as well. For our Final Year Project, they want us to build something that has meaning, like they don&rsquo;t want us to reinvent the wheel, they want us to have some sort of a selling point. Originally, I planned to make a chess engine from scratch and throw in a &ldquo;explainer&rdquo; layer, that basically explains why a certain position is better than the other, kinda like <a href="https://www.chess.com">chess.com&rsquo;s</a> game review, but instead of like cookie cutter templates, I wanted it to explain like a human would.</p>
+<p><strong>The only problem?</strong> It needs a dataset — one large enough to train a decent model that can explain, <em>in human terms</em>, why one position is better than another. But that &hellip; as far as I know, doesn’t exist. I suspect that’s because only about <strong>10% of the world’s population</strong> (roughly <strong>800 million</strong> people) even know how to play chess — and among them, only around <strong>2,000</strong> are Grandmasters, that&rsquo;s like <strong>0.0025%</strong> of the world&rsquo;s population.</p>
+<p>Grandmasters are the ones capable of actually explaining positions in human language. A dataset of annotated games <em>with explanations</em> from them? As far as I know, it just doesn’t exist. And honestly, even if it did — today’s top chess bots destroy any human. So if you trained a model purely on grandmaster commentary, it might only justify “human” moves, not the weird, depth-20 engine stuff that leads to a +0.1 eval shift. It wouldn’t help explain why the bot made <em>that</em> move.</p>
+<p>So yeah, that idea doesn’t feel too feasible. I’ll probably still toss in a basic game review feature — maybe pipe the PGN into ChatGPT or some other LLM via API — but I don&rsquo;t think its gonna be too good, the quality’s gonna be meh. LLMs kinda suck at playing chess right now. (Try it yourself — don’t be surprised if it invents pawns or eats its own pieces lol.)
+So, okay if that&rsquo;s the case then what&rsquo;s my unique thing?</p>
+<hr>
+<h1 id="the-goal">The Goal?</h1>
+<p>Welp, turns out no one from Nepal has ever made a chess engine. Or, I mean more correctly, no one seems to have made a chess engine from Nepal, published it so that it appears on google. So, my goal, create Nepal&rsquo;s first, and the strongest ( well I mean, if I am the first, then implicitly I am also the strongest, but we don&rsquo;t talk about that) chess engine.</p>
+<div class="my-2 p-4 border border-red-500/30 bg-red-500/10 rounded-lg text-red-200">
+  <div class="flex items-start gap-3 pb-4">
+    <svg class="w-5 h-5 mt-1 text-red-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/>
+    </svg>
+    <strong class="underline">So, your selling point is another chess engine?</strong>
+  </div>
+  <strong>yes. bite me lol</strong>. No one&rsquo;s made a chess engine from Nepal, or atleast, one that I can find so, ima look to change that.
+</div>
+
+<p>But with that being said, I&rsquo;m not gonna just slack off, because if we are being honest, If i just make a bot and publish it, It is going to be the first bot, and as such the defacto strongest, So even if I make a bot with an elo of 50, I technically would have made the strongest and the first bot from Nepal. Sure that works, but I don&rsquo;t quite like that. So let&rsquo;s setup some ground rules</p>
+<h3 id="the-chess-engine">The Chess Engine:</h3>
+<p>It&rsquo;s gotta:</p>
 <ul>
-<li>UCI</li>
-<li>NNUE</li>
-<li>FEN</li>
-<li>BitBoards</li>
-<li>Magic BitBoards</li>
-<li>Minimax
+<li>Atleast 2000 elo</li>
+<li>Support FEN, UCI, PGN all that good stuff</li>
+<li>Bitboards Based &amp; Magic Bitboard</li>
+<li>Made from scratch, no other libraries.</li>
+<li>And for eval, I know we go for NNUEs these days, and I also don&rsquo;t know of any rust crates to parse NNUEs, so I wana make that too.</li>
+<li>Gotta be hosted on like Lichess as a bot or somethin.</li>
+</ul>
+<p>And, on a side note I gotta figure out how the NNUEs work. Efficiently updatable neural network, but I don&rsquo;t seem to find anything relating to how they update over time. Because, like my implementation of this for now, is just a binary compiled from <a href="https://github.com/dshawul/nnue-probe">disawul&rsquo;s nnue proble</a> and I am just gonna be calling it with <code>./nnue &lt;fen&gt;</code> to get an eval. I mean it works but, I don&rsquo;t know if the <em>Efficiently Updatable</em> Neural Network is even <em>Efficiently Updating</em>.</p>
+<h3 id="this-blog">This Blog:</h3>
+<p>This blog aims to be well basically me figuring stuff out. I am new to rust and I am new to chess programming, so this is simply rambling and figuring this out and hopefully of being help to someone else taking on this journey down the line.
+Basically my version of the: <a href="https://rustic-chess.org/front_matter/title.html">Rustic Chess Engine&rsquo;s Blogs</a></p>
+<hr>
+<h1 id="the-plan">The Plan?</h1>
+<p>Have I Figured Everything Out Yet? Hell naw, but the rough idea is Individual Crates:</p>
 <ul>
-<li>Nega Max</li>
+<li><code>arena</code>: Board &amp; Piece Representations</li>
+<li><code>tactition</code>: Move Gen
+<ul>
+<li><code>magician</code>: Move Gen Magic Bitboards</li>
 </ul>
 </li>
-<li>MVV-LVA ordering</li>
-<li>&hellip; And anything else that I find down the line.</li>
+<li><code>translator</code>: Notations, so stuff like FEN, UCI, PGN yada yada</li>
+<li><code>warden</code>: Legalities, so stuff like checkmates, stalemates, 50 move rules etc.</li>
+<li><code>prophet</code>: Evaluation, So NNUE + MiniMax / NegaMax etc + Some Ordering + Some Pruning</li>
 </ul>
 
-  </main>
+    </main>
+    
 </div>
 <div class="w-full flex justify-center mt-12 border-t border-white/10 pt-6 text-sm text-white gap-2 flex-wrap">
     
 
     
     <a href="/posts/chess_engine/initial_setup/" rel="next" class="hover:underline px-3 py-2 bg-white text-black font-bold rounded-md text-xs sm:text-sm">
-        Initial setup →
+        Initial setup &amp; Board Representation →
     </a>
     
 </div>
 
         </div>
         <div class="w-full flex items-center bg-[#fa4b1e] h-[30vh] text-black px-10" >
-            <div class="lg:w-1/2 h-full geist flex flex-col justify-end"> <h2
+            <div class="lg:w-1/2 h-full geist flex flex-col justify-end"> <h5
                  class="hidden lg:block text-48-126 font-semibold cursor-pointer"
                  bind:this={name_footer}
                  >
                  Wizard.
-                </h2>
+                </h5>
             </div>
             <div class="w-full lg:w-1/2 h-full geist flex flex-row justify-center gap-4" >
                 <div class="flex flex-col h-full w-full justify-center items-center lg:items-end gap-4" >

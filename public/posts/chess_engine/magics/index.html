@@ -2,28 +2,28 @@
 <html lang="en">
     <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
         <meta charset="UTF-8" />
-        <title>some else</title>
+        <title>Magics</title>
 
         
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
         
-        <meta name="description" content="Figuring Out Board &#43; Piece Representation For A Bitboard Implementation">
+        <meta name="description" content="Exploring Magic Bitboards, how they function, what they solve, and generating moves for sliding pieces &#43; packaging it all into a handy crate for everyone.">
         <meta name="author" content="Swoyam Pokharel" />
         <meta name="keywords" content="blog, dev, swoyam, hugo, minimal" />
 
         
-        <meta property="og:title" content="some else">
-        <meta property="og:description" content="Figuring Out Board &#43; Piece Representation For A Bitboard Implementation">
+        <meta property="og:title" content="Magics">
+        <meta property="og:description" content="Exploring Magic Bitboards, how they function, what they solve, and generating moves for sliding pieces &#43; packaging it all into a handy crate for everyone.">
         <meta property="og:type" content="website">
-        <meta property="og:url" content="http://localhost:1313/posts/chess_engine/something_else/">
+        <meta property="og:url" content="http://localhost:1313/posts/chess_engine/magics/">
         
         <meta property="og:image" content="http://localhost:1313/images/preview.png">
 
         
         <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:title" content="some else">
-        <meta name="twitter:description" content="Figuring Out Board &#43; Piece Representation For A Bitboard Implementation">
+        <meta name="twitter:title" content="Magics">
+        <meta name="twitter:description" content="Exploring Magic Bitboards, how they function, what they solve, and generating moves for sliding pieces &#43; packaging it all into a handy crate for everyone.">
 
         
         <link rel="icon" href="/favicon.ico" type="image/x-icon" />
@@ -32,7 +32,7 @@
         <link rel="stylesheet" href="/css/output.css">
     </head>
     <body class="w-screen text-white">
-        <header class="flex justify-between items-center p-12">
+        <header class="flex justify-between items-center p-8">
             <a class="uppercase font-bold text-xl tracking-widest" href="/">(._.)</a>
             <nav class="flex gap-6 text-sm underline uppercase tracking-wide"
                  >
@@ -57,40 +57,54 @@
 
         <div class="min-h-screen main-content w-full pb-16 text-white ">
             
+
+<div class="w-full flex justify-center items-center p-4 my-8 flex-col">
+    <div class="w-full max-w-7xl pb-4 flex flex-col md:flex-row justify-between items-center">
+        <nav class="text-sm text-neutral-400 mb-4">
+            <a href="/posts" class="hover:underline">Posts</a>
+            
+            / <a href="/posts/chess_engine/" class="hover:underline">Chess Engine</a>
+            
+            / <span class="text-white">Magics</span>
+        </nav>
+        
+        <a href="https://github.com/PS-Wizard/EvalDeez/tree/main/crates/magician" class="hidden md:block text-sm hover:underline" target="_blank" rel="noopener">
+            View In Github &rarr;
+        </a>
+        
+    </div>
+<img src="/images/default_blogs.jpg" alt="Card image" class="max-w-7xl h-69 object-cover rounded-xl" />
+</div>
 <div class="relative max-w-7xl mx-auto px-4 flex flex-col">
-    <nav class="text-sm text-neutral-400 mb-4">
-        <a href="/posts" class="hover:underline">Posts</a>
-        
-        / <a href="/posts/chess_engine/" class="hover:underline">Chess Engine</a>
-        
-        / <span class="text-white">some else</span>
-    </nav>
-  <main class="prose prose-invert max-w-7xl flex-grow">
     
-  </main>
+<div class="text-center py-20 space-y-10 select-none">
+    <div class="w-fit mx-auto text-white/69">
+        <h1 class="text-40-64">Pls Wait learning happening</h1>
+        <span class="text-14-24 text-center block md:text-right">... like real slow tho</span>
+    </div>
+
+    <img src="/images/default_no_content.gif" alt="No content" class="mx-auto max-w-xs !border-none" />
+</div>
+    
 </div>
 <div class="w-full flex justify-center mt-12 border-t border-white/10 pt-6 text-sm text-white gap-2 flex-wrap">
     
-    <a href="/posts/chess_engine/introduction/" rel="prev" class="hover:underline px-3 py-2 bg-white text-black font-bold rounded-md text-xs sm:text-sm">
-        ← Introduction
+    <a href="/posts/chess_engine/initial_setup/" rel="prev" class="hover:underline px-3 py-2 bg-white text-black font-bold rounded-md text-xs sm:text-sm">
+        ← Initial setup &amp; Board Representation
     </a>
     
 
-    
-    <a href="/posts/chess_engine/initial_setup/" rel="next" class="hover:underline px-3 py-2 bg-white text-black font-bold rounded-md text-xs sm:text-sm">
-        Initial setup →
-    </a>
     
 </div>
 
         </div>
         <div class="w-full flex items-center bg-[#fa4b1e] h-[30vh] text-black px-10" >
-            <div class="lg:w-1/2 h-full geist flex flex-col justify-end"> <h2
+            <div class="lg:w-1/2 h-full geist flex flex-col justify-end"> <h5
                  class="hidden lg:block text-48-126 font-semibold cursor-pointer"
                  bind:this={name_footer}
                  >
                  Wizard.
-                </h2>
+                </h5>
             </div>
             <div class="w-full lg:w-1/2 h-full geist flex flex-row justify-center gap-4" >
                 <div class="flex flex-col h-full w-full justify-center items-center lg:items-end gap-4" >
