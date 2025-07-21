@@ -2,6 +2,11 @@ baseURL = 'https://blogs.pswoyam.com.np/'
 languageCode = 'en-us'
 title = "Swoyam's Dev Blogs"
 
+[sitemap]
+  changefreq = "monthly"
+  priority = 0.5
+  filename = "sitemap.xml"
+
 [markup]
   [markup.highlight]
     noClasses = true

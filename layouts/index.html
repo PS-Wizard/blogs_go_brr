@@ -1,11 +1,27 @@
 {{ define "main" }}
 <div class="title w-full h-[70vh] flex flex-col gap-4 justify-center items-center">
     <div class="w-full flex justify-center items-center">
-        <h1 class="text-48-126 text-center graffity"> Dev Blogs </h1>
+        <h1 class="text-60-120 text-center graffity"> Dev Blogs </h1>
     </div>
     <div class="flex gap-4">
-    <a class="bg-white text-black gesit uppercase px-4 py-2 rounded-lg cursor-pointer" href="/posts/"> View Blogs &rarr;</a>
-    <button class="border-2 border-gray-500 text-white gesit uppercase px-4 py-2 rounded-lg cursor-pointer"> Surprise Me </button>
+    <a class="bg-white text-black gesit uppercase px-4 py-2 rounded-lg cursor-pointer text-sm" href="/posts/"> View Blogs &rarr;</a>
+    <button class="surprise-btn border-2 border-gray-500 text-white gesit uppercase px-4 text-sm rounded-lg cursor-pointer">
+        Surprise Me
+    </button>
     </div>
 </div>
+<script>
+    const pages = [
+        {{- range where site.RegularPages "File.BaseFileName" "ne" "_index" -}}
+        "{{ .RelPermalink }}",
+        {{- end -}}
+    ];
+
+    document.querySelector('.surprise-btn').addEventListener('click', () => {
+        if (pages.length === 0) return;
+        const rand = Math.floor(Math.random() * pages.length);
+        window.location.href = pages[rand];
+    });
+</script>
 {{ end }}
+

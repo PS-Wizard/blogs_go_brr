@@ -9,11 +9,11 @@
     <lastBuildDate>Sat, 19 Jul 2025 11:06:12 +0545</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/chess/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Magics</title>
+      <title>Move Generation: Magic Bitboards</title>
       <link>http://localhost:1313/posts/chess_engine/magics/</link>
       <pubDate>Sat, 19 Jul 2025 11:06:12 +0545</pubDate>
       <guid>http://localhost:1313/posts/chess_engine/magics/</guid>
-      <description></description>
+      <description>&lt;h1 id=&#34;magic-bitboards&#34;&gt;Magic Bitboards:&lt;/h1&gt;&#xA;&lt;p&gt;Magic Bitboards, a defacto standard of modern bitboard engines, as used for instance in &lt;a href=&#34;https://www.chessprogramming.org/Stockfish&#34;&gt;Stockfish&lt;/a&gt; &lt;a href=&#34;https://www.chessprogramming.org/Crafty&#34;&gt;Crafty&lt;/a&gt; &lt;a href=&#34;https://www.chessprogramming.org/Arasan&#34;&gt;Arasan&lt;/a&gt; etc. It is a technique to generate moves for &lt;strong&gt;sliding pieces&lt;/strong&gt;, and it is one of, if not the fastest way to do so. In this blog, I will attempt to explain the concept of Magic Bitboards, how they work, why even bother with one. Although, I am new to this myself, perhaps that&amp;rsquo;s a good thing, that way I can explain it in a way, that will perhaps &amp;ldquo;click&amp;rdquo; to someone starting out. Truth be told, I still am not sure if the way I understand magic bitboards is correct, but it makes sense to me, and made sense enough to spin up a correct implementation, so Ima just roll with it. Allrighty, with that said, lets get started:&lt;/p&gt;</description>
     </item>
     <item>
       <title>Initial setup &amp; Board Representation</title>

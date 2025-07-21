@@ -6,14 +6,6 @@
     <description>Recent content in Magician on Swoyam&#39;s Dev Blogs</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 19 Jul 2025 11:06:12 +0545</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/magician/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Magics</title>
-      <link>http://localhost:1313/posts/chess_engine/magics/</link>
-      <pubDate>Sat, 19 Jul 2025 11:06:12 +0545</pubDate>
-      <guid>http://localhost:1313/posts/chess_engine/magics/</guid>
-      <description></description>
-    </item>
   </channel>
 </rss>

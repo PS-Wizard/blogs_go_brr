@@ -2,7 +2,7 @@
 <html lang="en">
     <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
         <meta charset="UTF-8" />
-        <title>Magics</title>
+        <title>Move Generation: Magic Bitboards</title>
 
         
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -13,7 +13,7 @@
         <meta name="keywords" content="blog, dev, swoyam, hugo, minimal" />
 
         
-        <meta property="og:title" content="Magics">
+        <meta property="og:title" content="Move Generation: Magic Bitboards">
         <meta property="og:description" content="Exploring Magic Bitboards, how they function, what they solve, and generating moves for sliding pieces &#43; packaging it all into a handy crate for everyone.">
         <meta property="og:type" content="website">
         <meta property="og:url" content="http://localhost:1313/posts/chess_engine/magics/">
@@ -22,7 +22,7 @@
 
         
         <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:title" content="Magics">
+        <meta name="twitter:title" content="Move Generation: Magic Bitboards">
         <meta name="twitter:description" content="Exploring Magic Bitboards, how they function, what they solve, and generating moves for sliding pieces &#43; packaging it all into a handy crate for everyone.">
 
         
@@ -65,7 +65,7 @@
             
             / <a href="/posts/chess_engine/" class="hover:underline">Chess Engine</a>
             
-            / <span class="text-white">Magics</span>
+            / <span class="text-white">Move Generation: Magic Bitboards</span>
         </nav>
         
         <a href="https://github.com/PS-Wizard/EvalDeez/tree/main/crates/magician" class="hidden md:block text-sm hover:underline" target="_blank" rel="noopener">
@@ -77,14 +77,98 @@
 </div>
 <div class="relative max-w-7xl mx-auto px-4 flex flex-col">
     
-<div class="text-center py-20 space-y-10 select-none">
-    <div class="w-fit mx-auto text-white/69">
-        <h1 class="text-40-64">Pls Wait learning happening</h1>
-        <span class="text-14-24 text-center block md:text-right">... like real slow tho</span>
-    </div>
-
-    <img src="/images/default_no_content.gif" alt="No content" class="mx-auto max-w-xs !border-none" />
+    <main class="prose prose-invert max-w-7xl flex-grow break-words">
+        <h1 id="magic-bitboards">Magic Bitboards:</h1>
+<p>Magic Bitboards, a defacto standard of modern bitboard engines, as used for instance in <a href="https://www.chessprogramming.org/Stockfish">Stockfish</a> <a href="https://www.chessprogramming.org/Crafty">Crafty</a> <a href="https://www.chessprogramming.org/Arasan">Arasan</a> etc. It is a technique to generate moves for <strong>sliding pieces</strong>, and it is one of, if not the fastest way to do so. In this blog, I will attempt to explain the concept of Magic Bitboards, how they work, why even bother with one. Although, I am new to this myself, perhaps that&rsquo;s a good thing, that way I can explain it in a way, that will perhaps &ldquo;click&rdquo; to someone starting out. Truth be told, I still am not sure if the way I understand magic bitboards is correct, but it makes sense to me, and made sense enough to spin up a correct implementation, so Ima just roll with it. Allrighty, with that said, lets get started:</p>
+<hr>
+<h2 id="the-normal-approach">The Normal Approach</h2>
+<p>To understand Magic Bitboards, let&rsquo;s first understand how we generate moves normally.</p>
+<p>So, our first intuition when tasked with generating moves for any sliding piece, is to use a loop. Basically, from any given square, we move in predefined directions, until there is a piece blocking our path. So for rooks, that would be <code>[8,-8,1,-1]</code>, for bishops, that would be <code>[9, 7, -9, -7]</code>. Those numbers might not make sense instantly, so let&rsquo;s look at it in a chess board:
+<img src="/images/chess_engine/chess_board.png" alt="Chess Board">
+In this board view, white pieces are shown with uppercase letters and black with lowercase—though that detail isn&rsquo;t important here. What&rsquo;s key is that we&rsquo;re looking at the board from white&rsquo;s perspective, and each square along the a-file (leftmost column) is labeled with its corresponding bit index in a 64-bit bitboard, starting from the bottom-left (a1 = 0) to the top-left (a8 = 56). With that out of the way, let&rsquo;s look at the bishop&rsquo;s offsets: [9,7,-9,-7].
+<img src="/images/chess_engine/bishop_offests.png" alt="Bishop Offsets"></p>
+<p>So, say a bishop is at <code>e4</code> (which is the <code>28th</code> index in bitboard terms), and we&rsquo;re only focusing on its diagonal moves.
+A bishop moves in four diagonal directions, and from e4, the possible immediate steps are:</p>
+<ul>
+<li><code>d5</code> (index <code>35</code>) — offset <code>+7</code> (35 - 28 = 7)</li>
+<li><code>f5</code> (index <code>37</code>) — offset <code>+9</code> (37 - 28 = 9)</li>
+<li><code>d3</code> (index <code>19</code>) — offset <code>-9</code> (19 - 28 = -9)</li>
+<li><code>f3</code> (index <code>21</code>) — offset <code>-7</code> (21 - 28 = -7)</li>
+<li>and all other reachable squares, like <code>c6</code>, are just further steps in those same directions — for example, <code>c6</code> is offset <code>+7 * 2</code>. In other words, every square the bishop can move to lies along a <strong>multiple of one of those base offsets</strong> (<code>+7</code>, <code>+9</code>, <code>-7</code>, <code>-9</code>).</li>
+</ul>
+<p>These offsets are consistent no matter where the bishop is, as long as you avoid wrapping off the board. In the diagram, we’ve marked those offsets <code>[7, 9, -7, -9]</code> directly on the adjacent diagonal squares from <code>e4</code>. All other reachable squares further along the diagonals are marked with <code>X</code>, showing the bishop&rsquo;s full potential path from that square.</p>
+<p>So, basically all we do is loop in each direction with said offsets until we are blocked; and that&rsquo;s how move generation works for bishop, and pretty much every other sliding pieces.</p>
+<div class="my-2 p-4 border border-green-500/30 bg-green-500/10 rounded-lg text-green-200">
+  <div class="flex items-start gap-3">
+    <svg class="w-5 h-5 mt-1 text-green-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 1 1-10 10A10 10 0 0 1 12 2z"/>
+    </svg>
+    <strong class="underline">Note About Queens</strong>
+  </div>
+  This is a good time to mention that we don’t explicitly generate moves for queens. Since a queen&rsquo;s movement is just a combination of a bishop’s and a rook’s, we simply generate moves as if a bishop and a rook were on the queen’s square, then combine the two results.
 </div>
+
+<hr>
+<h2 id="the-problem">The Problem?</h2>
+<p>Okay, this makes sense right? just loop in each direction based on a predefined offset, until you meet a piece that blocks you. This works, so why even bother with anything else?.</p>
+<p>While it&rsquo;s fine for a human or a one-off move, it quickly becomes a <strong>performance bottleneck</strong> when the computer starts evaluating positions deeper in the <strong>search tree</strong>. Engines need to generate <strong>millions of moves a second</strong>, and this step-by-step offset approach starts to slow things down fast.</p>
+<p>So, how do we speed things up?</p>
+<blockquote>
+<p>When in doubt, use a hash map. If you&rsquo;re still in doubt, use two.
+– <em>Probably not Dustin Poirier (I’m watching his final match rn)</em></p></blockquote>
+<p>Like every good dev, let’s throw a hashmap at the problem. I mean, <code>O(1)</code> lookup time, right? Sounds like a win.</p>
+<p>So what if we made the <strong>key</strong> the entire board state, like <code>all_white_pieces() | all_black_pieces()</code> in bitboard terms, and the <strong>value</strong> the possible attacks from a piece? Easy. Cool idea &hellip; until you realize you’d need to generate <strong>every possible board combination</strong>. That’s like&hellip; a big hashmap, and I mean a BIIIG hashmap.</p>
+<p>If you use the entire board as the key:</p>
+<ul>
+<li>64 squares, each can either be <code>0</code> (empty) or <code>1</code> (occupied)</li>
+<li>that&rsquo;s <code>2^64 = 1.8446744e+19</code> possible keys &ndash; aka your hashmap is now way bigger than <del>DEEEEZ NUTTS</del> any storage.</li>
+</ul>
+<h3 id="yikes-so-that-doesnt-work">Yikes, so that doesnt work</h3>
+<p>But wait — if we think about it, we <strong>don’t care</strong> about the entire board now do we?. Because all that really affects a sliding piece&rsquo;s moves is the blockers <em>along piece&rsquo;s possible paths</em>. We only care &lsquo;bout:</p>
+<ul>
+<li>What <strong>blocks</strong> the sliding piece in the direction it wants to move?</li>
+</ul>
+<p>That&rsquo;s a much smaller, manageable input space. That brings us down from <code>2^64 = 1.8446744e+19</code> possible keys to a max of <code>2^13 = 8192</code> possible keys for a bishop, or <code>2^14</code> for a rook <strong>per square</strong> .</p>
+
+
+
+<details  class="group w-full border-y border-white/20 overflow-hidden transition-all duration-200">
+  <summary class="cursor-pointer list-none px-4 py-3 bg-none flex justify-between items-center">
+    <span class="text-white h-full">
+      <span class="underline text-sm">If you are confused about where the `2^13` and `2^14` came from</span>
+    </span>
+    <span class="transform transition-transform duration-200 group-open:rotate-180 text-white">
+      
+        <span>+</span>
+      
+    </span>
+  </summary>
+  <div class="px-4 py-3 text-sm text-white/80 bg-white/5">
+    <p>Each sliding piece moves along certain directions called <strong>rays</strong> — for a bishop, these are the diagonals; for a rook, the ranks and files.</p>
+<ul>
+<li>For a bishop on a central square, there are up to <strong>13 squares</strong> along its diagonal rays that could potentially block its movement.</li>
+<li>For a rook, it’s up to <strong>14 squares</strong> along the rank and file rays.</li>
+</ul>
+<p>Since each of these squares can either be <strong>empty (0)</strong> or <strong>occupied (1)</strong>, the number of possible blocker configurations along those rays is:</p>
+<ul>
+<li>Bishop: <code>2^13 = 8192</code> possible blocker patterns</li>
+<li>Rook: <code>2^14 = 16384</code> possible blocker patterns</li>
+</ul>
+<p>By only considering these blockers <strong>along the relevant rays</strong> for the sliding piece, instead of the entire board, we massively reduce the number of keys we need to handle. This is the key insight behind magic bitboards.</p>
+
+  </div>
+</details>
+
+<h3 id="alright-that-makes-sense--lets-give-it-a-shot">Alright, that makes sense — let’s give it a shot:</h3>
+<p>Here’s what we need:</p>
+<ul>
+<li>A function to <strong>generate the keys</strong></li>
+<li>A function to <strong>generate values</strong> for those keys</li>
+</ul>
+<p>In this case, “generating values for the keys” means a function that, given a <strong>blocker configuration</strong> (the pieces blocking a sliding piece’s path), produces all the valid moves for that setup.</p>
+<h1 id="-damn-youre-here-early-pls-wait-while-i-finish-this-p">&hellip; Damn you&rsquo;re here early, pls wait while I finish this :P</h1>
+
+    </main>
     
 </div>
 <div class="w-full flex justify-center mt-12 border-t border-white/10 pt-6 text-sm text-white gap-2 flex-wrap">
@@ -149,7 +233,7 @@
                                 rel="noopener"
                                 class="bg-black text-white w-fit text-16-32 px-4 py-2 rounded-lg hover:opacity-80 transition"
                                 >
-                                p.swoyam.1@gmail.com
+                                me@pswoyam.com.np
                         </a>
                     </div>
                 </div>

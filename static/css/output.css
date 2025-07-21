@@ -13,6 +13,7 @@ html,body {
   --text-24-36: clamp(1.5rem, 1.2857rem + 0.8571vw, 2.25rem);
   --text-40-64: clamp(2.5rem, 2.0714rem + 1.7143vw, 4rem);
   --text-48-126: clamp(3rem, 1.6071rem + 5.5714vw, 7.875rem);
+  --text-60-120: clamp(3.75rem, 2.5rem + 5vw, 7.5rem);
   --text-64-448: clamp(4rem, -2.8571rem + 27.4286vw, 28rem);
   --text-40-120: clamp(2.5rem, 1.4286rem + 9.1429vw, 7.5rem);
 }
@@ -39,6 +40,9 @@ html,body {
 }
 .text-48-126 {
   font-size: var(--text-48-126);
+}
+.text-60-120 {
+  font-size: var(--text-60-120);
 }
 .text-64-448 {
   font-size: var(--text-64-448);
