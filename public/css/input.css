@@ -4,6 +4,12 @@ html,body {
     cursor: url('/images/cursor.png') 0 0, auto !important;
     scroll-behavior: smooth;
 }
+
+::selection {
+    background-color: #FBE689; /* tomato red or any color you want */
+    color: black;              /* text color on selection */
+}
+
 :root {
     --text-10-16: clamp(0.625rem, 0.5179rem + 0.4286vw, 1rem);
     --text-14-24: clamp(0.875rem, 0.6964rem + 0.7143vw, 1.5rem);
