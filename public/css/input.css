@@ -2,6 +2,7 @@ html,body {
     background-color:#000;
     overflow-x:hidden;
     cursor: url('/images/cursor.png') 0 0, auto !important;
+    scroll-behavior: smooth;
 }
 :root {
     --text-10-16: clamp(0.625rem, 0.5179rem + 0.4286vw, 1rem);
@@ -115,5 +116,4 @@ img {
 }
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
-
 

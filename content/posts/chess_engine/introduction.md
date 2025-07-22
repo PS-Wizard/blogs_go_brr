@@ -7,6 +7,7 @@ tags = ["rust", "chess","introduction"]
 +++
 
 # Introduction
+
 Welcome to a new series, of me figuring out how to build a chess engine. I'm doing this because chess is something I grew up with and the idea of me building something that could consistently beat me is pretty cool. Kinda like the student becomes the master vibe. 
 
 Furthermore, I need to do something for my Final Year Project too, so this serves that purpose as well. For our Final Year Project, they want us to build something that has meaning, like they don't want us to reinvent the wheel, they want us to have some sort of a selling point. Originally, I planned to make a chess engine from scratch and throw in a "explainer" layer, that basically explains why a certain position is better than the other, kinda like [chess.com's](https://www.chess.com) game review, but instead of like cookie cutter templates, I wanted it to explain like a human would. 
@@ -20,7 +21,7 @@ So, okay if that's the case then what's my unique thing?
 
 ---
 
-# The Goal?
+## The Goal?
 Welp, turns out no one from Nepal has ever made a chess engine. Or, I mean more correctly, no one seems to have made a chess engine from Nepal, published it so that it appears on google. So, my goal, create Nepal's first, and the strongest ( well I mean, if I am the first, then implicitly I am also the strongest, but we don't talk about that) chess engine. 
 
 {{<danger title="So, your selling point is another chess engine?">}}
@@ -46,7 +47,7 @@ Basically my version of the: [Rustic Chess Engine's Blogs](https://rustic-chess.
 
 ---
 
-# The Plan?
+## The Plan?
 Have I Figured Everything Out Yet? Hell naw, but the rough idea is Individual Crates:
 - `arena`: Board & Piece Representations
 - `tactition`: Move Gen 

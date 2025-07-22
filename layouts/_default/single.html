@@ -1,5 +1,20 @@
 {{ define "main" }}
 {{ $img := or .Params.image "/images/default_blogs.jpg" }}
+{{ if .TableOfContents }}
+<div class="fixed bottom-6 right-6 z-50">
+  <details class="group relative">
+    <summary class="bg-white text-black px-5 py-3 rounded-full shadow-lg cursor-pointer text-sm font-semibold transition hover:bg-neutral-100">
+      Table of Contents
+    </summary>
+    <div class="absolute bottom-14 right-0 w-[90vw] md:w-[28rem] max-h-[32rem] overflow-y-auto bg-neutral-900 text-white border border-[#252525] rounded-xl shadow-2xl p-6 mt-3 prose prose-invert text-sm leading-relaxed ">
+      <h2 class="font-bold mb-4">Jump to section</h2>
+      <nav class="[&_ul]:pl-4 [&_ul]:list-disc [&_li]:ml-1 [&_a]:no-underline [&_a:hover]:underline">
+          {{ .TableOfContents }}
+      </nav>
+    </div>
+  </details>
+</div>
+{{ end }}
 <div class="w-full flex justify-center items-center p-4 my-8 flex-col">
     <div class="w-full max-w-7xl pb-4 flex flex-col md:flex-row justify-between items-center">
         <nav class="text-sm text-neutral-400 mb-4">

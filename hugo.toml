@@ -8,5 +8,8 @@ title = "Swoyam's Dev Blogs"
   filename = "sitemap.xml"
 
 [markup]
-  [markup.highlight]
-    noClasses = true
+    [markup.highlight]
+        noClasses = true
+    [markup.tableOfContents]
+        startLevel = 1
+        endLevel = 4

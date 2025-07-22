@@ -58,6 +58,35 @@
         <div class="min-h-screen main-content w-full pb-16 text-white ">
             
 
+
+<div class="fixed bottom-6 right-6 z-50">
+  <details class="group relative">
+    <summary class="bg-white text-black px-5 py-3 rounded-full shadow-lg cursor-pointer text-sm font-semibold transition hover:bg-neutral-100">
+      Table of Contents
+    </summary>
+    <div class="absolute bottom-14 right-0 w-[90vw] md:w-[28rem] max-h-[32rem] overflow-y-auto bg-neutral-900 text-white border border-[#252525] rounded-xl shadow-2xl p-6 mt-3 prose prose-invert text-sm leading-relaxed ">
+      <h2 class="font-bold mb-4">Jump to section</h2>
+      <nav class="[&_ul]:pl-4 [&_ul]:list-disc [&_li]:ml-1 [&_a]:no-underline [&_a:hover]:underline">
+          <nav id="TableOfContents">
+  <ul>
+    <li><a href="#introduction">Introduction</a>
+      <ul>
+        <li><a href="#the-goal">The Goal?</a>
+          <ul>
+            <li><a href="#the-chess-engine">The Chess Engine:</a></li>
+            <li><a href="#this-blog">This Blog:</a></li>
+          </ul>
+        </li>
+        <li><a href="#the-plan">The Plan?</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+      </nav>
+    </div>
+  </details>
+</div>
+
 <div class="w-full flex justify-center items-center p-4 my-8 flex-col">
     <div class="w-full max-w-7xl pb-4 flex flex-col md:flex-row justify-between items-center">
         <nav class="text-sm text-neutral-400 mb-4">
@@ -82,7 +111,7 @@
 <p>So yeah, that idea doesn’t feel too feasible. I’ll probably still toss in a basic game review feature — maybe pipe the PGN into ChatGPT or some other LLM via API — but I don&rsquo;t think its gonna be too good, the quality’s gonna be meh. LLMs kinda suck at playing chess right now. (Try it yourself — don’t be surprised if it invents pawns or eats its own pieces lol.)
 So, okay if that&rsquo;s the case then what&rsquo;s my unique thing?</p>
 <hr>
-<h1 id="the-goal">The Goal?</h1>
+<h2 id="the-goal">The Goal?</h2>
 <p>Welp, turns out no one from Nepal has ever made a chess engine. Or, I mean more correctly, no one seems to have made a chess engine from Nepal, published it so that it appears on google. So, my goal, create Nepal&rsquo;s first, and the strongest ( well I mean, if I am the first, then implicitly I am also the strongest, but we don&rsquo;t talk about that) chess engine.</p>
 <div class="my-2 p-4 border border-red-500/30 bg-red-500/10 rounded-lg text-red-200">
   <div class="flex items-start gap-3 pb-4">
@@ -110,7 +139,7 @@ So, okay if that&rsquo;s the case then what&rsquo;s my unique thing?</p>
 <p>This blog aims to be well basically me figuring stuff out. I am new to rust and I am new to chess programming, so this is simply rambling and figuring this out and hopefully of being help to someone else taking on this journey down the line.
 Basically my version of the: <a href="https://rustic-chess.org/front_matter/title.html">Rustic Chess Engine&rsquo;s Blogs</a></p>
 <hr>
-<h1 id="the-plan">The Plan?</h1>
+<h2 id="the-plan">The Plan?</h2>
 <p>Have I Figured Everything Out Yet? Hell naw, but the rough idea is Individual Crates:</p>
 <ul>
 <li><code>arena</code>: Board &amp; Piece Representations</li>

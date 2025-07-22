@@ -112,6 +112,7 @@ Instead of having a single `u64` represent everything, we split it into a bunch 
 - `black_king`: `u64(0x1000_0000_0000_0000)`,
 
 #### So ... Why not one single board?
+
 Because splitting just makes sense:
 {{< accordion title="Clean Logic" open="y">}} A bitboard is a 64-bit integer where each bit represents a square on a chess board. {{< /accordion >}}
 {{< accordion title="Piece Detection" >}}
@@ -119,7 +120,7 @@ Wanna know what piece is sitting on a square? Easy. You just do:
 ```rust
 if (white_pawns | white_knights | white_rooks | ...) & (1 << e4_index) != 0
 ```
-##### **Bro what even is this?**
+##### Bro what even is this?
 Basically, since each of our bitboards is a `u64`, meaning every square on the board maps to a bit — `a1` is bit 0, `b1` is bit 1, ..., `h8` is bit 63.
 
 If you wanna check if a piece exists on, say, `e4`, you create a mask like `1 << e4_index`, and then `AND` it with a bitboard. If the result isn’t zero, that piece exists on that square. 
@@ -308,6 +309,7 @@ Takes in a `idx:u8` and returns and Optional `Piece`, The `Piece` is defined bel
 
 # Piece Representation:
 
+## Piece Colors:
 ```rust
 #[repr(u8)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -320,6 +322,7 @@ The Only Confusing Part Might Be The `repr(u8)`. Basically turns out, this just 
 
 Furthermore, this apparantly helps if later I am generating bindings for FFI (Foreign Function Interface), which I'm not too sure if I'm gonna do, I kinda want to just port the [disawul's nnue proble](https://github.com/dshawul/nnue-probe) into rust, but if that fails then I have to fall back to FFI.
 
+## Piece Types:
 ```rust
 #[repr(u8)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -337,6 +340,7 @@ pub struct Piece(u8);
 ```
 This is pretty self explanatory too.
 
+## Implementation Of The `Piece`:
 ```rust
 impl Piece {
     pub fn new(piece_type: PieceType, color: Color) -> Self {
@@ -375,4 +379,4 @@ impl Piece {
 
 In this representation the `Piece` is a `u8`. So, something like `00000000`. The first 3 bits represent the piece type eg: `00000101 = King`. and the 4th bit represents the color. So, `00000101 = King` is a black king, and `00001101 = King` is a white king. The rest of the bits, are pretty useless.
 
-##### Alr, so that's pretty much everything
+Alr, so that's pretty much everything
