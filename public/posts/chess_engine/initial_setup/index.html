@@ -72,15 +72,11 @@
     <li><a href="#initial-setup">Initial Setup</a></li>
     <li><a href="#board-representation">Board Representation:</a>
       <ul>
-        <li>
+        <li><a href="#bitboards--bitsets--bitmaps-">Bitboards / Bitsets / Bitmaps :</a>
           <ul>
-            <li><a href="#bitboards--bitsets--bitmaps-">Bitboards / Bitsets / Bitmaps :</a>
-              <ul>
-                <li><a href="#how-does-a-integer-even-represent-a-board"><strong>How does a integer even represent a board?</strong></a></li>
-                <li><a href="#how-do-u-place-pieces-in-an-integer"><strong>How do u place pieces in an integer?</strong>:</a></li>
-                <li><a href="#so--why-not-one-single-board">So &hellip; Why not one single board?</a></li>
-              </ul>
-            </li>
+            <li><a href="#how-does-a-integer-even-represent-a-board"><strong>How does a integer even represent a board?</strong></a></li>
+            <li><a href="#how-do-u-place-pieces-in-an-integer"><strong>How do u place pieces in an integer?</strong>:</a></li>
+            <li><a href="#so--why-not-one-single-board">So &hellip; Why not one single board?</a></li>
             <li><a href="#the-code">The Code:</a>
               <ul>
                 <li><a href="#is-it-enough">Is it enough?</a></li>
@@ -89,13 +85,13 @@
             <li><a href="#the-game-state">The Game State:</a></li>
           </ul>
         </li>
-      </ul>
-    </li>
-    <li><a href="#piece-representation">Piece Representation:</a>
-      <ul>
-        <li><a href="#piece-colors">Piece Colors:</a></li>
-        <li><a href="#piece-types">Piece Types:</a></li>
-        <li><a href="#implementation-of-the-piece">Implementation Of The <code>Piece</code>:</a></li>
+        <li><a href="#piece-representation">Piece Representation:</a>
+          <ul>
+            <li><a href="#piece-colors">Piece Colors:</a></li>
+            <li><a href="#piece-types">Piece Types:</a></li>
+            <li><a href="#implementation-of-the-piece">Implementation Of The <code>Piece</code>:</a></li>
+          </ul>
+        </li>
       </ul>
     </li>
   </ul>
@@ -168,12 +164,12 @@
     └── debug
 </code></pre><hr>
 <h1 id="board-representation">Board Representation:</h1>
-<h3 id="bitboards--bitsets--bitmaps-">Bitboards / Bitsets / Bitmaps :</h3>
+<h2 id="bitboards--bitsets--bitmaps-">Bitboards / Bitsets / Bitmaps :</h2>
 <p>So, our first intuition when we are tasked to represent an <code>8x8</code> board is probably an array. That&rsquo;s Valid But turns out there is a better way to represent the boards, <strong>Bitboards</strong>.
 Bitboards are basically a <code>u64</code>, an unsigned 64 bit long integer that we use to represent board state. Makes sense &hellip; or does it?</p>
-<h4 id="how-does-a-integer-even-represent-a-board"><strong>How does a integer even represent a board?</strong></h4>
+<h3 id="how-does-a-integer-even-represent-a-board"><strong>How does a integer even represent a board?</strong></h3>
 <p>A chess board is <code>8x8</code>, 8 rows &amp; 8 columns, that is a total of 64 squares. A <code>u64</code> has 64 bits, and thus it is possible to represent the board with a <code>u64</code>. Okay, but wait,</p>
-<h4 id="how-do-u-place-pieces-in-an-integer"><strong>How do u place pieces in an integer?</strong>:</h4>
+<h3 id="how-do-u-place-pieces-in-an-integer"><strong>How do u place pieces in an integer?</strong>:</h3>
 <p>A <code>u64</code> is basically <code>0000000000000000...repeated 64 times</code> right? So if we were to draw it out as a board, we would get the following:</p>
 <pre tabindex="0"><code>8  0 0 0 0 0 0 0 0
 7  0 0 0 0 0 0 0 0
@@ -221,7 +217,7 @@ Instead of having a single <code>u64</code> represent everything, we split it in
 <li><code>black_queens</code>: <code>u64(0x0800_0000_0000_0000)</code>,</li>
 <li><code>black_king</code>: <code>u64(0x1000_0000_0000_0000)</code>,</li>
 </ul>
-<h4 id="so--why-not-one-single-board">So &hellip; Why not one single board?</h4>
+<h3 id="so--why-not-one-single-board">So &hellip; Why not one single board?</h3>
 <p>Because splitting just makes sense:
 
 
@@ -510,8 +506,8 @@ Instead of having a single <code>u64</code> represent everything, we split it in
 </details>
 </p>
 <hr>
-<h1 id="piece-representation">Piece Representation:</h1>
-<h2 id="piece-colors">Piece Colors:</h2>
+<h2 id="piece-representation">Piece Representation:</h2>
+<h3 id="piece-colors">Piece Colors:</h3>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">#[repr(u8)]</span>
 </span></span><span style="display:flex;"><span><span style="color:#75715e">#[derive(Debug, Clone, Copy, PartialEq, Eq)]</span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">enum</span> <span style="color:#a6e22e">Color</span> {
@@ -520,7 +516,7 @@ Instead of having a single <code>u64</code> represent everything, we split it in
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>The Only Confusing Part Might Be The <code>repr(u8)</code>. Basically turns out, this just tells rust, &ldquo;Yo store this enum as a u8 (1 byte) in memory&rdquo;. By default, rust chooses how to store enums in memory based on safety/debug info. This forces it to just 1 byte &ndash; clean &amp; compact.</p>
 <p>Furthermore, this apparantly helps if later I am generating bindings for FFI (Foreign Function Interface), which I&rsquo;m not too sure if I&rsquo;m gonna do, I kinda want to just port the <a href="https://github.com/dshawul/nnue-probe">disawul&rsquo;s nnue proble</a> into rust, but if that fails then I have to fall back to FFI.</p>
-<h2 id="piece-types">Piece Types:</h2>
+<h3 id="piece-types">Piece Types:</h3>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">#[repr(u8)]</span>
 </span></span><span style="display:flex;"><span><span style="color:#75715e">#[derive(Debug, Clone, Copy, PartialEq, Eq)]</span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">enum</span> <span style="color:#a6e22e">PieceType</span> {
@@ -535,7 +531,7 @@ Instead of having a single <code>u64</code> represent everything, we split it in
 </span></span><span style="display:flex;"><span><span style="color:#75715e">#[derive(Clone, Copy, PartialEq, Eq)]</span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">Piece</span>(<span style="color:#66d9ef">u8</span>);
 </span></span></code></pre></div><p>This is pretty self explanatory too.</p>
-<h2 id="implementation-of-the-piece">Implementation Of The <code>Piece</code>:</h2>
+<h3 id="implementation-of-the-piece">Implementation Of The <code>Piece</code>:</h3>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">impl</span> Piece {
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">new</span>(piece_type: <span style="color:#a6e22e">PieceType</span>, color: <span style="color:#a6e22e">Color</span>) -&gt; <span style="color:#a6e22e">Self</span> {
 </span></span><span style="display:flex;"><span>        Self((piece_type <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">u8</span>) <span style="color:#f92672">|</span> ((color <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">u8</span>) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">3</span>))
@@ -590,7 +586,7 @@ Instead of having a single <code>u64</code> represent everything, we split it in
 </div>
 
         </div>
-        <div class="w-full flex items-center bg-[#fa4b1e] h-[30vh] text-black px-10" >
+        <div class="w-full flex items-center bg-[#A3D5FF] h-[30vh] text-black px-10" >
             <div class="lg:w-1/2 h-full geist flex flex-col justify-end"> <h5
                  class="hidden lg:block text-48-126 font-semibold cursor-pointer"
                  bind:this={name_footer}

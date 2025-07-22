@@ -49,14 +49,14 @@ members = [ "crates/arena", "crates/magician", "crates/prophet","crates/tactitio
 
 # Board Representation:
 
-### Bitboards / Bitsets / Bitmaps :
+## Bitboards / Bitsets / Bitmaps :
 So, our first intuition when we are tasked to represent an `8x8` board is probably an array. That's Valid But turns out there is a better way to represent the boards, **Bitboards**. 
 Bitboards are basically a `u64`, an unsigned 64 bit long integer that we use to represent board state. Makes sense ... or does it?
 
-####  **How does a integer even represent a board?**
+###  **How does a integer even represent a board?**
 A chess board is `8x8`, 8 rows & 8 columns, that is a total of 64 squares. A `u64` has 64 bits, and thus it is possible to represent the board with a `u64`. Okay, but wait,
 
-#### **How do u place pieces in an integer?**: 
+### **How do u place pieces in an integer?**: 
 A `u64` is basically `0000000000000000...repeated 64 times` right? So if we were to draw it out as a board, we would get the following:
 ```
 8  0 0 0 0 0 0 0 0
@@ -111,7 +111,7 @@ Instead of having a single `u64` represent everything, we split it into a bunch 
 - `black_queens`: `u64(0x0800_0000_0000_0000)`,
 - `black_king`: `u64(0x1000_0000_0000_0000)`,
 
-#### So ... Why not one single board?
+### So ... Why not one single board?
 
 Because splitting just makes sense:
 {{< accordion title="Clean Logic" open="y">}} A bitboard is a 64-bit integer where each bit represents a square on a chess board. {{< /accordion >}}
@@ -307,9 +307,9 @@ Takes in a `idx:u8` and returns and Optional `Piece`, The `Piece` is defined bel
 
 ---
 
-# Piece Representation:
+## Piece Representation:
 
-## Piece Colors:
+### Piece Colors:
 ```rust
 #[repr(u8)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -322,7 +322,7 @@ The Only Confusing Part Might Be The `repr(u8)`. Basically turns out, this just 
 
 Furthermore, this apparantly helps if later I am generating bindings for FFI (Foreign Function Interface), which I'm not too sure if I'm gonna do, I kinda want to just port the [disawul's nnue proble](https://github.com/dshawul/nnue-probe) into rust, but if that fails then I have to fall back to FFI.
 
-## Piece Types:
+### Piece Types:
 ```rust
 #[repr(u8)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -340,7 +340,8 @@ pub struct Piece(u8);
 ```
 This is pretty self explanatory too.
 
-## Implementation Of The `Piece`:
+### Implementation Of The `Piece`:
+
 ```rust
 impl Piece {
     pub fn new(piece_type: PieceType, color: Color) -> Self {
