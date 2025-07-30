@@ -125,18 +125,26 @@
                                 >
                                 Portfolio
                         </a>
-                        <a
-                                href="mailto:p.swoyam.1@gmail.com"
-                                target="_blank"
-                                rel="noopener"
-                                class="bg-black text-white w-fit text-16-32 px-4 py-2 rounded-lg hover:opacity-80 transition"
-                                >
-                                me@pswoyam.com.np
-                        </a>
+                            <a
+                                    href="mailto:p.swoyam.1@gmail.com"
+                                    target="_blank"
+                                    rel="noopener"
+                                    class="bg-black text-white w-fit text-16-32 px-4 py-2 rounded-lg hover:opacity-80 transition"
+                                    >
+                                    me@pswoyam.com.np
+                            </a>
                     </div>
                 </div>
             </div>
         </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                document.querySelectorAll('a[href]').forEach(a => {
+                    a.setAttribute('target', '_blank');
+                    a.setAttribute('rel', 'noopener noreferrer');
+                });
+            });
+        </script>
     </body>
 </html>
 

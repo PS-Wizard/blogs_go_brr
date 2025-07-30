@@ -69,18 +69,21 @@
       <nav class="[&_ul]:pl-4 [&_ul]:list-disc [&_li]:ml-1 [&_a]:no-underline [&_a:hover]:underline">
           <nav id="TableOfContents">
   <ul>
-    <li><a href="#magic-bitboards">Magic Bitboards:</a>
+    <li><a href="#magic-bitboards">Magic Bitboards</a>
       <ul>
-        <li><a href="#the-normal-approach">The Normal Approach</a></li>
-        <li><a href="#the-problem">The Problem?</a>
+        <li><a href="#the-basic-approach">The Basic Approach</a></li>
+        <li><a href="#the-bottleneck">The Bottleneck</a></li>
+        <li><a href="#the-key-insight">The Key Insight</a></li>
+        <li><a href="#building-the-magic">Building the Magic</a>
           <ul>
-            <li><a href="#yikes-so-that-doesnt-work">Yikes, so that doesnt work</a></li>
-            <li><a href="#alright-that-makes-sense--lets-give-it-a-shot">Alright, that makes sense — let’s give it a shot:</a></li>
+            <li><a href="#generating-blocker-configurations">Generating Blocker Configurations</a></li>
+            <li><a href="#generating-the-mask">Generating the Mask</a></li>
+            <li><a href="#generating-attack-maps">Generating Attack Maps</a></li>
           </ul>
         </li>
+        <li><a href="#the-actual-magic">The Actual Magic</a></li>
       </ul>
     </li>
-    <li><a href="#-damn-youre-here-early-pls-wait-while-i-finish-this-p">&hellip; Damn you&rsquo;re here early, pls wait while I finish this :P</a></li>
   </ul>
 </nav>
       </nav>
@@ -98,7 +101,7 @@
             / <span class="text-white">Move Generation: Magic Bitboards</span>
         </nav>
         
-        <a href="https://github.com/PS-Wizard/EvalDeez/tree/main/crates/magician" class="hidden md:block text-sm hover:underline" target="_blank" rel="noopener">
+        <a href="#ZgotmplZ" class="hidden md:block text-sm hover:underline" target="_blank" rel="noopener">
             View In Github &rarr;
         </a>
         
@@ -108,26 +111,24 @@
 <div class="relative max-w-7xl mx-auto px-4 flex flex-col">
     
     <main class="prose prose-invert max-w-7xl flex-grow break-words">
-        <h1 id="magic-bitboards">Magic Bitboards:</h1>
-<p>Magic Bitboards, a defacto standard of modern bitboard engines, as used for instance in <a href="https://www.chessprogramming.org/Stockfish">Stockfish</a> <a href="https://www.chessprogramming.org/Crafty">Crafty</a> <a href="https://www.chessprogramming.org/Arasan">Arasan</a> etc. It is a technique to generate moves for <strong>sliding pieces</strong>, and it is one of, if not the fastest way to do so. In this blog, I will attempt to explain the concept of Magic Bitboards, how they work, why even bother with one. Although, I am new to this myself, perhaps that&rsquo;s a good thing, that way I can explain it in a way, that will perhaps &ldquo;click&rdquo; to someone starting out. Truth be told, I still am not sure if the way I understand magic bitboards is correct, but it makes sense to me, and made sense enough to spin up a correct implementation, so Ima just roll with it. Allrighty, with that said, lets get started:</p>
+        <h1 id="magic-bitboards">Magic Bitboards</h1>
+<p>Magic Bitboards are a go-to technique in modern bitboard engines for generating moves for sliding pieces. They’re used in top-tier engines like <a href="https://www.chessprogramming.org/Stockfish">Stockfish</a>, <a href="https://www.chessprogramming.org/Crafty">Crafty</a>, and <a href="https://www.chessprogramming.org/Arasan">Arasan</a>, and are widely regarded as one of the fastest ways to generate legal moves.</p>
+<p>This post aims to break down the concept of Magic Bitboards—what they are, how they work, and why they&rsquo;re worth the effort. I’m still getting my feet wet with this stuff myself, so I’ll explain it in a way that hopefully clicks for anyone just diving in.</p>
 <hr>
-<h2 id="the-normal-approach">The Normal Approach</h2>
-<p>To understand Magic Bitboards, let&rsquo;s first understand how we generate moves normally.</p>
-<p>So, our first intuition when tasked with generating moves for any sliding piece, is to use a loop. Basically, from any given square, we move in predefined directions, until there is a piece blocking our path. So for rooks, that would be <code>[8,-8,1,-1]</code>, for bishops, that would be <code>[9, 7, -9, -7]</code>. Those numbers might not make sense instantly, so let&rsquo;s look at it in a chess board:
-<img src="/images/chess_engine/chess_board.png" alt="Chess Board">
-In this board view, white pieces are shown with uppercase letters and black with lowercase—though that detail isn&rsquo;t important here. What&rsquo;s key is that we&rsquo;re looking at the board from white&rsquo;s perspective, and each square along the a-file (leftmost column) is labeled with its corresponding bit index in a 64-bit bitboard, starting from the bottom-left (a1 = 0) to the top-left (a8 = 56). With that out of the way, let&rsquo;s look at the bishop&rsquo;s offsets: [9,7,-9,-7].
-<img src="/images/chess_engine/bishop_offests.png" alt="Bishop Offsets"></p>
-<p>So, say a bishop is at <code>e4</code> (which is the <code>28th</code> index in bitboard terms), and we&rsquo;re only focusing on its diagonal moves.
-A bishop moves in four diagonal directions, and from e4, the possible immediate steps are:</p>
+<h2 id="the-basic-approach">The Basic Approach</h2>
+<p>Let’s begin with how move generation typically works for sliding pieces.</p>
+<p>For sliding pieces like rooks and bishops, the first instinct is to generate moves using a loop in the piece’s movement directions until a blocking piece is encountered. For rooks, these directions are <code>[8, -8, 1, -1]</code>. For bishops, <code>[9, 7, -9, -7]</code>. These numbers correspond to bitboard offsets.</p>
+<p><img src="/images/chess_engine/chess_board.png" alt="Chess Board"></p>
+<p>Here&rsquo;s how a bishop on <code>e4</code> (index <code>28</code>) would move:</p>
 <ul>
-<li><code>d5</code> (index <code>35</code>) — offset <code>+7</code> (35 - 28 = 7)</li>
-<li><code>f5</code> (index <code>37</code>) — offset <code>+9</code> (37 - 28 = 9)</li>
-<li><code>d3</code> (index <code>19</code>) — offset <code>-9</code> (19 - 28 = -9)</li>
-<li><code>f3</code> (index <code>21</code>) — offset <code>-7</code> (21 - 28 = -7)</li>
-<li>and all other reachable squares, like <code>c6</code>, are just further steps in those same directions — for example, <code>c6</code> is offset <code>+7 * 2</code>. In other words, every square the bishop can move to lies along a <strong>multiple of one of those base offsets</strong> (<code>+7</code>, <code>+9</code>, <code>-7</code>, <code>-9</code>).</li>
+<li><code>d5</code> (index 35): offset <code>+7</code></li>
+<li><code>f5</code> (index 37): offset <code>+9</code></li>
+<li><code>d3</code> (index 19): offset <code>-9</code></li>
+<li><code>f3</code> (index 21): offset <code>-7</code></li>
 </ul>
-<p>These offsets are consistent no matter where the bishop is, as long as you avoid wrapping off the board. In the diagram, we’ve marked those offsets <code>[7, 9, -7, -9]</code> directly on the adjacent diagonal squares from <code>e4</code>. All other reachable squares further along the diagonals are marked with <code>X</code>, showing the bishop&rsquo;s full potential path from that square.</p>
-<p>So, basically all we do is loop in each direction with said offsets until we are blocked; and that&rsquo;s how move generation works for bishop, and pretty much every other sliding pieces.</p>
+<p>Any additional reachable squares like <code>c6</code> are just further steps in those directions. This pattern holds no matter the starting square—until a piece blocks the path.</p>
+<p><img src="/images/chess_engine/bishop_offests.png" alt="Bishop Offsets"></p>
+<p>So, in a simple loop, we step along each of the 4 diagonal directions for a bishop (or 4 orthogonal ones for a rook) and stop when blocked. That’s your basic sliding move generation.</p>
 <div class="my-2 p-4 border border-green-500/30 bg-green-500/10 rounded-lg text-green-200">
   <div class="flex items-start gap-3">
     <svg class="w-5 h-5 mt-1 text-green-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -135,37 +136,33 @@ A bishop moves in four diagonal directions, and from e4, the possible immediate 
     </svg>
     <strong class="underline">Note About Queens</strong>
   </div>
-  This is a good time to mention that we don’t explicitly generate moves for queens. Since a queen&rsquo;s movement is just a combination of a bishop’s and a rook’s, we simply generate moves as if a bishop and a rook were on the queen’s square, then combine the two results.
+  We don&rsquo;t generate queen moves separately. A queen&rsquo;s movement is just the union of a bishop’s and a rook’s moves.
 </div>
 
 <hr>
-<h2 id="the-problem">The Problem?</h2>
-<p>Okay, this makes sense right? just loop in each direction based on a predefined offset, until you meet a piece that blocks you. This works, so why even bother with anything else?.</p>
-<p>While it&rsquo;s fine for a human or a one-off move, it quickly becomes a <strong>performance bottleneck</strong> when the computer starts evaluating positions deeper in the <strong>search tree</strong>. Engines need to generate <strong>millions of moves a second</strong>, and this step-by-step offset approach starts to slow things down fast.</p>
-<p>So, how do we speed things up?</p>
+<h2 id="the-bottleneck">The Bottleneck</h2>
+<p>While looping works fine for a human player or a simple one-off calculation, it becomes inefficient when generating millions of moves per second during deep search trees. That’s where this approach falls short. It simply isn’t fast enough.</p>
+<p>So how do we make it fast?</p>
 <blockquote>
-<p>When in doubt, use a hash map. If you&rsquo;re still in doubt, use two.
-– <em>Probably not Dustin Poirier (I’m watching his final match rn)</em></p></blockquote>
-<p>Like every good dev, let’s throw a hashmap at the problem. I mean, <code>O(1)</code> lookup time, right? Sounds like a win.</p>
-<p>So what if we made the <strong>key</strong> the entire board state, like <code>all_white_pieces() | all_black_pieces()</code> in bitboard terms, and the <strong>value</strong> the possible attacks from a piece? Easy. Cool idea &hellip; until you realize you’d need to generate <strong>every possible board combination</strong>. That’s like&hellip; a big hashmap, and I mean a BIIIG hashmap.</p>
-<p>If you use the entire board as the key:</p>
+<p>When in doubt, use a hash map. If you&rsquo;re still in doubt, use two.</p></blockquote>
+<p>Let’s say we try using a hash map. We make the key the bitboard representing all occupied squares, and the value the attack bitboard. Conceptually great. But practically?</p>
+<p>64 bits means <code>2^64</code> possible combinations.</p>
+<p>That’s about <code>1.8e+19</code> entries. Not feasible at all.</p>
+<hr>
+<h2 id="the-key-insight">The Key Insight</h2>
+<p>We don’t need to consider the whole board. A sliding piece is only influenced by the blockers <em>along its movement rays</em>—not the entire board state.</p>
+<p>This reduces the number of relevant bits to 13 or 14 per square:</p>
 <ul>
-<li>64 squares, each can either be <code>0</code> (empty) or <code>1</code> (occupied)</li>
-<li>that&rsquo;s <code>2^64 = 1.8446744e+19</code> possible keys &ndash; aka your hashmap is now way bigger than <del>DEEEEZ NUTTS</del> any storage.</li>
+<li>Bishop: 13 potential blocker squares -&gt; <code>2^13 = 8192</code> possibilities</li>
+<li>Rook: 14 -&gt; <code>2^14 = 16384</code></li>
 </ul>
-<h3 id="yikes-so-that-doesnt-work">Yikes, so that doesnt work</h3>
-<p>But wait — if we think about it, we <strong>don’t care</strong> about the entire board now do we?. Because all that really affects a sliding piece&rsquo;s moves is the blockers <em>along piece&rsquo;s possible paths</em>. We only care &lsquo;bout:</p>
-<ul>
-<li>What <strong>blocks</strong> the sliding piece in the direction it wants to move?</li>
-</ul>
-<p>That&rsquo;s a much smaller, manageable input space. That brings us down from <code>2^64 = 1.8446744e+19</code> possible keys to a max of <code>2^13 = 8192</code> possible keys for a bishop, or <code>2^14</code> for a rook <strong>per square</strong> .</p>
 
 
 
 <details  class="group w-full border-y border-white/20 overflow-hidden transition-all duration-200">
   <summary class="cursor-pointer list-none px-4 py-3 bg-none flex justify-between items-center">
     <span class="text-white h-full">
-      <span class="underline text-sm">If you are confused about where the `2^13` and `2^14` came from</span>
+      <span class="underline text-sm">Why 13 and 14 blocker squares?</span>
     </span>
     <span class="transform transition-transform duration-200 group-open:rotate-180 text-white">
       
@@ -174,29 +171,178 @@ A bishop moves in four diagonal directions, and from e4, the possible immediate 
     </span>
   </summary>
   <div class="px-4 py-3 text-sm text-white/80 bg-white/5">
-    <p>Each sliding piece moves along certain directions called <strong>rays</strong> — for a bishop, these are the diagonals; for a rook, the ranks and files.</p>
-<ul>
-<li>For a bishop on a central square, there are up to <strong>13 squares</strong> along its diagonal rays that could potentially block its movement.</li>
-<li>For a rook, it’s up to <strong>14 squares</strong> along the rank and file rays.</li>
-</ul>
-<p>Since each of these squares can either be <strong>empty (0)</strong> or <strong>occupied (1)</strong>, the number of possible blocker configurations along those rays is:</p>
-<ul>
-<li>Bishop: <code>2^13 = 8192</code> possible blocker patterns</li>
-<li>Rook: <code>2^14 = 16384</code> possible blocker patterns</li>
-</ul>
-<p>By only considering these blockers <strong>along the relevant rays</strong> for the sliding piece, instead of the entire board, we massively reduce the number of keys we need to handle. This is the key insight behind magic bitboards.</p>
-
+    Each square a piece can move to lies along a ray. For central squares, bishops have 13 such squares along diagonals, rooks have 14 along ranks and files. Each square can either be empty or blocked, so we get <code>2^n</code> blocker configurations.
   </div>
 </details>
 
-<h3 id="alright-that-makes-sense--lets-give-it-a-shot">Alright, that makes sense — let’s give it a shot:</h3>
-<p>Here’s what we need:</p>
+<p>That’s way more manageable.</p>
+<hr>
+<h2 id="building-the-magic">Building the Magic</h2>
+<p>To use Magic Bitboards, we need:</p>
 <ul>
-<li>A function to <strong>generate the keys</strong></li>
-<li>A function to <strong>generate values</strong> for those keys</li>
+<li>A function to enumerate all blocker configurations</li>
+<li>A function to generate attack maps for each configuration</li>
 </ul>
-<p>In this case, “generating values for the keys” means a function that, given a <strong>blocker configuration</strong> (the pieces blocking a sliding piece’s path), produces all the valid moves for that setup.</p>
-<h1 id="-damn-youre-here-early-pls-wait-while-i-finish-this-p">&hellip; Damn you&rsquo;re here early, pls wait while I finish this :P</h1>
+<h3 id="generating-blocker-configurations">Generating Blocker Configurations</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">enumerate_blocker_configs</span>(mask: <span style="color:#66d9ef">u64</span>) -&gt; Vec<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">u64</span><span style="color:#f92672">&gt;</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> relevant_bits <span style="color:#f92672">=</span> Vec::new();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i <span style="color:#66d9ef">in</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">..</span><span style="color:#ae81ff">64</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (mask <span style="color:#f92672">&gt;&gt;</span> i) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span> {
+</span></span><span style="display:flex;"><span>            relevant_bits.push(i);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> num_bits <span style="color:#f92672">=</span> relevant_bits.len();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> num_configs <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> num_bits;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> configs <span style="color:#f92672">=</span> Vec::with_capacity(num_configs);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i <span style="color:#66d9ef">in</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">..</span>num_configs {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> blocker <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span><span style="color:#66d9ef">u64</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> j <span style="color:#66d9ef">in</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">..</span>num_bits {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (i <span style="color:#f92672">&gt;&gt;</span> j) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span> {
+</span></span><span style="display:flex;"><span>                blocker <span style="color:#f92672">|=</span> <span style="color:#ae81ff">1</span><span style="color:#66d9ef">u64</span> <span style="color:#f92672">&lt;&lt;</span> relevant_bits[j];
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        configs.push(blocker);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    configs
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>This function takes a mask (of relevant squares) and spits out every possible blocker configuration using binary counting.</p>
+<h3 id="generating-the-mask">Generating the Mask</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">rook_occupancy_mask</span>(square: <span style="color:#66d9ef">u8</span>) -&gt; <span style="color:#66d9ef">u64</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> rank <span style="color:#f92672">=</span> square <span style="color:#f92672">/</span> <span style="color:#ae81ff">8</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> file <span style="color:#f92672">=</span> square <span style="color:#f92672">%</span> <span style="color:#ae81ff">8</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> mask <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span><span style="color:#66d9ef">u64</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> r <span style="color:#66d9ef">in</span> (rank <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>)<span style="color:#f92672">..</span><span style="color:#ae81ff">7</span> {
+</span></span><span style="display:flex;"><span>        mask <span style="color:#f92672">|=</span> <span style="color:#ae81ff">1</span><span style="color:#66d9ef">u64</span> <span style="color:#f92672">&lt;&lt;</span> (r <span style="color:#f92672">*</span> <span style="color:#ae81ff">8</span> <span style="color:#f92672">+</span> file);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> r <span style="color:#66d9ef">in</span> (<span style="color:#ae81ff">1</span><span style="color:#f92672">..</span>rank).rev() {
+</span></span><span style="display:flex;"><span>        mask <span style="color:#f92672">|=</span> <span style="color:#ae81ff">1</span><span style="color:#66d9ef">u64</span> <span style="color:#f92672">&lt;&lt;</span> (r <span style="color:#f92672">*</span> <span style="color:#ae81ff">8</span> <span style="color:#f92672">+</span> file);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> f <span style="color:#66d9ef">in</span> (file <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>)<span style="color:#f92672">..</span><span style="color:#ae81ff">7</span> {
+</span></span><span style="display:flex;"><span>        mask <span style="color:#f92672">|=</span> <span style="color:#ae81ff">1</span><span style="color:#66d9ef">u64</span> <span style="color:#f92672">&lt;&lt;</span> (rank <span style="color:#f92672">*</span> <span style="color:#ae81ff">8</span> <span style="color:#f92672">+</span> f);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> f <span style="color:#66d9ef">in</span> (<span style="color:#ae81ff">1</span><span style="color:#f92672">..</span>file).rev() {
+</span></span><span style="display:flex;"><span>        mask <span style="color:#f92672">|=</span> <span style="color:#ae81ff">1</span><span style="color:#66d9ef">u64</span> <span style="color:#f92672">&lt;&lt;</span> (rank <span style="color:#f92672">*</span> <span style="color:#ae81ff">8</span> <span style="color:#f92672">+</span> f);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    mask
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">bishop_occupancy_mask</span>(square: <span style="color:#66d9ef">u8</span>) -&gt; <span style="color:#66d9ef">u64</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> rank <span style="color:#f92672">=</span> square <span style="color:#f92672">/</span> <span style="color:#ae81ff">8</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> file <span style="color:#f92672">=</span> square <span style="color:#f92672">%</span> <span style="color:#ae81ff">8</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> mask <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span><span style="color:#66d9ef">u64</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (dr, df) <span style="color:#66d9ef">in</span> [(<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>), (<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>), (<span style="color:#ae81ff">1</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>), (<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>)] {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> r <span style="color:#f92672">=</span> rank <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">i8</span> <span style="color:#f92672">+</span> dr;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> f <span style="color:#f92672">=</span> file <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">i8</span> <span style="color:#f92672">+</span> df;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span> (<span style="color:#ae81ff">1</span><span style="color:#f92672">..</span><span style="color:#ae81ff">7</span>).contains(<span style="color:#f92672">&amp;</span>r) <span style="color:#f92672">&amp;&amp;</span> (<span style="color:#ae81ff">1</span><span style="color:#f92672">..</span><span style="color:#ae81ff">7</span>).contains(<span style="color:#f92672">&amp;</span>f) {
+</span></span><span style="display:flex;"><span>            mask <span style="color:#f92672">|=</span> <span style="color:#ae81ff">1</span><span style="color:#66d9ef">u64</span> <span style="color:#f92672">&lt;&lt;</span> (r <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">u8</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">8</span> <span style="color:#f92672">+</span> f <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">u8</span>);
+</span></span><span style="display:flex;"><span>            r <span style="color:#f92672">+=</span> dr;
+</span></span><span style="display:flex;"><span>            f <span style="color:#f92672">+=</span> df;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    mask
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><hr>
+<h3 id="generating-attack-maps">Generating Attack Maps</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">rook_attacks_from</span>(square: <span style="color:#66d9ef">u8</span>, blockers: <span style="color:#66d9ef">u64</span>) -&gt; <span style="color:#66d9ef">u64</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> rank <span style="color:#f92672">=</span> square <span style="color:#f92672">/</span> <span style="color:#ae81ff">8</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> file <span style="color:#f92672">=</span> square <span style="color:#f92672">%</span> <span style="color:#ae81ff">8</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> attacks <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span><span style="color:#66d9ef">u64</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> r <span style="color:#66d9ef">in</span> (rank <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>)<span style="color:#f92672">..</span><span style="color:#ae81ff">8</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">let</span> sq <span style="color:#f92672">=</span> r <span style="color:#f92672">*</span> <span style="color:#ae81ff">8</span> <span style="color:#f92672">+</span> file;
+</span></span><span style="display:flex;"><span>        attacks <span style="color:#f92672">|=</span> <span style="color:#ae81ff">1</span><span style="color:#66d9ef">u64</span> <span style="color:#f92672">&lt;&lt;</span> sq;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (blockers <span style="color:#f92672">&gt;&gt;</span> sq) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span> { <span style="color:#66d9ef">break</span>; }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> r <span style="color:#66d9ef">in</span> (<span style="color:#ae81ff">0</span><span style="color:#f92672">..</span>rank).rev() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">let</span> sq <span style="color:#f92672">=</span> r <span style="color:#f92672">*</span> <span style="color:#ae81ff">8</span> <span style="color:#f92672">+</span> file;
+</span></span><span style="display:flex;"><span>        attacks <span style="color:#f92672">|=</span> <span style="color:#ae81ff">1</span><span style="color:#66d9ef">u64</span> <span style="color:#f92672">&lt;&lt;</span> sq;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (blockers <span style="color:#f92672">&gt;&gt;</span> sq) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span> { <span style="color:#66d9ef">break</span>; }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> f <span style="color:#66d9ef">in</span> (file <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>)<span style="color:#f92672">..</span><span style="color:#ae81ff">8</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">let</span> sq <span style="color:#f92672">=</span> rank <span style="color:#f92672">*</span> <span style="color:#ae81ff">8</span> <span style="color:#f92672">+</span> f;
+</span></span><span style="display:flex;"><span>        attacks <span style="color:#f92672">|=</span> <span style="color:#ae81ff">1</span><span style="color:#66d9ef">u64</span> <span style="color:#f92672">&lt;&lt;</span> sq;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (blockers <span style="color:#f92672">&gt;&gt;</span> sq) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span> { <span style="color:#66d9ef">break</span>; }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> f <span style="color:#66d9ef">in</span> (<span style="color:#ae81ff">0</span><span style="color:#f92672">..</span>file).rev() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">let</span> sq <span style="color:#f92672">=</span> rank <span style="color:#f92672">*</span> <span style="color:#ae81ff">8</span> <span style="color:#f92672">+</span> f;
+</span></span><span style="display:flex;"><span>        attacks <span style="color:#f92672">|=</span> <span style="color:#ae81ff">1</span><span style="color:#66d9ef">u64</span> <span style="color:#f92672">&lt;&lt;</span> sq;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (blockers <span style="color:#f92672">&gt;&gt;</span> sq) <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span> { <span style="color:#66d9ef">break</span>; }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    attacks
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">bishop_attacks_from</span>(square: <span style="color:#66d9ef">u8</span>, blockers: <span style="color:#66d9ef">u64</span>) -&gt; <span style="color:#66d9ef">u64</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> rank <span style="color:#f92672">=</span> square <span style="color:#f92672">/</span> <span style="color:#ae81ff">8</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> file <span style="color:#f92672">=</span> square <span style="color:#f92672">%</span> <span style="color:#ae81ff">8</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> attacks <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span><span style="color:#66d9ef">u64</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (dr, df) <span style="color:#66d9ef">in</span> [(<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>), (<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>), (<span style="color:#ae81ff">1</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>), (<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>)] {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> r <span style="color:#f92672">=</span> rank <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">i8</span> <span style="color:#f92672">+</span> dr;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> f <span style="color:#f92672">=</span> file <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">i8</span> <span style="color:#f92672">+</span> df;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span> (<span style="color:#ae81ff">0</span><span style="color:#f92672">..</span><span style="color:#ae81ff">8</span>).contains(<span style="color:#f92672">&amp;</span>r) <span style="color:#f92672">&amp;&amp;</span> (<span style="color:#ae81ff">0</span><span style="color:#f92672">..</span><span style="color:#ae81ff">8</span>).contains(<span style="color:#f92672">&amp;</span>f) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">let</span> idx <span style="color:#f92672">=</span> r <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">u8</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">8</span> <span style="color:#f92672">+</span> f <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">u8</span>;
+</span></span><span style="display:flex;"><span>            attacks <span style="color:#f92672">|=</span> <span style="color:#ae81ff">1</span><span style="color:#66d9ef">u64</span> <span style="color:#f92672">&lt;&lt;</span> idx;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> blockers <span style="color:#f92672">&amp;</span> (<span style="color:#ae81ff">1</span><span style="color:#66d9ef">u64</span> <span style="color:#f92672">&lt;&lt;</span> idx) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span> { <span style="color:#66d9ef">break</span>; }
+</span></span><span style="display:flex;"><span>            r <span style="color:#f92672">+=</span> dr;
+</span></span><span style="display:flex;"><span>            f <span style="color:#f92672">+=</span> df;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    attacks
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><hr>
+<h2 id="the-actual-magic">The Actual Magic</h2>
+<p>Now that we have all blocker configurations and attack maps, we want a way to map each blocker config to a unique index into an array of precomputed attack maps. That’s where the magic number comes in.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">generate_sparse_u64</span>(min_bits: <span style="color:#66d9ef">u32</span>, max_bits: <span style="color:#66d9ef">u32</span>) -&gt; <span style="color:#66d9ef">u64</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> rng <span style="color:#f92672">=</span> rand::rng();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> num_bits <span style="color:#f92672">=</span> rng.random_range(min_bits<span style="color:#f92672">..=</span>max_bits);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> candidate <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> set_bits <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> set_bits <span style="color:#f92672">&lt;</span> num_bits {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">let</span> bit <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> rng.random_range(<span style="color:#ae81ff">0</span><span style="color:#f92672">..</span><span style="color:#ae81ff">64</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> candidate <span style="color:#f92672">&amp;</span> bit <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> {
+</span></span><span style="display:flex;"><span>            candidate <span style="color:#f92672">|=</span> bit;
+</span></span><span style="display:flex;"><span>            set_bits <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    candidate
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#66d9ef">pub</span> <span style="color:#66d9ef">fn</span> <span style="color:#a6e22e">find_magics_number</span>(square: <span style="color:#66d9ef">u8</span>, mask: <span style="color:#66d9ef">&amp;</span><span style="color:#66d9ef">u64</span>) -&gt; <span style="color:#66d9ef">u64</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> relevant_bits <span style="color:#f92672">=</span> mask.count_ones();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> blocker_configs <span style="color:#f92672">=</span> enumerate_blocker_configs(<span style="color:#f92672">*</span>mask);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> shift <span style="color:#f92672">=</span> <span style="color:#ae81ff">64</span> <span style="color:#f92672">-</span> relevant_bits;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> table_size <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> relevant_bits;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> index_mask <span style="color:#f92672">=</span> table_size <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">&#39;search</span>: <span style="color:#a6e22e">for</span> _ <span style="color:#66d9ef">in</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">..</span><span style="color:#ae81ff">1_000_000</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">let</span> magic_candidate <span style="color:#f92672">=</span> generate_sparse_u64(<span style="color:#ae81ff">6</span>, <span style="color:#ae81ff">10</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">let</span> <span style="color:#66d9ef">mut</span> used_indices <span style="color:#f92672">=</span> <span style="color:#a6e22e">vec!</span>[<span style="color:#66d9ef">false</span>; table_size];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">&amp;</span>blockers <span style="color:#66d9ef">in</span> <span style="color:#f92672">&amp;</span>blocker_configs {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">let</span> index <span style="color:#f92672">=</span> (blockers.wrapping_mul(magic_candidate) <span style="color:#f92672">&gt;&gt;</span> shift) <span style="color:#66d9ef">as</span> <span style="color:#66d9ef">usize</span> <span style="color:#f92672">&amp;</span> index_mask;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> used_indices[index] {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">continue</span> &#39;search;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            used_indices[index] <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> magic_candidate;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">panic!</span>(<span style="color:#e6db74">&#34;No magic number found for square </span><span style="color:#e6db74">{}</span><span style="color:#e6db74">&#34;</span>, square);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>This brute-forces random sparse <code>u64</code> values until we find one that produces a perfect hash for all blocker configs.</p>
+<hr>
+<p>And that&rsquo;s it. That&rsquo;s the core of how Magic Bitboards work. The rest is wiring it all together—writing to disk, loading the tables, etc.—which you can find in the full implementation <a href="https://github.com/PS-Wizard/EvalDeez/tree/main/crates/magician">here</a>.</p>
+<p>Hope this helped clarify what the magic is all about.</p>
 
     </main>
     
@@ -257,18 +403,26 @@ A bishop moves in four diagonal directions, and from e4, the possible immediate 
                                 >
                                 Portfolio
                         </a>
-                        <a
-                                href="mailto:p.swoyam.1@gmail.com"
-                                target="_blank"
-                                rel="noopener"
-                                class="bg-black text-white w-fit text-16-32 px-4 py-2 rounded-lg hover:opacity-80 transition"
-                                >
-                                me@pswoyam.com.np
-                        </a>
+                            <a
+                                    href="mailto:p.swoyam.1@gmail.com"
+                                    target="_blank"
+                                    rel="noopener"
+                                    class="bg-black text-white w-fit text-16-32 px-4 py-2 rounded-lg hover:opacity-80 transition"
+                                    >
+                                    me@pswoyam.com.np
+                            </a>
                     </div>
                 </div>
             </div>
         </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                document.querySelectorAll('a[href]').forEach(a => {
+                    a.setAttribute('target', '_blank');
+                    a.setAttribute('rel', 'noopener noreferrer');
+                });
+            });
+        </script>
     </body>
 </html>
 

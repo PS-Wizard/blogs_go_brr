@@ -4,90 +4,273 @@ draft = false
 title = 'Move Generation: Magic Bitboards'
 description = 'Exploring Magic Bitboards, how they function, what they solve, and generating moves for sliding pieces + packaging it all into a handy crate for everyone.'
 tags = ['rust', 'chess', 'magic bitboards', 'move generation']
-code_link='https://github.com/PS-Wizard/EvalDeez/tree/main/crates/magician'
+code_link='[https://github.com/PS-Wizard/EvalDeez/tree/main/crates/magician](https://github.com/PS-Wizard/EvalDeez/tree/main/crates/magician)'
 +++
 
-# Magic Bitboards:
-Magic Bitboards, a defacto standard of modern bitboard engines, as used for instance in [Stockfish](https://www.chessprogramming.org/Stockfish) [Crafty](https://www.chessprogramming.org/Crafty) [Arasan](https://www.chessprogramming.org/Arasan) etc. It is a technique to generate moves for **sliding pieces**, and it is one of, if not the fastest way to do so. In this blog, I will attempt to explain the concept of Magic Bitboards, how they work, why even bother with one. Although, I am new to this myself, perhaps that's a good thing, that way I can explain it in a way, that will perhaps "click" to someone starting out. Truth be told, I still am not sure if the way I understand magic bitboards is correct, but it makes sense to me, and made sense enough to spin up a correct implementation, so Ima just roll with it. Allrighty, with that said, lets get started:
+# Magic Bitboards
+
+Magic Bitboards are a go-to technique in modern bitboard engines for generating moves for sliding pieces. They’re used in top-tier engines like [Stockfish](https://www.chessprogramming.org/Stockfish), [Crafty](https://www.chessprogramming.org/Crafty), and [Arasan](https://www.chessprogramming.org/Arasan), and are widely regarded as one of the fastest ways to generate legal moves.
+
+This post aims to break down the concept of Magic Bitboards—what they are, how they work, and why they're worth the effort. I’m still getting my feet wet with this stuff myself, so I’ll explain it in a way that hopefully clicks for anyone just diving in.
 
 ---
 
-## The Normal Approach
-To understand Magic Bitboards, let's first understand how we generate moves normally.
+## The Basic Approach
 
-So, our first intuition when tasked with generating moves for any sliding piece, is to use a loop. Basically, from any given square, we move in predefined directions, until there is a piece blocking our path. So for rooks, that would be `[8,-8,1,-1]`, for bishops, that would be `[9, 7, -9, -7]`. Those numbers might not make sense instantly, so let's look at it in a chess board:
+Let’s begin with how move generation typically works for sliding pieces.
+
+For sliding pieces like rooks and bishops, the first instinct is to generate moves using a loop in the piece’s movement directions until a blocking piece is encountered. For rooks, these directions are `[8, -8, 1, -1]`. For bishops, `[9, 7, -9, -7]`. These numbers correspond to bitboard offsets.
+
 ![Chess Board](/images/chess_engine/chess_board.png)
-In this board view, white pieces are shown with uppercase letters and black with lowercase—though that detail isn't important here. What's key is that we're looking at the board from white's perspective, and each square along the a-file (leftmost column) is labeled with its corresponding bit index in a 64-bit bitboard, starting from the bottom-left (a1 = 0) to the top-left (a8 = 56). With that out of the way, let's look at the bishop's offsets: [9,7,-9,-7]. 
+
+Here's how a bishop on `e4` (index `28`) would move:
+
+* `d5` (index 35): offset `+7`
+* `f5` (index 37): offset `+9`
+* `d3` (index 19): offset `-9`
+* `f3` (index 21): offset `-7`
+
+Any additional reachable squares like `c6` are just further steps in those directions. This pattern holds no matter the starting square—until a piece blocks the path.
+
 ![Bishop Offsets](/images/chess_engine/bishop_offests.png)
 
-So, say a bishop is at `e4` (which is the `28th` index in bitboard terms), and we're only focusing on its diagonal moves.
-A bishop moves in four diagonal directions, and from e4, the possible immediate steps are:
-
-- `d5` (index `35`) — offset `+7` (35 - 28 = 7)
-- `f5` (index `37`) — offset `+9` (37 - 28 = 9)
-- `d3` (index `19`) — offset `-9` (19 - 28 = -9)
-- `f3` (index `21`) — offset `-7` (21 - 28 = -7)
-- and all other reachable squares, like `c6`, are just further steps in those same directions — for example, `c6` is offset `+7 * 2`. In other words, every square the bishop can move to lies along a **multiple of one of those base offsets** (`+7`, `+9`, `-7`, `-9`).
-
-These offsets are consistent no matter where the bishop is, as long as you avoid wrapping off the board. In the diagram, we’ve marked those offsets `[7, 9, -7, -9]` directly on the adjacent diagonal squares from `e4`. All other reachable squares further along the diagonals are marked with `X`, showing the bishop's full potential path from that square. 
-
-So, basically all we do is loop in each direction with said offsets until we are blocked; and that's how move generation works for bishop, and pretty much every other sliding pieces.
+So, in a simple loop, we step along each of the 4 diagonal directions for a bishop (or 4 orthogonal ones for a rook) and stop when blocked. That’s your basic sliding move generation.
 
 {{<note title="Note About Queens">}}
-This is a good time to mention that we don’t explicitly generate moves for queens. Since a queen's movement is just a combination of a bishop’s and a rook’s, we simply generate moves as if a bishop and a rook were on the queen’s square, then combine the two results.
+We don't generate queen moves separately. A queen's movement is just the union of a bishop’s and a rook’s moves.
 {{</note>}}
 
 ---
 
-## The Problem?
-Okay, this makes sense right? just loop in each direction based on a predefined offset, until you meet a piece that blocks you. This works, so why even bother with anything else?.
+## The Bottleneck
 
-While it's fine for a human or a one-off move, it quickly becomes a **performance bottleneck** when the computer starts evaluating positions deeper in the **search tree**. Engines need to generate **millions of moves a second**, and this step-by-step offset approach starts to slow things down fast.
+While looping works fine for a human player or a simple one-off calculation, it becomes inefficient when generating millions of moves per second during deep search trees. That’s where this approach falls short. It simply isn’t fast enough.
 
-So, how do we speed things up?
+So how do we make it fast?
 
->  When in doubt, use a hash map. If you're still in doubt, use two. 
-> – *Probably not Dustin Poirier (I’m watching his final match rn)*
+> When in doubt, use a hash map. If you're still in doubt, use two.
 
-Like every good dev, let’s throw a hashmap at the problem. I mean, `O(1)` lookup time, right? Sounds like a win.
+Let’s say we try using a hash map. We make the key the bitboard representing all occupied squares, and the value the attack bitboard. Conceptually great. But practically?
 
-So what if we made the **key** the entire board state, like `all_white_pieces() | all_black_pieces()` in bitboard terms, and the **value** the possible attacks from a piece? Easy. Cool idea ... until you realize you’d need to generate **every possible board combination**. That’s like... a big hashmap, and I mean a BIIIG hashmap. 
+64 bits means `2^64` possible combinations.
 
-If you use the entire board as the key:
-- 64 squares, each can either be `0` (empty) or `1` (occupied)
-- that's `2^64 = 1.8446744e+19` possible keys -- aka your hashmap is now way bigger than ~~DEEEEZ NUTTS~~ any storage.
+That’s about `1.8e+19` entries. Not feasible at all.
 
-### Yikes, so that doesnt work
+---
 
-But wait — if we think about it, we **don’t care** about the entire board now do we?. Because all that really affects a sliding piece's moves is the blockers *along piece's possible paths*. We only care 'bout:
+## The Key Insight
 
-- What **blocks** the sliding piece in the direction it wants to move?
+We don’t need to consider the whole board. A sliding piece is only influenced by the blockers *along its movement rays*—not the entire board state.
 
-That's a much smaller, manageable input space. That brings us down from `2^64 = 1.8446744e+19` possible keys to a max of `2^13 = 8192` possible keys for a bishop, or `2^14` for a rook **per square** . 
+This reduces the number of relevant bits to 13 or 14 per square:
 
-{{<accordion title="If you are confused about where the `2^13` and `2^14` came from">}}
+* Bishop: 13 potential blocker squares -> `2^13 = 8192` possibilities
+* Rook: 14 -> `2^14 = 16384`
 
-Each sliding piece moves along certain directions called **rays** — for a bishop, these are the diagonals; for a rook, the ranks and files.
-
-- For a bishop on a central square, there are up to **13 squares** along its diagonal rays that could potentially block its movement.
-- For a rook, it’s up to **14 squares** along the rank and file rays.
-
-Since each of these squares can either be **empty (0)** or **occupied (1)**, the number of possible blocker configurations along those rays is:
-
-* Bishop: `2^13 = 8192` possible blocker patterns
-* Rook: `2^14 = 16384` possible blocker patterns
-
-By only considering these blockers **along the relevant rays** for the sliding piece, instead of the entire board, we massively reduce the number of keys we need to handle. This is the key insight behind magic bitboards.
+{{<accordion title="Why 13 and 14 blocker squares?">}}
+Each square a piece can move to lies along a ray. For central squares, bishops have 13 such squares along diagonals, rooks have 14 along ranks and files. Each square can either be empty or blocked, so we get `2^n` blocker configurations.
 {{</accordion>}}
 
-### Alright, that makes sense — let’s give it a shot:
+That’s way more manageable.
 
-Here’s what we need:
+---
 
-* A function to **generate the keys**
-* A function to **generate values** for those keys
+## Building the Magic
 
-In this case, “generating values for the keys” means a function that, given a **blocker configuration** (the pieces blocking a sliding piece’s path), produces all the valid moves for that setup.
+To use Magic Bitboards, we need:
 
+* A function to enumerate all blocker configurations
+* A function to generate attack maps for each configuration
 
-# ... Damn you're here early, pls wait while I finish this :P
+### Generating Blocker Configurations
+
+```rust
+pub fn enumerate_blocker_configs(mask: u64) -> Vec<u64> {
+    let mut relevant_bits = Vec::new();
+    for i in 0..64 {
+        if (mask >> i) & 1 == 1 {
+            relevant_bits.push(i);
+        }
+    }
+
+    let num_bits = relevant_bits.len();
+    let num_configs = 1 << num_bits;
+    let mut configs = Vec::with_capacity(num_configs);
+
+    for i in 0..num_configs {
+        let mut blocker = 0u64;
+        for j in 0..num_bits {
+            if (i >> j) & 1 == 1 {
+                blocker |= 1u64 << relevant_bits[j];
+            }
+        }
+        configs.push(blocker);
+    }
+
+    configs
+}
+```
+
+This function takes a mask (of relevant squares) and spits out every possible blocker configuration using binary counting.
+
+### Generating the Mask
+
+```rust
+pub fn rook_occupancy_mask(square: u8) -> u64 {
+    let rank = square / 8;
+    let file = square % 8;
+    let mut mask = 0u64;
+
+    for r in (rank + 1)..7 {
+        mask |= 1u64 << (r * 8 + file);
+    }
+    for r in (1..rank).rev() {
+        mask |= 1u64 << (r * 8 + file);
+    }
+    for f in (file + 1)..7 {
+        mask |= 1u64 << (rank * 8 + f);
+    }
+    for f in (1..file).rev() {
+        mask |= 1u64 << (rank * 8 + f);
+    }
+
+    mask
+}
+```
+
+```rust
+pub fn bishop_occupancy_mask(square: u8) -> u64 {
+    let rank = square / 8;
+    let file = square % 8;
+    let mut mask = 0u64;
+
+    for (dr, df) in [(-1, -1), (-1, 1), (1, -1), (1, 1)] {
+        let mut r = rank as i8 + dr;
+        let mut f = file as i8 + df;
+
+        while (1..7).contains(&r) && (1..7).contains(&f) {
+            mask |= 1u64 << (r as u8 * 8 + f as u8);
+            r += dr;
+            f += df;
+        }
+    }
+
+    mask
+}
+```
+
+---
+
+### Generating Attack Maps
+
+```rust
+pub fn rook_attacks_from(square: u8, blockers: u64) -> u64 {
+    let rank = square / 8;
+    let file = square % 8;
+    let mut attacks = 0u64;
+
+    for r in (rank + 1)..8 {
+        let sq = r * 8 + file;
+        attacks |= 1u64 << sq;
+        if (blockers >> sq) & 1 == 1 { break; }
+    }
+    for r in (0..rank).rev() {
+        let sq = r * 8 + file;
+        attacks |= 1u64 << sq;
+        if (blockers >> sq) & 1 == 1 { break; }
+    }
+    for f in (file + 1)..8 {
+        let sq = rank * 8 + f;
+        attacks |= 1u64 << sq;
+        if (blockers >> sq) & 1 == 1 { break; }
+    }
+    for f in (0..file).rev() {
+        let sq = rank * 8 + f;
+        attacks |= 1u64 << sq;
+        if (blockers >> sq) & 1 == 1 { break; }
+    }
+
+    attacks
+}
+```
+
+```rust
+pub fn bishop_attacks_from(square: u8, blockers: u64) -> u64 {
+    let rank = square / 8;
+    let file = square % 8;
+    let mut attacks = 0u64;
+
+    for (dr, df) in [(-1, -1), (-1, 1), (1, -1), (1, 1)] {
+        let mut r = rank as i8 + dr;
+        let mut f = file as i8 + df;
+
+        while (0..8).contains(&r) && (0..8).contains(&f) {
+            let idx = r as u8 * 8 + f as u8;
+            attacks |= 1u64 << idx;
+            if blockers & (1u64 << idx) != 0 { break; }
+            r += dr;
+            f += df;
+        }
+    }
+
+    attacks
+}
+```
+
+---
+
+## The Actual Magic
+
+Now that we have all blocker configurations and attack maps, we want a way to map each blocker config to a unique index into an array of precomputed attack maps. That’s where the magic number comes in.
+
+```rust
+fn generate_sparse_u64(min_bits: u32, max_bits: u32) -> u64 {
+    let mut rng = rand::rng();
+    let num_bits = rng.random_range(min_bits..=max_bits);
+    let mut candidate = 0;
+    let mut set_bits = 0;
+    while set_bits < num_bits {
+        let bit = 1 << rng.random_range(0..64);
+        if candidate & bit == 0 {
+            candidate |= bit;
+            set_bits += 1;
+        }
+    }
+    candidate
+}
+```
+
+```rust
+pub fn find_magics_number(square: u8, mask: &u64) -> u64 {
+    let relevant_bits = mask.count_ones();
+    let blocker_configs = enumerate_blocker_configs(*mask);
+    let shift = 64 - relevant_bits;
+    let table_size = 1 << relevant_bits;
+    let index_mask = table_size - 1;
+
+    'search: for _ in 0..1_000_000 {
+        let magic_candidate = generate_sparse_u64(6, 10);
+        let mut used_indices = vec![false; table_size];
+
+        for &blockers in &blocker_configs {
+            let index = (blockers.wrapping_mul(magic_candidate) >> shift) as usize & index_mask;
+
+            if used_indices[index] {
+                continue 'search;
+            }
+            used_indices[index] = true;
+        }
+
+        return magic_candidate;
+    }
+    panic!("No magic number found for square {}", square);
+}
+```
+
+This brute-forces random sparse `u64` values until we find one that produces a perfect hash for all blocker configs.
+
+---
+
+And that's it. That's the core of how Magic Bitboards work. The rest is wiring it all together—writing to disk, loading the tables, etc.—which you can find in the full implementation [here](https://github.com/PS-Wizard/EvalDeez/tree/main/crates/magician).
+
+Hope this helped clarify what the magic is all about.
