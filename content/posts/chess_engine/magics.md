@@ -4,7 +4,7 @@ draft = false
 title = 'Move Generation: Magic Bitboards'
 description = 'Exploring Magic Bitboards, how they function, what they solve, and generating moves for sliding pieces + packaging it all into a handy crate for everyone.'
 tags = ['rust', 'chess', 'magic bitboards', 'move generation']
-code_link='[https://github.com/PS-Wizard/EvalDeez/tree/main/crates/magician](https://github.com/PS-Wizard/EvalDeez/tree/main/crates/magician)'
+code_link="https://github.com/PS-Wizard/EvalDeez/tree/main/crates/magician"
 +++
 
 # Magic Bitboards
