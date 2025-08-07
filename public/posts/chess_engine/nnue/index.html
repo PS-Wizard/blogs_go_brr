@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+        <meta charset="UTF-8" />
+        <title>NNUE Theory</title>
+
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        
+        <meta name="description" content="Figuring Out How NNUEs work, trying to understand it in theory before actually trying to make a library to parse one.">
+        <meta name="author" content="Swoyam Pokharel" />
+        <meta name="keywords" content="blog, dev, swoyam, hugo, minimal" />
+
+        
+        <meta property="og:title" content="NNUE Theory">
+        <meta property="og:description" content="Figuring Out How NNUEs work, trying to understand it in theory before actually trying to make a library to parse one.">
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="http://localhost:1313/posts/chess_engine/nnue/">
+        
+        <meta property="og:image" content="http://localhost:1313/images/preview.png">
+
+        
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="NNUE Theory">
+        <meta name="twitter:description" content="Figuring Out How NNUEs work, trying to understand it in theory before actually trying to make a library to parse one.">
+
+        
+        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+        
+        <link rel="stylesheet" href="/css/output.css">
+    </head>
+    <body class="w-screen text-white">
+        <header class="flex justify-between items-center p-8">
+            <a class="uppercase font-bold text-xl tracking-widest" href="/">(._.)</a>
+            <nav class="flex gap-6 text-sm underline uppercase tracking-wide"
+                 >
+                 <a
+                         href="https://github.com/PS-Wizard"
+                         target="_blank"
+                         rel="noopener"
+                         class="hover:underline"
+                         >
+                         GITHUB
+                 </a>
+                     <a
+                             href="https://www.linkedin.com/in/swoyam-pokharel-557779340/"
+                             target="_blank"
+                             rel="noopener"
+                             class="hover:underline"
+                             >
+                             LINKEDIN
+                     </a>
+            </nav>
+        </header>
+
+        <div class="min-h-screen main-content w-full pb-16 text-white ">
+            
+
+
+<div class="fixed bottom-6 right-6 z-50">
+  <details class="group relative">
+    <summary class="bg-white text-black px-5 py-3 rounded-full shadow-lg cursor-pointer text-sm font-semibold transition hover:bg-neutral-100">
+      Table of Contents
+    </summary>
+    <div class="absolute bottom-14 right-0 w-[90vw] md:w-[28rem] max-h-[32rem] overflow-y-auto bg-neutral-900 text-white border border-[#252525] rounded-xl shadow-2xl p-6 mt-3 prose prose-invert text-sm leading-relaxed ">
+      <h2 class="font-bold mb-4">Jump to section</h2>
+      <nav class="[&_ul]:pl-4 [&_ul]:list-disc [&_li]:ml-1 [&_a]:no-underline [&_a:hover]:underline">
+          <nav id="TableOfContents">
+  <ul>
+    <li><a href="#introduction">Introduction</a>
+      <ul>
+        <li><a href="#where-do-i-even-begin">Where Do I Even Begin?</a></li>
+        <li><a href="#answers-hopefully">Answers? Hopefully?</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+      </nav>
+    </div>
+  </details>
+</div>
+
+<div class="w-full flex justify-center items-center p-4 my-8 flex-col">
+    <div class="w-full max-w-7xl pb-4 flex flex-col md:flex-row justify-between items-center">
+        <nav class="text-sm text-neutral-400 mb-4">
+            <a href="/posts" class="hover:underline">Posts</a>
+            
+            / <a href="/posts/chess_engine/" class="hover:underline">Chess Engine</a>
+            
+            / <span class="text-white">NNUE Theory</span>
+        </nav>
+        
+    </div>
+<img src="/images/default_blogs.jpg" alt="Card image" class="max-w-7xl h-69 object-cover rounded-xl" />
+</div>
+<div class="relative max-w-7xl mx-auto px-4 flex flex-col">
+    
+    <main class="prose prose-invert max-w-7xl flex-grow break-words">
+        <h1 id="introduction">Introduction</h1>
+<p>Okay, so NNUEs, I know they are from shogi, I know it&rsquo;s used in stockfish, and I know that it&rsquo;s just one single file; that&rsquo;s about all that I know. NNUEs or &ldquo;Efficiently Updatable Neural Network&rdquo; seem nice, because my naive approach using the NNUE probe library from <a href="https://github.com/dshawul/nnue-probe">dshawul</a>, is getting me the same evaluations as stockfish, so I&rsquo;m thrilled, but I don&rsquo;t quite know how it&rsquo;s working and I&rsquo;d like to roll out my own NNUE probe native to rust. So, bear with me while I try and figure this out.</p>
+<hr>
+<h2 id="where-do-i-even-begin">Where Do I Even Begin?</h2>
+<p>Okay, so I know it&rsquo;s a neural network, so it&rsquo;s just a bunch of weights right, but okay let&rsquo;s figure out the gimmic, whats so <em>efficient</em>  about these <em>Efficiently Updatable Neural Networks</em>. Here is what I don&rsquo;t get:</p>
+<ul>
+<li>How does a file even be &ldquo;Efficiently Updatable&rdquo;, cause its just a simple <code>*.nnue</code> file, and I doubt you update those? because well &hellip; I don&rsquo;t think we tinker around with the weights for a neural network? so like ???</li>
+<li>How do I go about parsing such a file, like I couldn&rsquo;t find an official
+<blockquote>
+<p><em>&ldquo;ayo, this NNUE thing, is in this format, and we do this to read it&rdquo;</em> type documentation.</p></blockquote>
+</li>
+</ul>
+<hr>
+<h2 id="answers-hopefully">Answers? Hopefully?</h2>
+<p>Okay, after a not so thorough GPT (<em>with the study mode btw lol</em>),</p>
+<p>The <em>Efficiently Updatable</em> thing, comes from unsurprisingly not changing the actual <code>.nnue</code> , but changing the accumulator it seems. So, NNUEs are just the weights, we load em up, and once we do that then now it makes sense for it to be <em>Efficiently Updatable</em>, because after we load em up, it&rsquo;s the long lived program that&rsquo;s responsible for doing all the fancy efficient shit that I don&rsquo;t quite get at the moment.  Okay, it&rsquo;s starting to make a bit more sense now.</p>
+<p>Okay, a bit more searching later, here&rsquo;s whats up. NNUEs are simply weights, they are just <strong>raw facts</strong>. You need to make your own stuff on how you deal with the raw facts. So, to deal with the raw facts, there is:</p>
+
+
+
+<details  class="group w-full border-y border-white/20 overflow-hidden transition-all duration-200">
+  <summary class="cursor-pointer list-none px-4 py-3 bg-none flex justify-between items-center">
+    <span class="text-white h-full">
+      <span class="underline text-sm">The Inputs </span>
+    </span>
+    <span class="transform transition-transform duration-200 group-open:rotate-180 text-white">
+      
+        <span>+</span>
+      
+    </span>
+  </summary>
+  <div class="px-4 py-3 text-sm text-white/80 bg-white/5">
+    <ul>
+<li>So, basically features is the fancy name for providing an input right, basically here is how I&rsquo;m thinking of it right now, NNUE is simply a <code>f(x) -&gt; evaluation</code> , and in this case our input is the <code>x</code>.</li>
+</ul>
+<p>But ofcourse like always, they have a catch. In this case, the catch is that we don&rsquo;t feed it the full raw board. I&rsquo;ve personally always thought it was just the <code>FEN</code> notation that gets converted into like a bitboard state or something, but turns out nah.</p>
+<p>Turns out</p>
+<blockquote>
+<p>We extract <strong>semantic features</strong> based on <strong>piece-square combinations</strong> anchored to the king, also called the <strong>HalfKP format</strong>.</p></blockquote>
+<h3 id="bro-tf-does-that-even-meaaaan">Bro tf does that even meaaaan</h3>
+<p><img src="/images/memes/confused_pepe.png" alt="Confused Pepe The Frog"></p>
+<p>&hellip; Okay nvm, it&rsquo;s not that deep, so okay it&rsquo;s just for each side, we build inputs using:</p>
+<ul>
+<li>The king square for that side</li>
+<li>The square and type of every piece of that side</li>
+</ul>
+<p>So, basically for our <code>f(x) -&gt; eval</code> , the <code>x = (king_square, piece_type, piece_sqare)</code> but instead of the tuple like that, we use the following to index the vector</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span>index <span style="color:#f92672">=</span> king_sq <span style="color:#f92672">*</span> (num_piece_types <span style="color:#f92672">*</span> <span style="color:#ae81ff">64</span>) <span style="color:#f92672">+</span> piece_type <span style="color:#f92672">*</span> <span style="color:#ae81ff">64</span> <span style="color:#f92672">+</span> piece_sq
+</span></span></code></pre></div><ul>
+<li>
+<p><code>king_sq</code>: makes sense right, just the square that the king is on</p>
+</li>
+<li>
+<p><code>num_piece_types</code>: basically the number of piece types, so <code>6</code> in a game of chess (pawns, rooks, knights, bishops, king, queens). <strong>And NO, turns out it&rsquo;s not dynamic</strong>, in the sense that say if white looses both of its bishop, the <code>num_piece_types</code> for white doesn&rsquo;t drop down to <code>5</code>, it is a constant. Which, I mean, bro why even label it if its a constant lol but sure, makes sense.</p>
+</li>
+<li>
+<p><code>piece_type</code>: So, they have an index for each type, Pawns are <code>0</code>, Knights are <code>1</code>, Bishops are <code>2</code>, Rooks are <code>3</code>, Queens are <code>4</code> and finally the King is <code>5</code>. I&rsquo;m skeptical about this tho, cause no hate ChatGPT, you&rsquo;re good and all, but sometimes you hallucinate, that&rsquo;s all I&rsquo;m Saying</p>
+</li>
+<li>
+<p><code>piece_sq</code>: That&rsquo;s basically the piece&rsquo;s square that we dealing with. Like the <code>x=(king_square,piece_type,*piece_square**)</code></p>
+</li>
+</ul>
+
+  </div>
+</details>
+
+
+
+
+<details  class="group w-full border-y border-white/20 overflow-hidden transition-all duration-200">
+  <summary class="cursor-pointer list-none px-4 py-3 bg-none flex justify-between items-center">
+    <span class="text-white h-full">
+      <span class="underline text-sm">Hidden Layer &amp; The Weights</span>
+    </span>
+    <span class="transform transition-transform duration-200 group-open:rotate-180 text-white">
+      
+        <span>+</span>
+      
+    </span>
+  </summary>
+  <div class="px-4 py-3 text-sm text-white/80 bg-white/5">
+    <h4 id="what-is-a-weight-matrix-in-a-neural-network">What is a weight matrix in a neural network?</h4>
+<p>Okay, so if you are anything like me, you have no idea what on god&rsquo;s green earth a neural network actually even is. But, for this context, here is what GPT is telling me:</p>
+<ul>
+<li>In a neural network, each layer transforms it&rsquo;s input vector <code>x</code> by multiplying it with a matrix of weights. This I get.</li>
+<li>This matrix, is just a big ass 2D table of numbers learnt during training. This I get as well.</li>
+<li>For example, if your input vector <code>x</code> has size <code>N</code> and your hidden layer has size <code>M</code>, then the weight matrix <code>W</code> has shape <code>N x M</code>. &hellip; Okay, kidna makes sense but it&rsquo;s loosing me a little.</li>
+<li>Multiplying <code>x</code> by <code>W</code> gives you a vector of size <code>M</code></li>
+</ul>
+<p>and okay, so I got a little confused about this whole length, length of the hidden layer thing so okay,</p>
+<hr>
+<h4 id="what-is-input-size">What is input size?</h4>
+<ul>
+<li>Your input vector is a big array where each position corresponds to one possible feature.</li>
+<li>For NNUE, each feature is identified by <code>(king_sq, piece_type, piece_sq)</code>.</li>
+<li>Because the number of squares is 64 and piece types are 6, you calculate the total number of features as:
+<ul>
+<li><code>input_size = 64 (king squares) × 6 (piece types) × 64 (piece squares) = 24,576</code></li>
+<li>So the input vector x is length 24,576, but most entries are zero because only a few pieces exist.</li>
+<li>You don&rsquo;t actually build a full array of 24,576 values — you only track which features are “active” (non-zero) using that index formula you have.</li>
+</ul>
+</li>
+</ul>
+<h4 id="what-is-hidden-layer-size-and-why-does-it-matter">What is hidden layer size, and why does it matter?</h4>
+<ul>
+<li>The hidden layer is a layer in the neural network between input and output.</li>
+<li>It has some number of neurons (or units) — this number is called the hidden layer size.</li>
+<li>For example, if hidden layer size = 256, that means the hidden layer output is a vector of length 256.</li>
+<li>The hidden layer size controls the capacity of the network — more neurons = can learn more complex patterns (but slower and heavier).</li>
+<li>The weight matrix from input to hidden is therefore size <code>input_size × hidden_size</code> (e.g., 24,576 × 256).</li>
+<li>Each row in that matrix corresponds to one feature’s weights to all 256 hidden neurons.</li>
+</ul>
+<h4 id="in-the-context-of-nnue-what-even-is-the-weight_matrix">In the context of NNUE what even is the weight_matrix?</h4>
+<p>Okay, so one thing, before we actually get into this is that our input vector <code>x</code> is mostly <code>0s</code> because only a few pieces exist on the board. So, if we were to compute <code>x.W</code> do we really need to multiply the full vector <code>x</code> with the entire weight matrix <code>W</code>?. Nah right, cause it just simply makes more sense to prune out the empty inputs, so:</p>
+<ul>
+<li>For each <strong>active input</strong></li>
+<li>Take the corresponding row in the weight matrix &ndash; which is a vector length <code>M</code> ( the hidden size &hellip; bro who comes up with these names tho <em>tHe HiDdEn sIzE?</em>)</li>
+<li>And, <strong>sum these rows together</strong>  to get the hidden layer output.</li>
+</ul>
+<h4 id="aite-cool-jimmy-but-where-does-this-weight_matrix-come-from-and-how-do-you-even-parse-it-from-a-nnue-file">Aite, cool jimmy, but where does this <code>weight_matrix</code> come from? and how do you even parse it from a <code>.nnue</code> file?</h4>
+<p>Okay, so I think it&rsquo;s pretty clear that the <code>.nnue</code> file is pretty much just, <strong>the weights</strong>. So, that&rsquo;s where the <code>weight_matrix</code> comes from. But actually parsing it?, in theory it is:</p>
+<ul>
+<li>You read it by reading the weights in the order the NNUE format expects (usually fixed offsets and sizes)</li>
+<li>Each weight vector (for a given input index) is stored as a fixed-size array (often i16 or f32 values).</li>
+</ul>
+<p>So, again in theory, we:</p>
+<ul>
+<li>Open the <code>.nnue</code> file as a binary file.</li>
+<li>Read the header metadata ( which hopefully contains stuff like the input size, hidden size etc)</li>
+<li>Then read the weight vectors sequentially into our Rust data structure, whichever we decide to go with; which I mean is probably just gonna be a array wrapped in a <code>Box&lt;&gt;</code></li>
+</ul>
+<h1 id="learning-happening-pls-wait-im-getting-real-confused">Learning Happening Pls Wait. I&rsquo;m getting real confused</h1>
+<p><img src="/images/memes/pepe-cry.gif" alt="Crying pepe">
+Here is what I need to figure out:</p>
+<ul>
+<li>Like i get a <code>.nnue</code> file is just the weights right, how do i parse it tho?, im assuming the metadata will contain offsets or atleast size of each &ldquo;weight&rdquo;? is that correct?</li>
+<li>What&rsquo;s this hidden layer size, the input layer size thingy. Like i get it&rsquo;s just matrix sizes but for some reason it &hellip; <strong>dont feel right</strong></li>
+<li>How does stuff correspond like:
+<ul>
+<li>
+<blockquote>
+<p>Your Input vector is a big array where each position corresponds to one possible features &ndash; tf does this even meann</p></blockquote>
+</li>
+<li>
+<blockquote>
+<p>For example, if hidden layer size = 256, that means the hidden layer output is a vector of length 256. &ndash; tf does this even meaan</p></blockquote>
+</li>
+<li>
+<blockquote>
+<p>Each row in that matrix corresponds to one feature’s weights to all 256 hidden neurons. &ndash; Say what now</p></blockquote>
+</li>
+<li>And like how does this all tie together, because inputs are just well inputs makes sense, hidden layer i think is the weights you parse, and so before you get the eval, turns out there is this another thing called an <strong>activation function</strong> and this <strong>ReLU</strong> which although is super simple, just simply make negatives to 0.</li>
+<li>And it also turns out that there is this second weight matrix that you need to multiply with so I gotta figure that out too</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+</details>
+
+<ul>
+<li>Output ( The Actual Evaluation)</li>
+</ul>
+
+    </main>
+    
+</div>
+<div class="w-full flex justify-center mt-12 border-t border-white/10 pt-6 text-sm text-white gap-2 flex-wrap">
+    
+    <a href="/posts/chess_engine/magics/" rel="prev" class="hover:underline px-3 py-2 bg-white text-black font-bold rounded-md text-xs sm:text-sm">
+        ← Move Generation: Magic Bitboards
+    </a>
+    
+
+    
+</div>
+
+        </div>
+        <div class="w-full flex items-center bg-[#A3D5FF] h-[30vh] text-black px-10" >
+            <div class="lg:w-1/2 h-full geist flex flex-col justify-end"> <h5
+                 class="hidden lg:block text-48-126 font-semibold cursor-pointer"
+                 bind:this={name_footer}
+                 >
+                 Wizard.
+                </h5>
+            </div>
+            <div class="w-full lg:w-1/2 h-full geist flex flex-row justify-center gap-4" >
+                <div class="flex flex-col h-full w-full justify-center items-center lg:items-end gap-4" >
+                    <div class="flex gap-2">
+                        <a
+                                href="https://www.linkedin.com/in/swoyam-pokharel-557779340/"
+                                target="_blank"
+                                rel="noopener"
+                                class="bg-black text-white w-fit text-16-32 px-4 py-2 rounded-lg hover:opacity-80 transition"
+                                >
+                                Linkedin
+                        </a>
+                            <a
+                                    href="https://github.com/PS-Wizard"
+                                    target="_blank"
+                                    rel="noopener"
+                                    class="bg-black text-white w-fit text-16-32 px-4 py-2 rounded-lg hover:opacity-80 transition"
+                                    >
+                                    Github
+                            </a>
+                                <a
+                                        href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                                        target="_blank"
+                                        rel="noopener"
+                                        class="hidden md:block bg-black text-white w-fit text-16-32 px-4 py-2 rounded-lg hover:opacity-80 transition"
+                                        >
+                                        Hopefully More lol
+                                </a>
+                    </div>
+                    <div class="flex gap-2">
+                        <a
+                                href="https://pswoyam.com.np/"
+                                target="_blank"
+                                rel="noopener"
+                                class="bg-black text-white w-fit text-16-32 px-4 py-2 rounded-lg hover:opacity-80 transition"
+                                >
+                                Portfolio
+                        </a>
+                            <a
+                                    href="mailto:p.swoyam.1@gmail.com"
+                                    target="_blank"
+                                    rel="noopener"
+                                    class="bg-black text-white w-fit text-16-32 px-4 py-2 rounded-lg hover:opacity-80 transition"
+                                    >
+                                    me@pswoyam.com.np
+                            </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+

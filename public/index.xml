@@ -6,8 +6,15 @@
     <description>Recent content on Swoyam&#39;s Dev Blogs</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 19 Jul 2025 11:06:12 +0545</lastBuildDate>
+    <lastBuildDate>Tue, 05 Aug 2025 18:07:46 +0545</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>NNUE Theory</title>
+      <link>http://localhost:1313/posts/chess_engine/nnue_theory/</link>
+      <pubDate>Tue, 05 Aug 2025 18:07:46 +0545</pubDate>
+      <guid>http://localhost:1313/posts/chess_engine/nnue_theory/</guid>
+      <description>&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;&#xA;&lt;p&gt;Okay, so NNUEs, I know they are from shogi, I know it&amp;rsquo;s used in stockfish, and I know that it&amp;rsquo;s just one single file; that&amp;rsquo;s about all that I know. NNUEs or &amp;ldquo;Efficiently Updatable Neural Network&amp;rdquo; seem nice, because my naive approach using the NNUE probe library from &lt;a href=&#34;https://github.com/dshawul/nnue-probe&#34;&gt;dshawul&lt;/a&gt;, is getting me the same evaluations as stockfish, so I&amp;rsquo;m thrilled, but I don&amp;rsquo;t quite know how it&amp;rsquo;s working and I&amp;rsquo;d like to roll out my own NNUE probe native to rust. So, bear with me while I try and figure this out.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Move Generation: Magic Bitboards</title>
       <link>http://localhost:1313/posts/chess_engine/magics/</link>

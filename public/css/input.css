@@ -119,6 +119,15 @@ img {
     border: 1px solid #252525;
     border-radius: 5px;
 }
+details img {
+  display: block;
+  max-width: 50%; /* Makes image smaller */
+  height: auto;
+  margin: 0 auto; /* Centers the image */
+  padding: 0.5rem;
+  border: none !important;
+}
+
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
