@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+        <meta charset="UTF-8" />
+        <title>Remake_01</title>
+
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        
+        <meta name="description" content="Remaking The Page Transition From &#39;The Art Of Documentary&#39;">
+        <meta name="author" content="Swoyam Pokharel" />
+        <meta name="keywords" content="blog, dev, swoyam, hugo, minimal" />
+
+        
+        <meta property="og:title" content="Remake_01">
+        <meta property="og:description" content="Remaking The Page Transition From &#39;The Art Of Documentary&#39;">
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="http://localhost:1313/posts/web_dev_101/remake_01/">
+        
+        <meta property="og:image" content="http://localhost:1313/images/preview.png">
+
+        
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="Remake_01">
+        <meta name="twitter:description" content="Remaking The Page Transition From &#39;The Art Of Documentary&#39;">
+
+        
+        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+        
+        <link rel="stylesheet" href="/css/output.css">
+    </head>
+    <body class="w-screen text-white">
+        <header class="flex justify-between items-center p-8">
+            <a class="uppercase font-bold text-xl tracking-widest" href="/">(._.)</a>
+            <nav class="flex gap-6 text-sm underline uppercase tracking-wide"
+                 >
+                 <a
+                         href="https://github.com/PS-Wizard"
+                         target="_blank"
+                         rel="noopener"
+                         class="hover:underline"
+                         >
+                         GITHUB
+                 </a>
+                     <a
+                             href="https://www.linkedin.com/in/swoyam-pokharel-557779340/"
+                             target="_blank"
+                             rel="noopener"
+                             class="hover:underline"
+                             >
+                             LINKEDIN
+                     </a>
+            </nav>
+        </header>
+
+        <div class="min-h-screen main-content w-full pb-16 text-white ">
+            
+
+
+<div class="fixed bottom-6 right-6 z-50">
+  <details class="group relative">
+    <summary class="bg-white text-black px-5 py-3 rounded-full shadow-lg cursor-pointer text-sm font-semibold transition hover:bg-neutral-100">
+      Table of Contents
+    </summary>
+    <div class="absolute bottom-14 right-0 w-[90vw] md:w-[28rem] max-h-[32rem] overflow-y-auto bg-neutral-900 text-white border border-[#252525] rounded-xl shadow-2xl p-6 mt-3 prose prose-invert text-sm leading-relaxed ">
+      <h2 class="font-bold mb-4">Jump to section</h2>
+      <nav class="[&_ul]:pl-4 [&_ul]:list-disc [&_li]:ml-1 [&_a]:no-underline [&_a:hover]:underline">
+          <nav id="TableOfContents">
+  <ul>
+    <li><a href="#introduction">Introduction</a>
+      <ul>
+        <li><a href="#step-1-making-routes-accessible">Step 1: Making Routes Accessible</a></li>
+        <li><a href="#step-2-the-key-block">Step 2: The <code>#key</code> block</a></li>
+        <li><a href="#step-3-the-animateout-function">Step 3: The <code>AnimateOut</code> function</a></li>
+        <li><a href="#step-4-animating-in">Step 4: Animating In</a></li>
+        <li><a href="#step-5-use-it">Step 5: Use it</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+      </nav>
+    </div>
+  </details>
+</div>
+
+<div class="w-full flex justify-center items-center p-4 my-8 flex-col">
+    <div class="w-full max-w-7xl pb-4 flex flex-col md:flex-row justify-between items-center">
+        <nav class="text-sm text-neutral-400 mb-4">
+            <a href="/posts" class="hover:underline">Posts</a>
+            
+            / <a href="/posts/web_dev_101/" class="hover:underline">Learning Web Dev</a>
+            
+            / <span class="text-white">Remake_01</span>
+        </nav>
+        
+    </div>
+<img src="/images/default_blogs.jpg" alt="Card image" class="max-w-7xl h-69 object-cover rounded-xl" />
+</div>
+<div class="relative max-w-7xl mx-auto px-4 flex flex-col">
+    
+    <main class="prose prose-invert max-w-7xl flex-grow break-words">
+        <h1 id="introduction">Introduction</h1>
+<p>Okay, so this website <a href="https://theartofdocumentary.com/">The Art Of Documentary</a> has this really cool animation where one page slides up, and another one takes it&rsquo;s place but, the catch is that both pages are visible, during the transition, and it gives a really unique effect. You have to check it out yourself to get what I mean since I can&rsquo;t actually show a video over here ( im on vercel free plan :&lt; ), but I will be showing how to acheive a similar effect with <code>in:</code> and <code>out:</code> directives in svelte.</p>
+<h2 id="step-1-making-routes-accessible">Step 1: Making Routes Accessible</h2>
+<p>So, thinking this through, here&rsquo;s what we need, on <strong>route change</strong> we need to do a custom <code>out:</code> transition for the container holding the current page, and a custom <code>in:</code> transition for the page coming in. Simple enough, so first thing is we need to make use of the <code>#key</code> block. The <code>#key</code> block, destroys the content inside of it, and recreates it when the value of the expression changes, in our case, when the route of the page changes, this way, we trigger the <code>in:</code> and <code>out:</code> transitions. So, first things first, in our root <code>+layout.ts</code> we throw in the following</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-svelte" data-lang="svelte"><span style="display:flex;"><span>export const load = ({ <span style="color:#a6e22e">url</span> }) =&gt; {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> { <span style="color:#a6e22e">pathname</span>: <span style="color:#66d9ef">url.pathname</span> };
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><p>so, each other page has easy access to the current url, granted that we could probably have just used this in our <code>+layout.svelte</code> too since no other pages actually use this but still.</p>
+<h2 id="step-2-the-key-block">Step 2: The <code>#key</code> block</h2>
+<p>So, now that we have our route accessible, we plop this in our <code>+layout.svelte</code> file:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-svelte" data-lang="svelte"><span style="display:flex;"><span>&lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;container&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>    {<span style="color:#66d9ef">#key</span> <span style="color:#a6e22e">data</span>.<span style="color:#a6e22e">pathname</span>}
+</span></span><span style="display:flex;"><span>        &lt;<span style="color:#f92672">div</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;absolute flex justify-center items-center&#34;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">in:animateIn</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">out:animateOut</span>
+</span></span><span style="display:flex;"><span>        &gt;
+</span></span><span style="display:flex;"><span>            {<span style="color:#66d9ef">@render</span> <span style="color:#a6e22e">children</span>()}
+</span></span><span style="display:flex;"><span>        &lt;/<span style="color:#f92672">div</span>&gt;
+</span></span><span style="display:flex;"><span>    {<span style="color:#66d9ef">/key</span>}
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">div</span>&gt;
+</span></span></code></pre></div><p>where, the <code>data.pathname</code> comes from:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-svelte" data-lang="svelte"><span style="display:flex;"><span>&lt;<span style="color:#f92672">script</span>&gt;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> { <span style="color:#a6e22e">data</span>, <span style="color:#a6e22e">children</span> } <span style="color:#f92672">=</span> <span style="color:#a6e22e">$props</span>();
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">script</span>&gt;
+</span></span></code></pre></div><h2 id="step-3-the-animateout-function">Step 3: The <code>AnimateOut</code> function</h2>
+<p>For me it helped thinking the outro animation first, because the effect isnt visible on first page load, although its super easy to do as well, it&rsquo;s basically just <code>onMount(animateIn)</code>. But, actually breaking down the animation, it has 3 steps:</p>
+<ul>
+<li>Zoom out / Scale down</li>
+<li>Slide Out</li>
+<li>While Another Page Slides In.
+With that, we have</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-typescript" data-lang="typescript"><span style="display:flex;"><span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">animateOut</span>(<span style="color:#a6e22e">node</span>: <span style="color:#66d9ef">HTMLElement</span>)<span style="color:#f92672">:</span> <span style="color:#a6e22e">TransitionConfig</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">tl</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">gsap</span>.<span style="color:#a6e22e">timeline</span>();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// step 1: scale down
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">tl</span>.<span style="color:#a6e22e">to</span>(<span style="color:#a6e22e">node</span>, {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">scale</span>: <span style="color:#66d9ef">0.9</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">duration</span>: <span style="color:#66d9ef">0.3</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">ease</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;sine.out&#34;</span>,
+</span></span><span style="display:flex;"><span>    });
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// step 2: move up after scale
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">tl</span>.<span style="color:#a6e22e">to</span>(
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">node</span>,
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">y</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;-100vh&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">duration</span>: <span style="color:#66d9ef">0.75</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">ease</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;sine.in&#34;</span>,
+</span></span><span style="display:flex;"><span>        },
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;-=0.2&#34;</span>,
+</span></span><span style="display:flex;"><span>    ); <span style="color:#75715e">// negative offset = overlap
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">total</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">tl</span>.<span style="color:#a6e22e">duration</span>(); <span style="color:#75715e">// total duration for the animation, in seconds.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">duration</span>: <span style="color:#66d9ef">total</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1000</span>, <span style="color:#75715e">// svelte expects ms , 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#a6e22e">tick</span><span style="color:#f92672">:</span> (<span style="color:#a6e22e">t</span>: <span style="color:#66d9ef">number</span>, <span style="color:#a6e22e">u</span>: <span style="color:#66d9ef">number</span>) <span style="color:#f92672">=&gt;</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">tl</span>.<span style="color:#a6e22e">progress</span>(<span style="color:#a6e22e">u</span>);
+</span></span><span style="display:flex;"><span>        },
+</span></span><span style="display:flex;"><span>    };
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>and that&rsquo;s basically it for our outro animation</p>
+<h2 id="step-4-animating-in">Step 4: Animating In</h2>
+<p>Almost identical to the <code>animateOut</code> function, except we just go the other way right,</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-svelte" data-lang="svelte"><span style="display:flex;"><span>function animateIn(node: HTMLElement): TransitionConfig {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">tl</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">gsap</span>.<span style="color:#a6e22e">timeline</span>();
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">gsap</span>.<span style="color:#66d9ef">set</span>(<span style="color:#a6e22e">node</span>, { <span style="color:#a6e22e">y</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;100vh&#34;</span>, <span style="color:#a6e22e">scale</span>: <span style="color:#66d9ef">0.9</span> });
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 1. slide in (with your delay)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">tl</span>.<span style="color:#a6e22e">to</span>(<span style="color:#a6e22e">node</span>, {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">y</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;0vh&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">duration</span>: <span style="color:#66d9ef">0.65</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">delay</span>: <span style="color:#66d9ef">0.4</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">ease</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;sine.out&#34;</span>,
+</span></span><span style="display:flex;"><span>    });
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 2. zoom in after slide (slightly overlapping)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">tl</span>.<span style="color:#a6e22e">to</span>(
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">node</span>,
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">scale</span>: <span style="color:#66d9ef">1</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">duration</span>: <span style="color:#66d9ef">0.3</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">ease</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;sine.in&#34;</span>,
+</span></span><span style="display:flex;"><span>        },
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;-=0.25&#34;</span>,
+</span></span><span style="display:flex;"><span>    );
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">total</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">tl</span>.<span style="color:#a6e22e">duration</span>();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">duration</span>: <span style="color:#66d9ef">total</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">1000</span>, <span style="color:#75715e">// keep your total duration
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#a6e22e">tick</span><span style="color:#f92672">:</span> (<span style="color:#a6e22e">t</span>: <span style="color:#66d9ef">number</span>) <span style="color:#f92672">=&gt;</span> <span style="color:#a6e22e">tl</span>.<span style="color:#a6e22e">progress</span>(<span style="color:#a6e22e">t</span>),
+</span></span><span style="display:flex;"><span>    };
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Everything here is pretty identical, the only thing is the <code>delay</code> when sliding in, this is so that the previous animation that&rsquo;s running; our <code>animateOut</code> has enough time to slide out enough for this sliding animation to not fully overlap.</p>
+<hr>
+<h2 id="step-5-use-it">Step 5: Use it</h2>
+<p>That&rsquo;s basically it for our animations, now in every child component, have something like:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-svelte" data-lang="svelte"><span style="display:flex;"><span>&lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;relative h-screen w-screen bg-neutral-900 text-white flex flex-col justify-between overflow-hidden z-8&#34;</span> &gt;
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#f92672">img</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://images.unsplash.com/photo-1740686004244-e9bc7c75d8e5?fm=jpg&amp;q=60&amp;w=3000&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwcm9maWxlLWxpa2VkfDExfHx8ZW58MHx8fHx8&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">alt</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;background&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;absolute inset-0 w-full h-full object-cover brightness-69 z-4&#34;</span>
+</span></span><span style="display:flex;"><span>    /&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">&lt;!-- Overlay content --&gt;</span>
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;relative z-10 flex flex-col justify-between h-full&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>        &lt;<span style="color:#f92672">Navbar</span> <span style="color:#a6e22e">text</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;AWWWARDS Remake&#34;</span> <span style="color:#a6e22e">number</span><span style="color:#f92672">=</span>{<span style="color:#ae81ff">1</span>} <span style="color:#e6db74">/</span>&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;h-[70vh] flex flex-col justify-center items-center gap-8&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>            &lt;<span style="color:#f92672">h1</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;uppercase text-7xl&#34;</span>&gt;Another Page&lt;/<span style="color:#f92672">h1</span>&gt;
+</span></span><span style="display:flex;"><span>            &lt;<span style="color:#f92672">p</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;max-w-3xl text-center&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+</span></span><span style="display:flex;"><span>                Assumenda reprehenderit vel eligendi aut repudiandae laudantium
+</span></span><span style="display:flex;"><span>                nesciunt. Nesciunt eligendi facere itaque reiciendis
+</span></span><span style="display:flex;"><span>            &lt;/<span style="color:#f92672">p</span>&gt;
+</span></span><span style="display:flex;"><span>            &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;flex flex-col&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>                &lt;<span style="color:#f92672">a</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/&#34;</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;px-4 py-2 bg-white rounded-lg text-black&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>                    Click Me
+</span></span><span style="display:flex;"><span>                &lt;/<span style="color:#f92672">a</span>&gt;
+</span></span><span style="display:flex;"><span>            &lt;/<span style="color:#f92672">div</span>&gt;
+</span></span><span style="display:flex;"><span>        &lt;/<span style="color:#f92672">div</span>&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        &lt;<span style="color:#f92672">Footer</span> <span style="color:#a6e22e">link</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;https://theartofdocumentary.com/&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>            The Art Of Documentary.
+</span></span><span style="display:flex;"><span>        &lt;/<span style="color:#f92672">Footer</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;/<span style="color:#f92672">div</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">div</span>&gt;
+</span></span></code></pre></div><p>and youre good to go, the child pages can have basically anything so this part isnt all that important.</p>
+
+    </main>
+    
+</div>
+<div class="w-full flex justify-center mt-12 border-t border-white/10 pt-6 text-sm text-white gap-2 flex-wrap">
+    
+    <a href="/posts/chess_engine/nnue_theory/" rel="prev" class="hover:underline px-3 py-2 bg-white text-black font-bold rounded-md text-xs sm:text-sm">
+        ← NNUE Theory
+    </a>
+    
+
+    
+</div>
+
+        </div>
+        <div class="w-full flex items-center bg-[#A3D5FF] h-[30vh] text-black px-10" >
+            <div class="lg:w-1/2 h-full geist flex flex-col justify-end"> <h5
+                 class="hidden lg:block text-48-126 font-semibold cursor-pointer"
+                 bind:this={name_footer}
+                 >
+                 Wizard.
+                </h5>
+            </div>
+            <div class="w-full lg:w-1/2 h-full geist flex flex-row justify-center gap-4" >
+                <div class="flex flex-col h-full w-full justify-center items-center lg:items-end gap-4" >
+                    <div class="flex gap-2">
+                        <a
+                                href="https://www.linkedin.com/in/swoyam-pokharel-557779340/"
+                                target="_blank"
+                                rel="noopener"
+                                class="bg-black text-white w-fit text-16-32 px-4 py-2 rounded-lg hover:opacity-80 transition"
+                                >
+                                Linkedin
+                        </a>
+                            <a
+                                    href="https://github.com/PS-Wizard"
+                                    target="_blank"
+                                    rel="noopener"
+                                    class="bg-black text-white w-fit text-16-32 px-4 py-2 rounded-lg hover:opacity-80 transition"
+                                    >
+                                    Github
+                            </a>
+                                <a
+                                        href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                                        target="_blank"
+                                        rel="noopener"
+                                        class="hidden md:block bg-black text-white w-fit text-16-32 px-4 py-2 rounded-lg hover:opacity-80 transition"
+                                        >
+                                        Hopefully More lol
+                                </a>
+                    </div>
+                    <div class="flex gap-2">
+                        <a
+                                href="https://pswoyam.com.np/"
+                                target="_blank"
+                                rel="noopener"
+                                class="bg-black text-white w-fit text-16-32 px-4 py-2 rounded-lg hover:opacity-80 transition"
+                                >
+                                Portfolio
+                        </a>
+                            <a
+                                    href="mailto:p.swoyam.1@gmail.com"
+                                    target="_blank"
+                                    rel="noopener"
+                                    class="bg-black text-white w-fit text-16-32 px-4 py-2 rounded-lg hover:opacity-80 transition"
+                                    >
+                                    me@pswoyam.com.np
+                            </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+

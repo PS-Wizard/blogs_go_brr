@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Page Transition on Swoyam&#39;s Dev Blogs</title>
+    <link>http://localhost:1313/tags/page-transition/</link>
+    <description>Recent content in Page Transition on Swoyam&#39;s Dev Blogs</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 01 Sep 2025 07:53:18 +0545</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/page-transition/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Remake_01</title>
+      <link>http://localhost:1313/posts/web_dev_101/remake_01/</link>
+      <pubDate>Mon, 01 Sep 2025 07:53:18 +0545</pubDate>
+      <guid>http://localhost:1313/posts/web_dev_101/remake_01/</guid>
+      <description></description>
+    </item>
+  </channel>
+</rss>
