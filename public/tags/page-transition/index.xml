@@ -13,7 +13,7 @@
       <link>http://localhost:1313/posts/web_dev_101/remake_01/</link>
       <pubDate>Mon, 01 Sep 2025 07:53:18 +0545</pubDate>
       <guid>http://localhost:1313/posts/web_dev_101/remake_01/</guid>
-      <description></description>
+      <description>&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;&#xA;&lt;p&gt;Okay, so this website &lt;a href=&#34;https://theartofdocumentary.com/&#34;&gt;The Art Of Documentary&lt;/a&gt; has this really cool animation where one page slides up, and another one takes it&amp;rsquo;s place but, the catch is that both pages are visible, during the transition, and it gives a really unique effect. You have to check it out yourself to get what I mean since I can&amp;rsquo;t actually show a video over here ( im on vercel free plan :&amp;lt; ), but I will be showing how to acheive a similar effect with &lt;code&gt;in:&lt;/code&gt; and &lt;code&gt;out:&lt;/code&gt; directives in svelte.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

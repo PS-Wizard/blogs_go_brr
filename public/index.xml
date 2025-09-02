@@ -6,14 +6,21 @@
     <description>Recent content on Swoyam&#39;s Dev Blogs</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 01 Sep 2025 07:53:18 +0545</lastBuildDate>
+    <lastBuildDate>Tue, 02 Sep 2025 19:11:04 +0545</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Proposal</title>
+      <link>http://localhost:1313/posts/chess_engine/literature_review/</link>
+      <pubDate>Tue, 02 Sep 2025 19:11:04 +0545</pubDate>
+      <guid>http://localhost:1313/posts/chess_engine/literature_review/</guid>
+      <description>&lt;p&gt;&lt;img src=&#34;http://localhost:1313/images/chess_engine/logo.png&#34; alt=&#34;Logo&#34;&gt;&lt;/p&gt;&#xA;&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;&#xA;&lt;p&gt;Chess can be traced back to nearly 1500 years with it&amp;rsquo;s earliest known predecessor called Chaturanga in India. The game of chess has long served as a testing ground for computer science, specially in the study of search algorithms, data structures and decision making under constraints. The world of chess programming has come a long way since the earliest known chess algorithm written by Alan Turing.&lt;/p&gt;&#xA;&lt;p&gt;The goal of this project is to build a chess engine entirely from scratch in Rust. The engine will be modular, with core components such as &lt;a href=&#34;https://www.chessprogramming.org/Bitboards&#34;&gt; Bitboards &lt;/a&gt;, move generation via &lt;a href=&#34;https://www.google.com/search?client=firefox-b-d&amp;amp;channel=entpr&amp;amp;q=magic+bitboards&#34;&gt;Magics&lt;/a&gt;, Legality checks, evaluation etc being published as a separate crates. Along side the development, the entire process will be documented in this &lt;a href=&#34;https://blogs.pswoyam.com.np&#34;&gt;blog&lt;/a&gt;.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Remake_01</title>
       <link>http://localhost:1313/posts/web_dev_101/remake_01/</link>
       <pubDate>Mon, 01 Sep 2025 07:53:18 +0545</pubDate>
       <guid>http://localhost:1313/posts/web_dev_101/remake_01/</guid>
-      <description></description>
+      <description>&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;&#xA;&lt;p&gt;Okay, so this website &lt;a href=&#34;https://theartofdocumentary.com/&#34;&gt;The Art Of Documentary&lt;/a&gt; has this really cool animation where one page slides up, and another one takes it&amp;rsquo;s place but, the catch is that both pages are visible, during the transition, and it gives a really unique effect. You have to check it out yourself to get what I mean since I can&amp;rsquo;t actually show a video over here ( im on vercel free plan :&amp;lt; ), but I will be showing how to acheive a similar effect with &lt;code&gt;in:&lt;/code&gt; and &lt;code&gt;out:&lt;/code&gt; directives in svelte.&lt;/p&gt;</description>
     </item>
     <item>
       <title>NNUE Theory</title>

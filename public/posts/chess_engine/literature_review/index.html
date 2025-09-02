@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+        <meta charset="UTF-8" />
+        <title>Proposal</title>
+
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        
+        <meta name="description" content="Outline For Proposal Review">
+        <meta name="author" content="Swoyam Pokharel" />
+        <meta name="keywords" content="blog, dev, swoyam, hugo, minimal" />
+
+        
+        <meta property="og:title" content="Proposal">
+        <meta property="og:description" content="Outline For Proposal Review">
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="http://localhost:1313/posts/chess_engine/literature_review/">
+        
+        <meta property="og:image" content="http://localhost:1313/images/preview.png">
+
+        
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="Proposal">
+        <meta name="twitter:description" content="Outline For Proposal Review">
+
+        
+        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+        
+        <link rel="stylesheet" href="/css/output.css">
+    </head>
+    <body class="w-screen text-white">
+        <header class="flex justify-between items-center p-8">
+            <a class="uppercase font-bold text-xl tracking-widest" href="/">(._.)</a>
+            <nav class="flex gap-6 text-sm underline uppercase tracking-wide"
+                 >
+                 <a
+                         href="https://github.com/PS-Wizard"
+                         target="_blank"
+                         rel="noopener"
+                         class="hover:underline"
+                         >
+                         GITHUB
+                 </a>
+                     <a
+                             href="https://www.linkedin.com/in/swoyam-pokharel-557779340/"
+                             target="_blank"
+                             rel="noopener"
+                             class="hover:underline"
+                             >
+                             LINKEDIN
+                     </a>
+            </nav>
+        </header>
+
+        <div class="min-h-screen main-content w-full pb-16 text-white ">
+            
+
+
+<div class="fixed bottom-6 right-6 z-50">
+  <details class="group relative">
+    <summary class="bg-white text-black px-5 py-3 rounded-full shadow-lg cursor-pointer text-sm font-semibold transition hover:bg-neutral-100">
+      Table of Contents
+    </summary>
+    <div class="absolute bottom-14 right-0 w-[90vw] md:w-[28rem] max-h-[32rem] overflow-y-auto bg-neutral-900 text-white border border-[#252525] rounded-xl shadow-2xl p-6 mt-3 prose prose-invert text-sm leading-relaxed ">
+      <h2 class="font-bold mb-4">Jump to section</h2>
+      <nav class="[&_ul]:pl-4 [&_ul]:list-disc [&_li]:ml-1 [&_a]:no-underline [&_a:hover]:underline">
+          <nav id="TableOfContents">
+  <ul>
+    <li><a href="#introduction">Introduction</a></li>
+    <li><a href="#problem-statement">Problem Statement</a></li>
+    <li><a href="#aims-and-objectives">Aims and Objectives</a></li>
+    <li><a href="#preliminary-literature-review">Preliminary Literature Review</a>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#this-the-part-im-confused-on">This the part im confused on</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#artifacts">Artifacts</a></li>
+    <li><a href="#testing">Testing:</a></li>
+    <li><a href="#project-management-plan">Project Management Plan</a></li>
+  </ul>
+</nav>
+      </nav>
+    </div>
+  </details>
+</div>
+
+<div class="w-full flex justify-center items-center p-4 my-8 flex-col">
+    <div class="w-full max-w-7xl pb-4 flex flex-col md:flex-row justify-between items-center">
+        <nav class="text-sm text-neutral-400 mb-4">
+            <a href="/posts" class="hover:underline">Posts</a>
+            
+            / <a href="/posts/chess_engine/" class="hover:underline">Chess Engine</a>
+            
+            / <span class="text-white">Proposal</span>
+        </nav>
+        
+    </div>
+<img src="/images/chess_engine/chess_cover.png" alt="Card image" class="max-w-7xl h-69 object-cover rounded-xl" />
+</div>
+<div class="relative max-w-7xl mx-auto px-4 flex flex-col">
+    
+    <main class="prose prose-invert max-w-7xl flex-grow break-words">
+        <p><img src="/images/chess_engine/logo.png" alt="Logo"></p>
+<h1 id="introduction">Introduction</h1>
+<p>Chess can be traced back to nearly 1500 years with it&rsquo;s earliest known predecessor called Chaturanga in India. The game of chess has long served as a testing ground for computer science, specially in the study of search algorithms, data structures and decision making under constraints. The world of chess programming has come a long way since the earliest known chess algorithm written by Alan Turing.</p>
+<p>The goal of this project is to build a chess engine entirely from scratch in Rust. The engine will be modular, with core components such as <a href="https://www.chessprogramming.org/Bitboards"> Bitboards </a>, move generation via <a href="https://www.google.com/search?client=firefox-b-d&amp;channel=entpr&amp;q=magic+bitboards">Magics</a>, Legality checks, evaluation etc being published as a separate crates. Along side the development, the entire process will be documented in this <a href="https://blogs.pswoyam.com.np">blog</a>.</p>
+<hr>
+<h1 id="problem-statement">Problem Statement</h1>
+<p>While modern chess engines like <a href="https://stockfishchess.org/">Stockfish</a> and <a href="https://en.wikipedia.org/wiki/AlphaZero">AlphaZero</a> along with many others do exist, they are all finished products, often backed by thousands of open source contributors. This makes it difficult for learners who are trying to understand how everything ties together, such as how move generation, legality checks, searching, ordering work. Furthermore, there isn&rsquo;t a resource benchmarking different techniques involved in chess programming, that results to the highest performance gain.</p>
+<p>Additionally despite the global progress in chess engine programming, as of today, (September, 02, 2025), there has not yet been a chess engine originating from Nepal, which also leaves a opportunity to contribute to this space. Therefore, the research question is:</p>
+<blockquote>
+<p>How does each incremental algorithmic enhancement (with techniques such as alpha-beta pruning, iterative deepening, move ordering, endgame tables etc) affect a chess engine’s playing strength and efficiency?</p></blockquote>
+<hr>
+<h1 id="aims-and-objectives">Aims and Objectives</h1>
+<p><strong>The Aim:</strong>
+To build a chess engine in Rust from scratch and benchmark incremental performance gains by implying different techniques used in chess programming.</p>
+<p><strong>The Objectives:</strong></p>
+<ul>
+<li>Implement baseline engine ( Bitboards, NNUE based eval function, UCI Protocol Support, Basically an engine that can play chess)</li>
+<li>Incrementally integrate different techniques: ( Subject to be added upon based on the timeline)
+<ul>
+<li>Minimax / Negamax as the baseline</li>
+<li>Alpha Beta Pruning</li>
+<li>Move Ordering ( eg, Captures First, Checks First, Promotions First etc )</li>
+<li>Quiescence Search</li>
+<li>Iterative Deepening</li>
+</ul>
+</li>
+<li>Benchmark each engine generation against it&rsquo;s own predecessor</li>
+<li>Publish modular crates for core components</li>
+<li>Document progress and learning in a public blog.</li>
+</ul>
+<hr>
+<h1 id="preliminary-literature-review">Preliminary Literature Review</h1>
+<h3 id="this-the-part-im-confused-on">This the part im confused on</h3>
+<p><img src="/images/memes/pepe-cry.gif" alt="Crying pepe"></p>
+<p>Chess engines can be categorized into traditional search-based engines like Stockfish and neural network–assisted engines like Leela, Chess Zero. Both types share several core components:</p>
+<ul>
+<li>Some Sort Of Search</li>
+<li>Some Sort Of Pruning</li>
+<li>Some Sort of Move ordering</li>
+<li>Evaluation functions, which are either hand-crafted (as in classic engines) or augmented with neural networks (as in Stockfish with NNUE or Leela Chess Zero with fully trained networks)</li>
+</ul>
+<p>Modern chess engines are increasingly using alternative methods, such as Monte Carlo Tree Search (MCTS) paired with fully trained neural networks, as seen in engines like Leela Chess Zero.</p>
+<p>However, this project will focus on a classic search-based approach, implementing Minimax/Negamax as the backbone, enhanced with Alpha-Beta pruning, move ordering heuristics, and Quiescence Search.</p>
+<p>For the evaluation function, Neural network evaluation similar to existing NNUE architecture from Stockfish will be used, keeping the focus on understanding and benchmarking incremental algorithmic improvements. While some high-performance engines also implement parallel search techniques such as Young Brothers Wait Concept (YBWC) or Lazy SMP to leverage multicore processors, this project will focus on sequential search methods for simplicity. Neural network evaluation will use the existing NNUE architecture from Stockfish rather than training a new model from scratch, keeping the focus on understanding and benchmarking incremental algorithmic improvements.</p>
+<hr>
+<h1 id="artifacts">Artifacts</h1>
+<p><strong>Rust Crates For</strong>:</p>
+<ul>
+<li>Bitboards</li>
+<li>Move Generation</li>
+<li>Evaluation</li>
+<li>Search</li>
+<li>UCI protocol</li>
+<li>Blog post documenting each stage</li>
+</ul>
+<hr>
+<h1 id="testing">Testing:</h1>
+<p>As before mentioned, testing will happen based on generation. While other alternatives were considered such as a bot account on the LiChess platform, it was eventaually turned down because of the inconvience of having to have a personal VPS even for testing, with each test spanning hours.</p>
+<p>However, for the first ancestor, to get a rough estimate on it&rsquo;s Elo, It will be facing random people who know how to play chess. Furthermore, techniques like <a href="https://www.chessprogramming.org/Perft">Perft</a> will be applied to check the correctness of move generation.</p>
+<hr>
+<h1 id="project-management-plan">Project Management Plan</h1>
+<p>The project will use Kanban as the framework for task tracking, but following a Waterfall approach for overall planning. This approach is aimed because the requirements for the chess engine are well-defined and unlikely to change, allowing for a structured, phase-based development process while still visually managing tasks in Trello.</p>
+<p>The timeline is for ~ 7 months, 10 days.
+<img src="/images/chess_engine/Timeline.png" alt="Estimated Timeline">
+( Subject to change, as I am increasingly realising how i might have to push UCI to one of the earlier phases)</p>
+
+    </main>
+    
+</div>
+<div class="w-full flex justify-center mt-12 border-t border-white/10 pt-6 text-sm text-white gap-2 flex-wrap">
+    
+    <a href="/posts/web_dev_101/remake_01/" rel="prev" class="hover:underline px-3 py-2 bg-white text-black font-bold rounded-md text-xs sm:text-sm">
+        ← Remake_01
+    </a>
+    
+
+    
+</div>
+
+        </div>
+        <div class="w-full flex items-center bg-[#A3D5FF] h-[30vh] text-black px-10" >
+            <div class="lg:w-1/2 h-full geist flex flex-col justify-end"> <h5
+                 class="hidden lg:block text-48-126 font-semibold cursor-pointer"
+                 bind:this={name_footer}
+                 >
+                 Wizard.
+                </h5>
+            </div>
+            <div class="w-full lg:w-1/2 h-full geist flex flex-row justify-center gap-4" >
+                <div class="flex flex-col h-full w-full justify-center items-center lg:items-end gap-4" >
+                    <div class="flex gap-2">
+                        <a
+                                href="https://www.linkedin.com/in/swoyam-pokharel-557779340/"
+                                target="_blank"
+                                rel="noopener"
+                                class="bg-black text-white w-fit text-16-32 px-4 py-2 rounded-lg hover:opacity-80 transition"
+                                >
+                                Linkedin
+                        </a>
+                            <a
+                                    href="https://github.com/PS-Wizard"
+                                    target="_blank"
+                                    rel="noopener"
+                                    class="bg-black text-white w-fit text-16-32 px-4 py-2 rounded-lg hover:opacity-80 transition"
+                                    >
+                                    Github
+                            </a>
+                                <a
+                                        href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                                        target="_blank"
+                                        rel="noopener"
+                                        class="hidden md:block bg-black text-white w-fit text-16-32 px-4 py-2 rounded-lg hover:opacity-80 transition"
+                                        >
+                                        Hopefully More lol
+                                </a>
+                    </div>
+                    <div class="flex gap-2">
+                        <a
+                                href="https://pswoyam.com.np/"
+                                target="_blank"
+                                rel="noopener"
+                                class="bg-black text-white w-fit text-16-32 px-4 py-2 rounded-lg hover:opacity-80 transition"
+                                >
+                                Portfolio
+                        </a>
+                            <a
+                                    href="mailto:p.swoyam.1@gmail.com"
+                                    target="_blank"
+                                    rel="noopener"
+                                    class="bg-black text-white w-fit text-16-32 px-4 py-2 rounded-lg hover:opacity-80 transition"
+                                    >
+                                    me@pswoyam.com.np
+                            </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+

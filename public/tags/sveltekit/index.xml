@@ -6,14 +6,21 @@
     <description>Recent content in Sveltekit on Swoyam&#39;s Dev Blogs</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 01 Sep 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 01 Sep 2025 07:53:18 +0545</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/sveltekit/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Remake_01</title>
+      <link>http://localhost:1313/posts/web_dev_101/remake_01/</link>
+      <pubDate>Mon, 01 Sep 2025 07:53:18 +0545</pubDate>
+      <guid>http://localhost:1313/posts/web_dev_101/remake_01/</guid>
+      <description>&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;&#xA;&lt;p&gt;Okay, so this website &lt;a href=&#34;https://theartofdocumentary.com/&#34;&gt;The Art Of Documentary&lt;/a&gt; has this really cool animation where one page slides up, and another one takes it&amp;rsquo;s place but, the catch is that both pages are visible, during the transition, and it gives a really unique effect. You have to check it out yourself to get what I mean since I can&amp;rsquo;t actually show a video over here ( im on vercel free plan :&amp;lt; ), but I will be showing how to acheive a similar effect with &lt;code&gt;in:&lt;/code&gt; and &lt;code&gt;out:&lt;/code&gt; directives in svelte.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Learning Web Dev</title>
       <link>http://localhost:1313/posts/web_dev_101/</link>
       <pubDate>Mon, 01 Sep 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/posts/web_dev_101/</guid>
-      <description>&lt;p&gt;A bunch of posts on different aspects of web development, but mostly remaking animations.&lt;/p&gt;</description>
+      <description>&lt;p&gt;A bunch of posts on different aspects of web development, but mostly remaking animations &lt;strong&gt;in svelte&lt;/strong&gt;&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>
