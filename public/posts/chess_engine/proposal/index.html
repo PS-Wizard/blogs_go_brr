@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+        <meta charset="UTF-8" />
+        <title>Proposal</title>
+
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        
+        <meta name="description" content="Proposal For Chess Engine">
+        <meta name="author" content="Swoyam Pokharel" />
+        <meta name="keywords" content="blog, dev, swoyam, hugo, minimal" />
+
+        
+        <meta property="og:title" content="Proposal">
+        <meta property="og:description" content="Proposal For Chess Engine">
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="http://localhost:1313/posts/chess_engine/proposal/">
+        
+        <meta property="og:image" content="http://localhost:1313/images/preview.png">
+
+        
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="Proposal">
+        <meta name="twitter:description" content="Proposal For Chess Engine">
+
+        
+        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+        
+        <link rel="stylesheet" href="/css/output.css">
+    </head>
+    <body class="w-screen text-white">
+        <header class="flex justify-between items-center p-8">
+            <a class="uppercase font-bold text-xl tracking-widest" href="/">(._.)</a>
+            <nav class="flex gap-6 text-sm underline uppercase tracking-wide"
+                 >
+                 <a
+                         href="https://github.com/PS-Wizard"
+                         target="_blank"
+                         rel="noopener"
+                         class="hover:underline"
+                         >
+                         GITHUB
+                 </a>
+                     <a
+                             href="https://www.linkedin.com/in/swoyam-pokharel-557779340/"
+                             target="_blank"
+                             rel="noopener"
+                             class="hover:underline"
+                             >
+                             LINKEDIN
+                     </a>
+            </nav>
+        </header>
+
+        <div class="min-h-screen main-content w-full pb-16 text-white ">
+            
+
+
+<div class="fixed bottom-6 right-6 z-50">
+  <details class="group relative">
+    <summary class="bg-white text-black px-5 py-3 rounded-full shadow-lg cursor-pointer text-sm font-semibold transition hover:bg-neutral-100">
+      Table of Contents
+    </summary>
+    <div class="absolute bottom-14 right-0 w-[90vw] md:w-[28rem] max-h-[32rem] overflow-y-auto bg-neutral-900 text-white border border-[#252525] rounded-xl shadow-2xl p-6 mt-3 prose prose-invert text-sm leading-relaxed ">
+      <h2 class="font-bold mb-4">Jump to section</h2>
+      <nav class="[&_ul]:pl-4 [&_ul]:list-disc [&_li]:ml-1 [&_a]:no-underline [&_a:hover]:underline">
+          <nav id="TableOfContents">
+  <ul>
+    <li><a href="#introduction">Introduction</a></li>
+    <li><a href="#problem-statement">Problem Statement</a></li>
+    <li><a href="#aims-and-objectives">Aims and Objectives</a></li>
+    <li><a href="#research">Research</a>
+      <ul>
+        <li>
+          <ul>
+            <li><a href="#board-representation">Board Representation</a>
+              <ul>
+                <li><a href="#square-centric">Square Centric</a></li>
+                <li><a href="#piece-centric">Piece Centric</a></li>
+              </ul>
+            </li>
+            <li><a href="#evaluation">Evaluation</a></li>
+            <li><a href="#search">Search</a></li>
+            <li><a href="#other-extensions">Other Extensions</a></li>
+            <li><a href="#communication--notations">Communication &amp; Notations</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#artifacts">Artifacts</a></li>
+    <li><a href="#testing">Testing</a></li>
+    <li><a href="#project-management-plan">Project Management Plan</a></li>
+    <li><a href="#diagram-showing-the-overall-program-flow">Diagram Showing The Overall Program Flow</a></li>
+  </ul>
+</nav>
+      </nav>
+    </div>
+  </details>
+</div>
+
+<div class="w-full flex justify-center items-center p-4 my-8 flex-col">
+    <div class="w-full max-w-7xl pb-4 flex flex-col md:flex-row justify-between items-center">
+        <nav class="text-sm text-neutral-400 mb-4">
+            <a href="/posts" class="hover:underline">Posts</a>
+            
+            / <a href="/posts/chess_engine/" class="hover:underline">Chess Engine</a>
+            
+            / <span class="text-white">Proposal</span>
+        </nav>
+        
+    </div>
+<img src="/images/chess_engine/chess_cover.png" alt="Card image" class="max-w-7xl h-69 object-cover rounded-xl" />
+</div>
+<div class="relative max-w-7xl mx-auto px-4 flex flex-col">
+    
+    <main class="prose prose-invert max-w-7xl flex-grow break-words">
+        <p><img src="/images/chess_engine/logo.png" alt="Logo"></p>
+<h1 id="introduction">Introduction</h1>
+<p>Chess has long served as a testing ground for computer science, specially in the study of search algorithms, data structures and decision making under constraints.</p>
+<p><strong>OopsMate</strong> aims to be a chess engine written from scratch in Rust. The engine aims to have a baseline <a href="https://en.wikipedia.org/wiki/Elo_rating_system">Elo Rating</a> of at-least 1800. The engine itself will follow a more &ldquo;classical&rdquo; approach to chess engines, and the main goal of this project is to explore and benchmark different techniques used in chess programming to enhance engine performance.</p>
+<h1 id="problem-statement">Problem Statement</h1>
+<p>This project aims to fill the gap in couple a couple of things. Firstly, although chess engines like <a href="https://stockfishchess.org/">Stockfish</a>, <a href="https://www.chess.com/terms/alphazero-chess-engine">Alpha Zero</a> and many others do exist, they are all finished products, often open sourced and backed by thousands of open source contributors or proprietary engines in private development. As such, it is often hard for new comers to answer &ldquo;<em>how did they make this engine</em>&rdquo;, or how different components in chess engines such as <a href="https://www.chessprogramming.org/Move_Ordering">Ordering</a>, <a href="https://www.chessprogramming.org/Evaluation">Evaluation</a>, <a href="https://www.chessprogramming.org/Search">Search</a> etc tie together. Furthermore, there isn&rsquo;t a resource directly benchmarking these different techniques for the most significant increase in each component. Finally, despite the global progress in chess engine programming, as of (September 03, 2025) there is yet to be a chess engine developed in the country Nepal, which opens up room for contribution.</p>
+<p>This project, therefore, aims to answer the following question:</p>
+<blockquote>
+<p>How different techniques involved in chess programming affect a chess engine&rsquo;s playing strength and efficiency</p></blockquote>
+<p>The entire development will be documented <a href="https://blogs.pswoyam.com.np/">here</a>, providing newcomers with a comprehensive resource to understand and implement a fully functional chess engine.</p>
+<hr>
+<h1 id="aims-and-objectives">Aims and Objectives</h1>
+<p><strong>The Aim</strong>
+To build a chess engine in Rust from scratch and benchmark incremental performance gains by implying different techniques used in chess programming.</p>
+<p><strong>The Objectives</strong></p>
+<ul>
+<li>
+<p>Implement baseline engine</p>
+<ul>
+<li><a href="https://www.chessprogramming.org/Bitboards">BitBoards</a></li>
+<li><a href="https://www.chessprogramming.org/NNUE">NNUE</a></li>
+<li><a href="https://www.chessprogramming.org/Magic_Bitboards">Magics</a></li>
+<li><a href="https://www.chessprogramming.org/Negamax">Negamax</a></li>
+<li><a href="https://www.chessprogramming.org/Forsyth-Edwards_Notation">FEN</a></li>
+<li><a href="https://www.chessprogramming.org/UCI">UCI</a></li>
+</ul>
+</li>
+<li>
+<p>Incrementally integrate different techniques:</p>
+<ul>
+<li><a href="https://www.chessprogramming.org/Evaluation">Evaluation</a>
+<ul>
+<li><a href="https://www.chessprogramming.org/NNUE">NNUE</a></li>
+<li>HCE (Hand Crafted Evaluation)</li>
+</ul>
+</li>
+<li><a href="https://www.chessprogramming.org/Pruning">Pruning</a>:
+<ul>
+<li><a href="https://www.chessprogramming.org/Alpha-Beta">Alpha Beta Pruning</a></li>
+<li><a href="https://www.chessprogramming.org/Null_Move_Pruning">Null Move Pruning</a></li>
+<li>Depending on time constraints I&rsquo;d like to play around with <a href="https://www.chessprogramming.org/Futility_Pruning">Futility Pruning</a> too</li>
+</ul>
+</li>
+<li><a href="https://www.chessprogramming.org/MVV-LVA">Move Ordering</a>
+<ul>
+<li>Captures First (eg. <a href="https://www.chessprogramming.org/MVV-LVA">MVV-LVA</a>),</li>
+<li>Promotions First</li>
+</ul>
+</li>
+<li>Other Extensions:
+<ul>
+<li><a href="https://www.chessprogramming.org/Quiescence_Search">Quiescence Search</a></li>
+<li><a href="https://www.chessprogramming.org/Iterative_Deepening">Iterative Deepening</a></li>
+</ul>
+</li>
+<li>Benchmark each engine generation against it&rsquo;s own predecessor</li>
+<li>Document progress and learning in a public blog.</li>
+</ul>
+<hr>
+</li>
+</ul>
+<h1 id="research">Research</h1>
+<p>This project aims to be a more &ldquo;classical&rdquo; chess engine, focusing on building a solid baseline and then incrementally integrating and benchmarking established techniques.  Each chosen technique is selected for it&rsquo;s proven effectiveness in chess programming. The project also emphasizes benchmarking each iteration against its predecessor to objectively measure improvements, and documenting progress to contribute to both personal learning and the broader chess programming community.</p>
+<h3 id="board-representation">Board Representation</h3>
+<p>Representing the board is the foundational step in setting up the path for the rest of the chess engine. There are two different main types of board representation, <strong>Piece Centric</strong> and <strong>Square Centric</strong>.</p>
+<h4 id="square-centric">Square Centric</h4>
+<p>This approach focuses on the board itself, typically using a 2D (eg. <a href="https://www.chessprogramming.org/8x8_Board">8x8</a>) or a 1D (eg. <a href="https://lichess.org/@/likeawizard/blog/review-of-different-board-representations-in-computer-chess/S9eQCAWa#one-dimensional-64array">64</a>) array where each square stores what piece occupies it, if any. It is particularly useful because it is the most intuitive, easy to visualize and simple to implement as it&rsquo;s basically just <code>board [8][8]</code>. But, it struggles large scale computations like generating all moves for multiple pieces.</p>
+<h4 id="piece-centric">Piece Centric</h4>
+<p>In this approach, each piece type is tracked separately, often using techniques like <a href="https://www.chessprogramming.org/Bitboards">BitBoards</a>, and they shine making certain operations like generating moves or checking attacks on a square faster.</p>
+<p>This project aims to use the <a href="https://www.chessprogramming.org/Bitboards">BitBoards</a> representation. This is because BitBoards are performant because they allow <strong>parallel bitwise operations</strong> such as <code>AND</code>, <code>OR</code>, <code>NOT</code> to quickly set or query the game states <a href="https://en.wikipedia.org/wiki/Bitboard">-&gt; 1</a>. This, paired with the fact that most architectures these days are 64 bits, and conveniently enough there are exactly 64 squares in a chess board. This alignment makes it so that each bitboard fits in a single machine [word](<a href="https://en.wikipedia.org/wiki/Word_(computer_architecture)">https://en.wikipedia.org/wiki/Word_(computer_architecture)</a>. Furthermore, the use of bitboards enables the use of a technique called <a href="https://www.chessprogramming.org/Magic_Bitboards">Magics</a>, which allows move generation for sliding pieces like queens, bishops and rooks to be constant time <code>O(1)</code></p>
+<h3 id="evaluation">Evaluation</h3>
+<p>For a engine to come up with good moves, it needs to first know what makes a position good or bad. Each engine defines a score function: <code>eval(position) -&gt; number</code>, but there are different ways to do so. Initially, the evaluation function was handcrafted (HCE) which considered factors such as: <code>material</code>, <code>piece-square tables</code>, <code>king safety</code>, <code>mobility</code> etc. These metrics were often weighted so that it would look like this at the end:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>    eval <span style="color:#f92672">=</span> <span style="color:#ae81ff">9</span><span style="color:#f92672">*</span>queens <span style="color:#f92672">+</span> <span style="color:#ae81ff">5</span><span style="color:#f92672">*</span>rooks <span style="color:#f92672">+</span> <span style="color:#ae81ff">3</span><span style="color:#f92672">*</span>knights <span style="color:#f92672">+</span> <span style="color:#f92672">...</span> <span style="color:#f92672">+</span> mobility_bonus <span style="color:#f92672">+</span> king_safety_penalty
+</span></span></code></pre></div><p>However, a newer approach to this evaluation functions are efficiency updatable neural networks; <a href="https://www.chessprogramming.org/NNUE">NNUEs</a> or sometimes styled as ƎUИИ. Originally from <a href="https://en.wikipedia.org/wiki/Shogi">Shogi</a>, this technique has made it&rsquo;s way to the world of chess programming, with one of the first introductions of it being in <a href="https://www.chessprogramming.org/Stockfish_NNUE">Stockfish</a>. NNUEs learn to evaluate positions from games instead of handcrafted weights, where the inputs are usually - <a href="https://www.chessprogramming.org/Bitboards">BitBoards</a> or piece-square occupancy maps and the output is a score for the position. They are fast enough to update incrementally, during move search, hence the name &ldquo;<em>Efficiently Updatabale</em> neural networks&rdquo;.</p>
+<p>Finally, engines like <a href="https://www.chess.com/terms/alphazero-chess-engine">Alpha Zero</a> use pure reinforcement learning, and their evaluation of position comes from self play.
+This project aims to explore both classical HCE and modern NNUE approaches for the evaluation function, while deliberately not pursuing the self-play alternative due to its substantial computational requirements and the extensive data and infrastructure necessary for effective implementation.</p>
+<h3 id="search">Search</h3>
+<p>To search for the best move, chess engines explore potential sequences of moves in the background and call the evaluation function, to get a metric of the position. The core challenge is that the number of possible move sequences grows exponentially with depth. For a zero sum game like chess, MinMax is the natural approach, it recursively evaluates the game tree by alternating between maximizing the score from the evaluation function for itself, and minimizing the score for the opponent.  <a href="http://lib.ysu.am/disciplines_bk/efdd4d1d4c2087fe1cbe03d9ced67f34.pdf">Russell, S., &amp; Norvig, P. (2021)</a>. A commonly used variation is <a href="https://www.chessprogramming.org/Negamax">Negamax</a>, which simplifies the implementation of Minimax by taking advantage of the zero-sum property of chess.</p>
+<p>However, while naive Minimax or Negamax evaluates all nodes in the game tree, engines improve upon this using pruning techniques such as:
+- Alpha beta pruning, which eliminates branches that cannot affect the final decision. <a href="https://www.netlib.org/utk/lsi/pcwLSI/text/node351.html">-&gt; 2</a>
+- Null Move Pruning, which assumes doing nothing ( passing a move )  is worse than playing the <em>best possible legal move</em>, allowing engines to prune branches that are unlikely to improve the position <a href="https://www.chessprogramming.org/Null_Move_Pruning#core-idea">-&gt; 3</a></p>
+<p>This project aims to explore both of these techniques to improve search efficiency while maintaining optimal decision making.</p>
+<h3 id="other-extensions">Other Extensions</h3>
+<p>To further enhance search quality and efficiency, modern chess engines implement additional techniques beyond standard pruning and Negamax/Minimax.</p>
+<ul>
+<li>
+<p><a href="www.chessprogramming.org/Quiescence_Search"> Quiescence Search </a>: This technique extends the search at nodes for &ldquo;noisy&rdquo; positions, such as captures or checks to avoid the <a href="https://en.wikipedia.org/wiki/Horizon_effect">horizon effect</a>.</p>
+</li>
+<li>
+<p><a href="https://en.wikipedia.org/wiki/Iterative_deepening_depth-first_search"> Iterative Deepening </a>: This technique repeatedly  searches the game tree to increasing depths, using results from shallower searches to guide move ordering in deeper searches. This improves pruning efficiency and allowing &ldquo;anytime behavior&rdquo;, which basically means that the engine can return the last analyzed best move even if interrupted, say in a time based setting.</p>
+</li>
+</ul>
+<p>This project aims to integrate both of these techniques to improve move selection under practical constraints.</p>
+<h3 id="communication--notations">Communication &amp; Notations</h3>
+<p>To standardize this engine, the project aims to integrate the standard protocol <a href="https://www.chessprogramming.org/UCI">UCI</a> and as such, it&rsquo;s dependency <a href="https://www.chessprogramming.org/Forsyth-Edwards_Notation">FEN</a>.</p>
+<hr>
+<h1 id="artifacts">Artifacts</h1>
+<p><strong>Rust Crates For</strong>:</p>
+<ul>
+<li>Bitboards</li>
+<li>Move Generation Using Magic Bitboards + Look Up Tables</li>
+<li>Evaluation
+<ul>
+<li>NNUE</li>
+<li>HCE</li>
+</ul>
+</li>
+<li>Search
+<ul>
+<li>Alpha-Beta Pruning</li>
+<li>Null Move Pruning</li>
+</ul>
+</li>
+<li>Ordering
+<ul>
+<li>MVV-LVA,</li>
+<li>Promotions First</li>
+</ul>
+</li>
+<li>UCI protocol &amp; FEN</li>
+</ul>
+<p>Along with blog post documenting the each stage.</p>
+<hr>
+<h1 id="testing">Testing</h1>
+<p>Testing will proceed generation by generation. While alternatives such as using a bot account on the <a href="https://lichess.org/">Lichess</a> platform were considered, this approach was ultimately set aside due to the logistical and financial challenge of maintaining a personal VPS for extended testing sessions, each potentially lasting several hours.</p>
+<p>For the initial baseline engine, a rough estimate of its Elo will be obtained by having it play against human opponents of varying skill levels. Additionally, techniques like <a href="https://www.chessprogramming.org/Perft">Perft</a> will be used to verify the correctness of move generation.</p>
+<hr>
+<h1 id="project-management-plan">Project Management Plan</h1>
+<p>The project will use Kanban as the framework for task tracking, but following a Waterfall approach for overall planning. This approach is aimed because the requirements for the chess engine are well-defined and unlikely to change, allowing for a structured, phase-based development process while still visually managing tasks in Trello.</p>
+<p>The timeline is for ~ 7 months, 10 days.
+<img src="/images/chess_engine/Timeline.png" alt="Estimated Timeline">
+( Subject to change, as I am increasingly realising how i might have to push UCI to one of the earlier phases)</p>
+<hr>
+<h1 id="diagram-showing-the-overall-program-flow">Diagram Showing The Overall Program Flow</h1>
+
+    </main>
+    
+</div>
+<div class="w-full flex justify-center mt-12 border-t border-white/10 pt-6 text-sm text-white gap-2 flex-wrap">
+    
+    <a href="/posts/web_dev_101/remake_01/" rel="prev" class="hover:underline px-3 py-2 bg-white text-black font-bold rounded-md text-xs sm:text-sm">
+        ← Remake_01
+    </a>
+    
+
+    
+    <a href="/posts/chess_engine/literature_review/" rel="next" class="hover:underline px-3 py-2 bg-white text-black font-bold rounded-md text-xs sm:text-sm">
+        Proposal →
+    </a>
+    
+</div>
+
+        </div>
+        <div class="w-full flex items-center bg-[#A3D5FF] h-[30vh] text-black px-10" >
+            <div class="lg:w-1/2 h-full geist flex flex-col justify-end"> <h5
+                 class="hidden lg:block text-48-126 font-semibold cursor-pointer"
+                 bind:this={name_footer}
+                 >
+                 Wizard.
+                </h5>
+            </div>
+            <div class="w-full lg:w-1/2 h-full geist flex flex-row justify-center gap-4" >
+                <div class="flex flex-col h-full w-full justify-center items-center lg:items-end gap-4" >
+                    <div class="flex gap-2">
+                        <a
+                                href="https://www.linkedin.com/in/swoyam-pokharel-557779340/"
+                                target="_blank"
+                                rel="noopener"
+                                class="bg-black text-white w-fit text-16-32 px-4 py-2 rounded-lg hover:opacity-80 transition"
+                                >
+                                Linkedin
+                        </a>
+                            <a
+                                    href="https://github.com/PS-Wizard"
+                                    target="_blank"
+                                    rel="noopener"
+                                    class="bg-black text-white w-fit text-16-32 px-4 py-2 rounded-lg hover:opacity-80 transition"
+                                    >
+                                    Github
+                            </a>
+                                <a
+                                        href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                                        target="_blank"
+                                        rel="noopener"
+                                        class="hidden md:block bg-black text-white w-fit text-16-32 px-4 py-2 rounded-lg hover:opacity-80 transition"
+                                        >
+                                        Hopefully More lol
+                                </a>
+                    </div>
+                    <div class="flex gap-2">
+                        <a
+                                href="https://pswoyam.com.np/"
+                                target="_blank"
+                                rel="noopener"
+                                class="bg-black text-white w-fit text-16-32 px-4 py-2 rounded-lg hover:opacity-80 transition"
+                                >
+                                Portfolio
+                        </a>
+                            <a
+                                    href="mailto:p.swoyam.1@gmail.com"
+                                    target="_blank"
+                                    rel="noopener"
+                                    class="bg-black text-white w-fit text-16-32 px-4 py-2 rounded-lg hover:opacity-80 transition"
+                                    >
+                                    me@pswoyam.com.np
+                            </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+

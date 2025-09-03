@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Proposal on Swoyam&#39;s Dev Blogs</title>
+    <link>http://localhost:1313/tags/proposal/</link>
+    <description>Recent content in Proposal on Swoyam&#39;s Dev Blogs</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 02 Sep 2025 19:11:04 +0545</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/proposal/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Proposal</title>
+      <link>http://localhost:1313/posts/chess_engine/proposal/</link>
+      <pubDate>Tue, 02 Sep 2025 19:11:04 +0545</pubDate>
+      <guid>http://localhost:1313/posts/chess_engine/proposal/</guid>
+      <description>&lt;p&gt;&lt;img src=&#34;http://localhost:1313/images/chess_engine/logo.png&#34; alt=&#34;Logo&#34;&gt;&lt;/p&gt;&#xA;&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;&#xA;&lt;p&gt;Chess has long served as a testing ground for computer science, specially in the study of search algorithms, data structures and decision making under constraints.&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;OopsMate&lt;/strong&gt; aims to be a chess engine written from scratch in Rust. The engine aims to have a baseline &lt;a href=&#34;https://en.wikipedia.org/wiki/Elo_rating_system&#34;&gt;Elo Rating&lt;/a&gt; of at-least 1800. The engine itself will follow a more &amp;ldquo;classical&amp;rdquo; approach to chess engines, and the main goal of this project is to explore and benchmark different techniques used in chess programming to enhance engine performance.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

@@ -70,17 +70,7 @@
           <nav id="TableOfContents">
   <ul>
     <li><a href="#introduction">Introduction</a></li>
-    <li><a href="#problem-statement">Problem Statement</a></li>
-    <li><a href="#aims-and-objectives">Aims and Objectives</a></li>
-    <li><a href="#preliminary-literature-review">Preliminary Literature Review</a>
-      <ul>
-        <li>
-          <ul>
-            <li><a href="#this-the-part-im-confused-on">This the part im confused on</a></li>
-          </ul>
-        </li>
-      </ul>
-    </li>
+    <li><a href="#research-question">Research Question</a></li>
     <li><a href="#artifacts">Artifacts</a></li>
     <li><a href="#testing">Testing:</a></li>
     <li><a href="#project-management-plan">Project Management Plan</a></li>
@@ -112,46 +102,11 @@
 <p>Chess can be traced back to nearly 1500 years with it&rsquo;s earliest known predecessor called Chaturanga in India. The game of chess has long served as a testing ground for computer science, specially in the study of search algorithms, data structures and decision making under constraints. The world of chess programming has come a long way since the earliest known chess algorithm written by Alan Turing.</p>
 <p>The goal of this project is to build a chess engine entirely from scratch in Rust. The engine will be modular, with core components such as <a href="https://www.chessprogramming.org/Bitboards"> Bitboards </a>, move generation via <a href="https://www.google.com/search?client=firefox-b-d&amp;channel=entpr&amp;q=magic+bitboards">Magics</a>, Legality checks, evaluation etc being published as a separate crates. Along side the development, the entire process will be documented in this <a href="https://blogs.pswoyam.com.np">blog</a>.</p>
 <hr>
-<h1 id="problem-statement">Problem Statement</h1>
+<h1 id="research-question">Research Question</h1>
 <p>While modern chess engines like <a href="https://stockfishchess.org/">Stockfish</a> and <a href="https://en.wikipedia.org/wiki/AlphaZero">AlphaZero</a> along with many others do exist, they are all finished products, often backed by thousands of open source contributors. This makes it difficult for learners who are trying to understand how everything ties together, such as how move generation, legality checks, searching, ordering work. Furthermore, there isn&rsquo;t a resource benchmarking different techniques involved in chess programming, that results to the highest performance gain.</p>
 <p>Additionally despite the global progress in chess engine programming, as of today, (September, 02, 2025), there has not yet been a chess engine originating from Nepal, which also leaves a opportunity to contribute to this space. Therefore, the research question is:</p>
 <blockquote>
 <p>How does each incremental algorithmic enhancement (with techniques such as alpha-beta pruning, iterative deepening, move ordering, endgame tables etc) affect a chess engine’s playing strength and efficiency?</p></blockquote>
-<hr>
-<h1 id="aims-and-objectives">Aims and Objectives</h1>
-<p><strong>The Aim:</strong>
-To build a chess engine in Rust from scratch and benchmark incremental performance gains by implying different techniques used in chess programming.</p>
-<p><strong>The Objectives:</strong></p>
-<ul>
-<li>Implement baseline engine ( Bitboards, NNUE based eval function, UCI Protocol Support, Basically an engine that can play chess)</li>
-<li>Incrementally integrate different techniques: ( Subject to be added upon based on the timeline)
-<ul>
-<li>Minimax / Negamax as the baseline</li>
-<li>Alpha Beta Pruning</li>
-<li>Move Ordering ( eg, Captures First, Checks First, Promotions First etc )</li>
-<li>Quiescence Search</li>
-<li>Iterative Deepening</li>
-</ul>
-</li>
-<li>Benchmark each engine generation against it&rsquo;s own predecessor</li>
-<li>Publish modular crates for core components</li>
-<li>Document progress and learning in a public blog.</li>
-</ul>
-<hr>
-<h1 id="preliminary-literature-review">Preliminary Literature Review</h1>
-<h3 id="this-the-part-im-confused-on">This the part im confused on</h3>
-<p><img src="/images/memes/pepe-cry.gif" alt="Crying pepe"></p>
-<p>Chess engines can be categorized into traditional search-based engines like Stockfish and neural network–assisted engines like Leela, Chess Zero. Both types share several core components:</p>
-<ul>
-<li>Some Sort Of Search</li>
-<li>Some Sort Of Pruning</li>
-<li>Some Sort of Move ordering</li>
-<li>Evaluation functions, which are either hand-crafted (as in classic engines) or augmented with neural networks (as in Stockfish with NNUE or Leela Chess Zero with fully trained networks)</li>
-</ul>
-<p>Modern chess engines are increasingly using alternative methods, such as Monte Carlo Tree Search (MCTS) paired with fully trained neural networks, as seen in engines like Leela Chess Zero.</p>
-<p>However, this project will focus on a classic search-based approach, implementing Minimax/Negamax as the backbone, enhanced with Alpha-Beta pruning, move ordering heuristics, and Quiescence Search.</p>
-<p>For the evaluation function, Neural network evaluation similar to existing NNUE architecture from Stockfish will be used, keeping the focus on understanding and benchmarking incremental algorithmic improvements. While some high-performance engines also implement parallel search techniques such as Young Brothers Wait Concept (YBWC) or Lazy SMP to leverage multicore processors, this project will focus on sequential search methods for simplicity. Neural network evaluation will use the existing NNUE architecture from Stockfish rather than training a new model from scratch, keeping the focus on understanding and benchmarking incremental algorithmic improvements.</p>
-<hr>
 <h1 id="artifacts">Artifacts</h1>
 <p><strong>Rust Crates For</strong>:</p>
 <ul>
@@ -178,14 +133,14 @@ To build a chess engine in Rust from scratch and benchmark incremental performan
 </div>
 <div class="w-full flex justify-center mt-12 border-t border-white/10 pt-6 text-sm text-white gap-2 flex-wrap">
     
-    <a href="/posts/web_dev_101/remake_01/" rel="prev" class="hover:underline px-3 py-2 bg-white text-black font-bold rounded-md text-xs sm:text-sm">
-        ← Remake_01
+    <a href="/posts/chess_engine/proposal/" rel="prev" class="hover:underline px-3 py-2 bg-white text-black font-bold rounded-md text-xs sm:text-sm">
+        ← Proposal
     </a>
     
 
     
     <a href="/posts/web_dev_101/remake_02/" rel="next" class="hover:underline px-3 py-2 bg-white text-black font-bold rounded-md text-xs sm:text-sm">
-        Remake_02 →
+        Remake_02: ft. Inkfish →
     </a>
     
 </div>

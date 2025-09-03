@@ -6,8 +6,43 @@
     <description>Recent content in Tags on Swoyam&#39;s Dev Blogs</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 02 Sep 2025 19:11:04 +0545</lastBuildDate>
+    <lastBuildDate>Wed, 03 Sep 2025 07:20:45 +0545</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Gsap</title>
+      <link>http://localhost:1313/tags/gsap/</link>
+      <pubDate>Wed, 03 Sep 2025 07:20:45 +0545</pubDate>
+      <guid>http://localhost:1313/tags/gsap/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Inkfish</title>
+      <link>http://localhost:1313/tags/inkfish/</link>
+      <pubDate>Wed, 03 Sep 2025 07:20:45 +0545</pubDate>
+      <guid>http://localhost:1313/tags/inkfish/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Staggered</title>
+      <link>http://localhost:1313/tags/staggered/</link>
+      <pubDate>Wed, 03 Sep 2025 07:20:45 +0545</pubDate>
+      <guid>http://localhost:1313/tags/staggered/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Sveltekit</title>
+      <link>http://localhost:1313/tags/sveltekit/</link>
+      <pubDate>Wed, 03 Sep 2025 07:20:45 +0545</pubDate>
+      <guid>http://localhost:1313/tags/sveltekit/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Proposal</title>
+      <link>http://localhost:1313/tags/proposal/</link>
+      <pubDate>Tue, 02 Sep 2025 19:11:04 +0545</pubDate>
+      <guid>http://localhost:1313/tags/proposal/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Proposal Draft</title>
       <link>http://localhost:1313/tags/proposal-draft/</link>
@@ -23,24 +58,10 @@
       <description></description>
     </item>
     <item>
-      <title>Gsap</title>
-      <link>http://localhost:1313/tags/gsap/</link>
-      <pubDate>Mon, 01 Sep 2025 07:53:18 +0545</pubDate>
-      <guid>http://localhost:1313/tags/gsap/</guid>
-      <description></description>
-    </item>
-    <item>
       <title>Page Transition</title>
       <link>http://localhost:1313/tags/page-transition/</link>
       <pubDate>Mon, 01 Sep 2025 07:53:18 +0545</pubDate>
       <guid>http://localhost:1313/tags/page-transition/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Sveltekit</title>
-      <link>http://localhost:1313/tags/sveltekit/</link>
-      <pubDate>Mon, 01 Sep 2025 07:53:18 +0545</pubDate>
-      <guid>http://localhost:1313/tags/sveltekit/</guid>
       <description></description>
     </item>
     <item>

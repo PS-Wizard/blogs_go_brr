@@ -6,8 +6,15 @@
     <description>Recent content in Sveltekit on Swoyam&#39;s Dev Blogs</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 01 Sep 2025 07:53:18 +0545</lastBuildDate>
+    <lastBuildDate>Wed, 03 Sep 2025 07:20:45 +0545</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/sveltekit/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Remake_02: ft. Inkfish</title>
+      <link>http://localhost:1313/posts/web_dev_101/remake_02/</link>
+      <pubDate>Wed, 03 Sep 2025 07:20:45 +0545</pubDate>
+      <guid>http://localhost:1313/posts/web_dev_101/remake_02/</guid>
+      <description>&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;&#xA;&lt;p&gt;Allrighty, let&amp;rsquo;s get right to it, &lt;a href=&#34;https://inkfishnyc.com/&#34;&gt;InkFishNYC&lt;/a&gt; got a great looking page transition &amp;hellip; &lt;strong&gt;I WANT IT&lt;/strong&gt;.&lt;/p&gt;&#xA;&#xA;&#xA;&#xA;&lt;details open class=&#34;group w-full border-y border-white/20 overflow-hidden transition-all duration-200&#34;&gt;&#xA;  &lt;summary class=&#34;cursor-pointer list-none px-4 py-3 bg-none flex justify-between items-center&#34;&gt;&#xA;    &lt;span class=&#34;text-white h-full&#34;&gt;&#xA;      &lt;span class=&#34;underline text-sm&#34;&gt;Exited Pepe&lt;/span&gt;&#xA;    &lt;/span&gt;&#xA;    &lt;span class=&#34;transform transition-transform duration-200 group-open:rotate-180 text-white&#34;&gt;&#xA;      &#xA;        &lt;span&gt;+&lt;/span&gt;&#xA;      &#xA;    &lt;/span&gt;&#xA;  &lt;/summary&gt;&#xA;  &lt;div class=&#34;px-4 py-3 text-sm text-white/80 bg-white/5&#34;&gt;&#xA;    &lt;img src=&#34;http://localhost:1313/images/memes/hype-pepe.gif&#34; alt=&#34;Exited pepe the frog&#34;&gt;&#xA;  &lt;/div&gt;&#xA;&lt;/details&gt;&#xA;&#xA;&lt;h2 id=&#34;understanding-the-idea&#34;&gt;Understanding The Idea&lt;/h2&gt;&#xA;&lt;p&gt;So, it&amp;rsquo;s really not that complicated as it looks at first glance. The thing you need to do is have a container that holds a bunch of divs based on screen size. In my case I opted to have a 5x5 grid of divs that fit the screen perfectly. Then before navigating, make the blocks visible, by animating their height; stagger them randomly, and after navigate do the opposite, and voila.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Remake_01</title>
       <link>http://localhost:1313/posts/web_dev_101/remake_01/</link>
