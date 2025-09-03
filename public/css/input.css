@@ -115,7 +115,7 @@ pre {
     padding:0em 2em;
 }
 img {
-    width:100%;
+    max-width:20%;
     border: 1px solid #252525;
     border-radius: 5px;
 }

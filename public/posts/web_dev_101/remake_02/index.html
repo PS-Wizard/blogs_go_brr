@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+        <meta charset="UTF-8" />
+        <title>Remake_02: ft. Inkfish</title>
+
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        
+        <meta name="description" content="Remaking The Page Transition In Inkfish">
+        <meta name="author" content="Swoyam Pokharel" />
+        <meta name="keywords" content="blog, dev, swoyam, hugo, minimal" />
+
+        
+        <meta property="og:title" content="Remake_02: ft. Inkfish">
+        <meta property="og:description" content="Remaking The Page Transition In Inkfish">
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="http://localhost:1313/posts/web_dev_101/remake_02/">
+        
+        <meta property="og:image" content="http://localhost:1313/images/preview.png">
+
+        
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="Remake_02: ft. Inkfish">
+        <meta name="twitter:description" content="Remaking The Page Transition In Inkfish">
+
+        
+        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+        
+        <link rel="stylesheet" href="/css/output.css">
+    </head>
+    <body class="w-screen text-white">
+        <header class="flex justify-between items-center p-8">
+            <a class="uppercase font-bold text-xl tracking-widest" href="/">(._.)</a>
+            <nav class="flex gap-6 text-sm underline uppercase tracking-wide"
+                 >
+                 <a
+                         href="https://github.com/PS-Wizard"
+                         target="_blank"
+                         rel="noopener"
+                         class="hover:underline"
+                         >
+                         GITHUB
+                 </a>
+                     <a
+                             href="https://www.linkedin.com/in/swoyam-pokharel-557779340/"
+                             target="_blank"
+                             rel="noopener"
+                             class="hover:underline"
+                             >
+                             LINKEDIN
+                     </a>
+            </nav>
+        </header>
+
+        <div class="min-h-screen main-content w-full pb-16 text-white ">
+            
+
+
+<div class="fixed bottom-6 right-6 z-50">
+  <details class="group relative">
+    <summary class="bg-white text-black px-5 py-3 rounded-full shadow-lg cursor-pointer text-sm font-semibold transition hover:bg-neutral-100">
+      Table of Contents
+    </summary>
+    <div class="absolute bottom-14 right-0 w-[90vw] md:w-[28rem] max-h-[32rem] overflow-y-auto bg-neutral-900 text-white border border-[#252525] rounded-xl shadow-2xl p-6 mt-3 prose prose-invert text-sm leading-relaxed ">
+      <h2 class="font-bold mb-4">Jump to section</h2>
+      <nav class="[&_ul]:pl-4 [&_ul]:list-disc [&_li]:ml-1 [&_a]:no-underline [&_a:hover]:underline">
+          <nav id="TableOfContents">
+  <ul>
+    <li><a href="#introduction">Introduction</a>
+      <ul>
+        <li><a href="#understanding-the-idea">Understanding The Idea</a>
+          <ul>
+            <li><a href="#step-1-generating-divs">Step 1: Generating Divs</a></li>
+            <li><a href="#final-step-animate-the-divs-before-and-after-navigation">Final Step: Animate The Divs Before And After Navigation</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+      </nav>
+    </div>
+  </details>
+</div>
+
+<div class="w-full flex justify-center items-center p-4 my-8 flex-col">
+    <div class="w-full max-w-7xl pb-4 flex flex-col md:flex-row justify-between items-center">
+        <nav class="text-sm text-neutral-400 mb-4">
+            <a href="/posts" class="hover:underline">Posts</a>
+            
+            / <a href="/posts/web_dev_101/" class="hover:underline">Learning Web Dev</a>
+            
+            / <span class="text-white">Remake_02: ft. Inkfish</span>
+        </nav>
+        
+    </div>
+<img src="/images/default_blogs.jpg" alt="Card image" class="max-w-7xl h-69 object-cover rounded-xl" />
+</div>
+<div class="relative max-w-7xl mx-auto px-4 flex flex-col">
+    
+    <main class="prose prose-invert max-w-7xl flex-grow break-words">
+        <h1 id="introduction">Introduction</h1>
+<p>Allrighty, let&rsquo;s get right to it, <a href="https://inkfishnyc.com/">InkFishNYC</a> got a great looking page transition &hellip; <strong>I WANT IT</strong>.</p>
+
+
+
+<details open class="group w-full border-y border-white/20 overflow-hidden transition-all duration-200">
+  <summary class="cursor-pointer list-none px-4 py-3 bg-none flex justify-between items-center">
+    <span class="text-white h-full">
+      <span class="underline text-sm">Exited Pepe</span>
+    </span>
+    <span class="transform transition-transform duration-200 group-open:rotate-180 text-white">
+      
+        <span>+</span>
+      
+    </span>
+  </summary>
+  <div class="px-4 py-3 text-sm text-white/80 bg-white/5">
+    <img src="/images/memes/hype-pepe.gif" alt="Exited pepe the frog">
+  </div>
+</details>
+
+<h2 id="understanding-the-idea">Understanding The Idea</h2>
+<p>So, it&rsquo;s really not that complicated as it looks at first glance. The thing you need to do is have a container that holds a bunch of divs based on screen size. In my case I opted to have a 5x5 grid of divs that fit the screen perfectly. Then before navigating, make the blocks visible, by animating their height; stagger them randomly, and after navigate do the opposite, and voila.</p>
+<h3 id="step-1-generating-divs">Step 1: Generating Divs</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-svelte" data-lang="svelte"><span style="display:flex;"><span>let blocks: { <span style="color:#a6e22e">x</span>: <span style="color:#66d9ef">number</span>; <span style="color:#a6e22e">y</span>: <span style="color:#66d9ef">number</span>; <span style="color:#a6e22e">w</span>: <span style="color:#66d9ef">number</span>; <span style="color:#a6e22e">h</span>: <span style="color:#66d9ef">number</span> }[] = $state([]);
+</span></span><span style="display:flex;"><span>let divBlocks: HTMLElement[] = $state([]);
+</span></span><span style="display:flex;"><span>onMount(() =&gt; {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">cols</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">rows</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">blockW</span> <span style="color:#f92672">=</span> window.<span style="color:#a6e22e">innerWidth</span> <span style="color:#f92672">/</span> <span style="color:#a6e22e">cols</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">blockH</span> <span style="color:#f92672">=</span> window.<span style="color:#a6e22e">innerHeight</span> <span style="color:#f92672">/</span> <span style="color:#a6e22e">rows</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">blocks</span> <span style="color:#f92672">=</span> [];
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">let</span> <span style="color:#a6e22e">y</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">y</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">rows</span>; <span style="color:#a6e22e">y</span><span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">let</span> <span style="color:#a6e22e">x</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">x</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">cols</span>; <span style="color:#a6e22e">x</span><span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">blocks</span>.<span style="color:#a6e22e">push</span>({
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">x</span>: <span style="color:#66d9ef">x</span> <span style="color:#f92672">*</span> <span style="color:#a6e22e">blockW</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">y</span>: <span style="color:#66d9ef">y</span> <span style="color:#f92672">*</span> <span style="color:#a6e22e">blockH</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">w</span>: <span style="color:#66d9ef">blockW</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">h</span>: <span style="color:#66d9ef">blockH</span>,
+</span></span><span style="display:flex;"><span>            });
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>});
+</span></span></code></pre></div><p>and to use it,</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-svelte" data-lang="svelte"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">div</span>&gt;
+</span></span><span style="display:flex;"><span>    {<span style="color:#66d9ef">#each</span> <span style="color:#a6e22e">blocks</span> <span style="color:#66d9ef">as</span> <span style="color:#a6e22e">block</span>, <span style="color:#a6e22e">i</span>}
+</span></span><span style="display:flex;"><span>        &lt;<span style="color:#f92672">div</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;absolute bg-black z-10&#34;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">style</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                left: </span>{<span style="color:#a6e22e">block</span>.<span style="color:#a6e22e">x</span>}<span style="color:#e6db74">px;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                top: </span>{<span style="color:#a6e22e">block</span>.<span style="color:#a6e22e">y</span>}<span style="color:#e6db74">px;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                width: </span>{<span style="color:#a6e22e">block</span>.<span style="color:#a6e22e">w</span>}<span style="color:#e6db74">px;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                height: 0px; 
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                overflow: hidden;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                pointer-events: none; 
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">            &#34;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">bind:this</span><span style="color:#f92672">=</span>{<span style="color:#a6e22e">divBlocks</span>[<span style="color:#a6e22e">i</span>]}
+</span></span><span style="display:flex;"><span>        <span style="color:#960050;background-color:#1e0010">&gt;</span><span style="color:#e6db74">&lt;/div</span>&gt;
+</span></span><span style="display:flex;"><span>    {<span style="color:#66d9ef">/each</span>}
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">div</span>&gt;
+</span></span></code></pre></div><p>Likely not the best way to do this, but oh well ( skill issues I know :&lt; , I just didn&rsquo;t wana bother with this so I just gave it to GPT). Either way, once you’ve got your 5x5 grid set up, each div basically acts like a little “tile” that you can animate in and out whenever you navigate between pages.</p>
+<h3 id="final-step-animate-the-divs-before-and-after-navigation">Final Step: Animate The Divs Before And After Navigation</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-svelte" data-lang="svelte"><span style="display:flex;"><span>onNavigate(async () =&gt; {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Promise</span>((<span style="color:#a6e22e">res</span>) <span style="color:#f92672">=&gt;</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">gsap</span>.<span style="color:#a6e22e">to</span>(<span style="color:#a6e22e">divBlocks</span>, {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">height</span><span style="color:#f92672">:</span> (<span style="color:#a6e22e">i</span>) <span style="color:#f92672">=&gt;</span> <span style="color:#a6e22e">blocks</span>[<span style="color:#a6e22e">i</span>].<span style="color:#a6e22e">h</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">duration</span>: <span style="color:#66d9ef">0.69</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">stagger</span><span style="color:#f92672">:</span> { <span style="color:#a6e22e">each</span>: <span style="color:#66d9ef">0.03</span>, <span style="color:#66d9ef">from</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;random&#34;</span> },
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">pointerEvents</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;auto&#34;</span>, 
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">onComplete</span><span style="color:#f92672">:</span> () <span style="color:#f92672">=&gt;</span> {
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">res</span>(() <span style="color:#f92672">=&gt;</span> {
+</span></span><span style="display:flex;"><span>                    <span style="color:#a6e22e">gsap</span>.<span style="color:#a6e22e">to</span>(<span style="color:#a6e22e">divBlocks</span>, {
+</span></span><span style="display:flex;"><span>                        <span style="color:#a6e22e">height</span>: <span style="color:#66d9ef">0</span>,
+</span></span><span style="display:flex;"><span>                        <span style="color:#a6e22e">stagger</span><span style="color:#f92672">:</span> { <span style="color:#a6e22e">each</span>: <span style="color:#66d9ef">0.03</span>, <span style="color:#66d9ef">from</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;random&#34;</span> },
+</span></span><span style="display:flex;"><span>                        <span style="color:#a6e22e">duration</span>: <span style="color:#66d9ef">0.69</span>,
+</span></span><span style="display:flex;"><span>                        <span style="color:#a6e22e">pointerEvents</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;none&#34;</span>, 
+</span></span><span style="display:flex;"><span>                    });
+</span></span><span style="display:flex;"><span>                });
+</span></span><span style="display:flex;"><span>            },
+</span></span><span style="display:flex;"><span>        });
+</span></span><span style="display:flex;"><span>    });
+</span></span><span style="display:flex;"><span>});
+</span></span></code></pre></div><hr>
+<p>Annd that&rsquo;s pretty much it, fairly simple but it looks cool. If you wanna know more about these functions, always refer to the <a href="https://gsap.com/docs/v3/">GSAP Docs</a> &amp; <a href="https://svelte.dev/docs/kit/introduction">SvelteKit Docs</a>, specifically the docs for <a href="https://svelte.dev/docs/kit/$app-navigation">navigation hooks</a></p>
+
+    </main>
+    
+</div>
+<div class="w-full flex justify-center mt-12 border-t border-white/10 pt-6 text-sm text-white gap-2 flex-wrap">
+    
+    <a href="/posts/chess_engine/literature_review/" rel="prev" class="hover:underline px-3 py-2 bg-white text-black font-bold rounded-md text-xs sm:text-sm">
+        ← Proposal
+    </a>
+    
+
+    
+</div>
+
+        </div>
+        <div class="w-full flex items-center bg-[#A3D5FF] h-[30vh] text-black px-10" >
+            <div class="lg:w-1/2 h-full geist flex flex-col justify-end"> <h5
+                 class="hidden lg:block text-48-126 font-semibold cursor-pointer"
+                 bind:this={name_footer}
+                 >
+                 Wizard.
+                </h5>
+            </div>
+            <div class="w-full lg:w-1/2 h-full geist flex flex-row justify-center gap-4" >
+                <div class="flex flex-col h-full w-full justify-center items-center lg:items-end gap-4" >
+                    <div class="flex gap-2">
+                        <a
+                                href="https://www.linkedin.com/in/swoyam-pokharel-557779340/"
+                                target="_blank"
+                                rel="noopener"
+                                class="bg-black text-white w-fit text-16-32 px-4 py-2 rounded-lg hover:opacity-80 transition"
+                                >
+                                Linkedin
+                        </a>
+                            <a
+                                    href="https://github.com/PS-Wizard"
+                                    target="_blank"
+                                    rel="noopener"
+                                    class="bg-black text-white w-fit text-16-32 px-4 py-2 rounded-lg hover:opacity-80 transition"
+                                    >
+                                    Github
+                            </a>
+                                <a
+                                        href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                                        target="_blank"
+                                        rel="noopener"
+                                        class="hidden md:block bg-black text-white w-fit text-16-32 px-4 py-2 rounded-lg hover:opacity-80 transition"
+                                        >
+                                        Hopefully More lol
+                                </a>
+                    </div>
+                    <div class="flex gap-2">
+                        <a
+                                href="https://pswoyam.com.np/"
+                                target="_blank"
+                                rel="noopener"
+                                class="bg-black text-white w-fit text-16-32 px-4 py-2 rounded-lg hover:opacity-80 transition"
+                                >
+                                Portfolio
+                        </a>
+                            <a
+                                    href="mailto:p.swoyam.1@gmail.com"
+                                    target="_blank"
+                                    rel="noopener"
+                                    class="bg-black text-white w-fit text-16-32 px-4 py-2 rounded-lg hover:opacity-80 transition"
+                                    >
+                                    me@pswoyam.com.np
+                            </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+
