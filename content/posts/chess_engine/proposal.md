@@ -139,3 +139,5 @@ The timeline is for ~ 7 months, 10 days.
     
 ---
 # Diagram Showing The Overall Program Flow
+
+![Design Diagram](/images/chess_engine/design_diagram.png)
