@@ -20,7 +20,8 @@ The goal of this project is to build a chess engine entirely from scratch in Rus
 
 ---
 
-# Problem Statement
+# Research Question
+
 While modern chess engines like [Stockfish](https://stockfishchess.org/) and [AlphaZero](https://en.wikipedia.org/wiki/AlphaZero) along with many others do exist, they are all finished products, often backed by thousands of open source contributors. This makes it difficult for learners who are trying to understand how everything ties together, such as how move generation, legality checks, searching, ordering work. Furthermore, there isn't a resource benchmarking different techniques involved in chess programming, that results to the highest performance gain. 
 
 Additionally despite the global progress in chess engine programming, as of today, (September, 02, 2025), there has not yet been a chess engine originating from Nepal, which also leaves a opportunity to contribute to this space. Therefore, the research question is:
@@ -28,50 +29,6 @@ Additionally despite the global progress in chess engine programming, as of toda
 > How does each incremental algorithmic enhancement (with techniques such as alpha-beta pruning, iterative deepening, move ordering, endgame tables etc) affect a chess engine’s playing strength and efficiency?
 
 
----
-
-# Aims and Objectives
-
-**The Aim:**
-To build a chess engine in Rust from scratch and benchmark incremental performance gains by implying different techniques used in chess programming.
-
-**The Objectives:**
-- Implement baseline engine ( Bitboards, NNUE based eval function, UCI Protocol Support, Basically an engine that can play chess)
-- Incrementally integrate different techniques: ( Subject to be added upon based on the timeline)
-    - Minimax / Negamax as the baseline
-    - Alpha Beta Pruning
-    - Move Ordering ( eg, Captures First, Checks First, Promotions First etc )
-    - Quiescence Search
-    - Iterative Deepening
-- Benchmark each engine generation against it's own predecessor
-- Publish modular crates for core components
-- Document progress and learning in a public blog.
-
----
-
-# Preliminary Literature Review
-### This the part im confused on
-![Crying pepe](/images/memes/pepe-cry.gif)
-
-Chess engines can be categorized into traditional search-based engines like Stockfish and neural network–assisted engines like Leela, Chess Zero. Both types share several core components:
-
-- Some Sort Of Search
-- Some Sort Of Pruning
-- Some Sort of Move ordering
-- Evaluation functions, which are either hand-crafted (as in classic engines) or augmented with neural networks (as in Stockfish with NNUE or Leela Chess Zero with fully trained networks)
-
-Modern chess engines are increasingly using alternative methods, such as Monte Carlo Tree Search (MCTS) paired with fully trained neural networks, as seen in engines like Leela Chess Zero. 
-
-However, this project will focus on a classic search-based approach, implementing Minimax/Negamax as the backbone, enhanced with Alpha-Beta pruning, move ordering heuristics, and Quiescence Search. 
-
-For the evaluation function, Neural network evaluation similar to existing NNUE architecture from Stockfish will be used, keeping the focus on understanding and benchmarking incremental algorithmic improvements. While some high-performance engines also implement parallel search techniques such as Young Brothers Wait Concept (YBWC) or Lazy SMP to leverage multicore processors, this project will focus on sequential search methods for simplicity. Neural network evaluation will use the existing NNUE architecture from Stockfish rather than training a new model from scratch, keeping the focus on understanding and benchmarking incremental algorithmic improvements.
-
-
-
-
-
-
----
 # Artifacts 
 **Rust Crates For**:
 - Bitboards 
