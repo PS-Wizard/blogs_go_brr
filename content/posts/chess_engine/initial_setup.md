@@ -380,4 +380,3 @@ impl Piece {
 
 In this representation the `Piece` is a `u8`. So, something like `00000000`. The first 3 bits represent the piece type eg: `00000101 = King`. and the 4th bit represents the color. So, `00000101 = King` is a black king, and `00001101 = King` is a white king. The rest of the bits, are pretty useless.
 
-Alr, so that's pretty much everything
