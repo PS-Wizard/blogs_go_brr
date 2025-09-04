@@ -79,6 +79,7 @@
         </li>
       </ul>
     </li>
+    <li><a href="#making-the-page-transition-like-a-preloader">Making The Page Transition Like A Preloader</a></li>
   </ul>
 </nav>
       </nav>
@@ -188,6 +189,96 @@
 </span></span><span style="display:flex;"><span>});
 </span></span></code></pre></div><hr>
 <p>Annd that&rsquo;s pretty much it, fairly simple but it looks cool. If you wanna know more about these functions, always refer to the <a href="https://gsap.com/docs/v3/">GSAP Docs</a> &amp; <a href="https://svelte.dev/docs/kit/introduction">SvelteKit Docs</a>, specifically the docs for <a href="https://svelte.dev/docs/kit/$app-navigation">navigation hooks</a></p>
+<hr>
+<h1 id="making-the-page-transition-like-a-preloader">Making The Page Transition Like A Preloader</h1>
+<p>So, right now we are using the <code>onNavigate</code> funtion, and what it does is that it waits for the other page to fully load before the transition, which I mean doesn&rsquo;t make sense right, because the page transition should also behave like a preloader, so to acheive this preloading effect, where the page transitions out -&gt; waits for however long it takes for the other page to load -&gt; transitions in, we need to use the <code>beforeNavigate</code> and <code>onNavigate</code> funtions:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-svelte" data-lang="svelte"><span style="display:flex;"><span>&lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">lang</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;ts&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">onMount</span> } <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#34;svelte&#34;</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">import</span> <span style="color:#e6db74">&#34;../app.css&#34;</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">import</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">afterNavigate</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">beforeNavigate</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">goto</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">onNavigate</span>,
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#34;$app/navigation&#34;</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">import</span> { <span style="color:#a6e22e">gsap</span> } <span style="color:#66d9ef">from</span> <span style="color:#e6db74">&#34;gsap&#34;</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> { <span style="color:#a6e22e">children</span> } <span style="color:#f92672">=</span> <span style="color:#a6e22e">$props</span>();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">blocks</span><span style="color:#f92672">:</span> { <span style="color:#a6e22e">x</span>: <span style="color:#66d9ef">number</span>; <span style="color:#a6e22e">y</span>: <span style="color:#66d9ef">number</span>; <span style="color:#a6e22e">w</span>: <span style="color:#66d9ef">number</span>; <span style="color:#a6e22e">h</span>: <span style="color:#66d9ef">number</span> }[] <span style="color:#f92672">=</span> <span style="color:#a6e22e">$state</span>([]);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">divBlocks</span>: <span style="color:#66d9ef">HTMLElement</span>[] <span style="color:#f92672">=</span> <span style="color:#a6e22e">$state</span>([]);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">onMount</span>(() <span style="color:#f92672">=&gt;</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">cols</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">rows</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">blockW</span> <span style="color:#f92672">=</span> window.<span style="color:#a6e22e">innerWidth</span> <span style="color:#f92672">/</span> <span style="color:#a6e22e">cols</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">blockH</span> <span style="color:#f92672">=</span> window.<span style="color:#a6e22e">innerHeight</span> <span style="color:#f92672">/</span> <span style="color:#a6e22e">rows</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">blocks</span> <span style="color:#f92672">=</span> [];
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">let</span> <span style="color:#a6e22e">y</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">y</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">rows</span>; <span style="color:#a6e22e">y</span><span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">let</span> <span style="color:#a6e22e">x</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">x</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">cols</span>; <span style="color:#a6e22e">x</span><span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">blocks</span>.<span style="color:#a6e22e">push</span>({
+</span></span><span style="display:flex;"><span>                    <span style="color:#a6e22e">x</span>: <span style="color:#66d9ef">x</span> <span style="color:#f92672">*</span> <span style="color:#a6e22e">blockW</span>,
+</span></span><span style="display:flex;"><span>                    <span style="color:#a6e22e">y</span>: <span style="color:#66d9ef">y</span> <span style="color:#f92672">*</span> <span style="color:#a6e22e">blockH</span>,
+</span></span><span style="display:flex;"><span>                    <span style="color:#a6e22e">w</span>: <span style="color:#66d9ef">blockW</span>,
+</span></span><span style="display:flex;"><span>                    <span style="color:#a6e22e">h</span>: <span style="color:#66d9ef">blockH</span>,
+</span></span><span style="display:flex;"><span>                });
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    });
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">onNavigate</span>((<span style="color:#a6e22e">navigation</span>) <span style="color:#f92672">=&gt;</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">navigation</span>.<span style="color:#66d9ef">type</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;link&#34;</span>) {
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    });
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">beforeNavigate</span>(<span style="color:#66d9ef">async</span> (<span style="color:#a6e22e">nav</span>) <span style="color:#f92672">=&gt;</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">nav</span>.<span style="color:#66d9ef">type</span> <span style="color:#f92672">===</span> <span style="color:#e6db74">&#34;link&#34;</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">nav</span>.<span style="color:#a6e22e">cancel</span>(); <span style="color:#75715e">// cancel the nav From my testing, without this, the page attempts to first fully load before the animation, thus we stop that default behaviour with this
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                         <span style="color:#75715e">// and proceed with the outro animation
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">await</span> <span style="color:#a6e22e">gsap</span>.<span style="color:#a6e22e">to</span>(<span style="color:#a6e22e">divBlocks</span>, { <span style="color:#75715e">// await transition so that it doesn&#39;t overlap with the intro animation if the other page happens to load instantly
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                <span style="color:#a6e22e">height</span><span style="color:#f92672">:</span> (<span style="color:#a6e22e">i</span>) <span style="color:#f92672">=&gt;</span> <span style="color:#a6e22e">blocks</span>[<span style="color:#a6e22e">i</span>].<span style="color:#a6e22e">h</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">duration</span>: <span style="color:#66d9ef">0.69</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">stagger</span><span style="color:#f92672">:</span> { <span style="color:#a6e22e">each</span>: <span style="color:#66d9ef">0.03</span>, <span style="color:#66d9ef">from</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;random&#34;</span> },
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">pointerEvents</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;auto&#34;</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">onComplete</span><span style="color:#f92672">:</span> () <span style="color:#f92672">=&gt;</span> {
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">nav</span>.<span style="color:#a6e22e">to</span>) {
+</span></span><span style="display:flex;"><span>                        <span style="color:#66d9ef">goto</span>(<span style="color:#a6e22e">nav</span>.<span style="color:#a6e22e">to</span>.<span style="color:#a6e22e">url</span>); <span style="color:#75715e">// and ofcourse, if we cancel the navigation, it needs to resume so doing this will navigate it to where the user intended
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                    }
+</span></span><span style="display:flex;"><span>                },
+</span></span><span style="display:flex;"><span>            });
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    });
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">afterNavigate</span>(<span style="color:#66d9ef">async</span> () <span style="color:#f92672">=&gt;</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">gsap</span>.<span style="color:#a6e22e">to</span>(<span style="color:#a6e22e">divBlocks</span>, { <span style="color:#75715e">// no need to await here
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#a6e22e">height</span>: <span style="color:#66d9ef">0</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">stagger</span><span style="color:#f92672">:</span> { <span style="color:#a6e22e">each</span>: <span style="color:#66d9ef">0.03</span>, <span style="color:#66d9ef">from</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;random&#34;</span> },
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">duration</span>: <span style="color:#66d9ef">0.69</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">pointerEvents</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;none&#34;</span>,
+</span></span><span style="display:flex;"><span>        });
+</span></span><span style="display:flex;"><span>    });
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">script</span>&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">div</span>&gt;
+</span></span><span style="display:flex;"><span>    {<span style="color:#66d9ef">#each</span> <span style="color:#a6e22e">blocks</span> <span style="color:#66d9ef">as</span> <span style="color:#a6e22e">block</span>, <span style="color:#a6e22e">i</span>}
+</span></span><span style="display:flex;"><span>        &lt;<span style="color:#f92672">div</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;absolute bg-black z-10&#34;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">style</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                left: </span>{<span style="color:#a6e22e">block</span>.<span style="color:#a6e22e">x</span>}<span style="color:#e6db74">px;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                top: </span>{<span style="color:#a6e22e">block</span>.<span style="color:#a6e22e">y</span>}<span style="color:#e6db74">px;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                width: </span>{<span style="color:#a6e22e">block</span>.<span style="color:#a6e22e">w</span>}<span style="color:#e6db74">px;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                height: 0px; 
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                overflow: hidden;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">                pointer-events: none; 
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">            &#34;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">bind:this</span><span style="color:#f92672">=</span>{<span style="color:#a6e22e">divBlocks</span>[<span style="color:#a6e22e">i</span>]}
+</span></span><span style="display:flex;"><span>        <span style="color:#960050;background-color:#1e0010">&gt;</span><span style="color:#e6db74">&lt;/div</span>&gt;
+</span></span><span style="display:flex;"><span>    {<span style="color:#66d9ef">/each</span>}
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">div</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;container&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;absolute flex justify-center items-center&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>        {<span style="color:#66d9ef">@render</span> <span style="color:#a6e22e">children</span>()}
+</span></span><span style="display:flex;"><span>    &lt;/<span style="color:#f92672">div</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">div</span>&gt;
+</span></span></code></pre></div><p>In hindsight, it looks like we could just use <code>onNavigate</code> here as well, but the thing is that <code>onNavigate</code> doesnt allow us to use <code>cancel()</code>.</p>
 
     </main>
     

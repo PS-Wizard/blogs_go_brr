@@ -135,9 +135,13 @@ The project will use Kanban as the framework for task tracking, but following a 
 
 The timeline is for ~ 7 months, 10 days.
 ![Estimated Timeline](/images/chess_engine/Timeline.png)
-( Subject to change, as I am increasingly realising how i might have to push UCI to one of the earlier phases)
     
 ---
-# Diagram Showing The Overall Program Flow
+# Design Diagram & Tech stack
 
 ![Design Diagram](/images/chess_engine/design_diagram.png)
+
+As mentioned, the this project will be implemented in Rust. Rust was chosen because of its balance of performance, safety, and learning opportunity. It delivers performance on par with low-level languages like C and C++, making it well-suited for the computation-heavy tasks of move generation and evaluation. 
+
+However, unlike C and C++, Rust provides strong memory safety guarantees through its ownership and borrowing model, eliminating common classes of errors without a garbage collector. In addition, with Rust’s growing adoption and recognition in industry, this project serves as an ideal opportunity to both explore a modern systems language and gain practical experience in applying it to a problem.
+
