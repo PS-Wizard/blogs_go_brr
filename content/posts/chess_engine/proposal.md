@@ -145,3 +145,35 @@ As mentioned, the this project will be implemented in Rust. Rust was chosen beca
 
 However, unlike C and C++, Rust provides strong memory safety guarantees through its ownership and borrowing model, eliminating common classes of errors without a garbage collector. In addition, with Rust’s growing adoption and recognition in industry, this project serves as an ideal opportunity to both explore a modern systems language and gain practical experience in applying it to a problem.
 
+
+# References
+
+* [https://en.wikipedia.org/wiki/Elo\_rating\_system](https://en.wikipedia.org/wiki/Elo_rating_system)
+* [https://stockfishchess.org/](https://stockfishchess.org/)
+* [https://www.chess.com/terms/alphazero-chess-engine](https://www.chess.com/terms/alphazero-chess-engine)
+* [https://www.chessprogramming.org/Move\_Ordering](https://www.chessprogramming.org/Move_Ordering)
+* [https://www.chessprogramming.org/Evaluation](https://www.chessprogramming.org/Evaluation)
+* [https://www.chessprogramming.org/Search](https://www.chessprogramming.org/Search)
+* [https://www.chessprogramming.org/Bitboards](https://www.chessprogramming.org/Bitboards)
+* [https://www.chessprogramming.org/NNUE](https://www.chessprogramming.org/NNUE)
+* [https://www.chessprogramming.org/Magic\_Bitboards](https://www.chessprogramming.org/Magic_Bitboards)
+* [https://www.chessprogramming.org/Negamax](https://www.chessprogramming.org/Negamax)
+* [https://www.chessprogramming.org/Forsyth-Edwards\_Notation](https://www.chessprogramming.org/Forsyth-Edwards_Notation)
+* [https://www.chessprogramming.org/UCI](https://www.chessprogramming.org/UCI)
+* [https://www.chessprogramming.org/Pruning](https://www.chessprogramming.org/Pruning)
+* [https://www.chessprogramming.org/Alpha-Beta](https://www.chessprogramming.org/Alpha-Beta)
+* [https://www.chessprogramming.org/Null\_Move\_Pruning](https://www.chessprogramming.org/Null_Move_Pruning)
+* [https://www.chessprogramming.org/Futility\_Pruning](https://www.chessprogramming.org/Futility_Pruning)
+* [https://www.chessprogramming.org/MVV-LVA](https://www.chessprogramming.org/MVV-LVA)
+* [https://www.chessprogramming.org/Quiescence\_Search](https://www.chessprogramming.org/Quiescence_Search)
+* [https://www.chessprogramming.org/Iterative\_Deepening](https://www.chessprogramming.org/Iterative_Deepening)
+* [https://lichess.org/@/likeawizard/blog/review-of-different-board-representations-in-computer-chess/S9eQCAWa#one-dimensional-64array](https://lichess.org/@/likeawizard/blog/review-of-different-board-representations-in-computer-chess/S9eQCAWa#one-dimensional-64array)
+* [https://en.wikipedia.org/wiki/Bitboard](https://en.wikipedia.org/wiki/Bitboard)
+* [https://en.wikipedia.org/wiki/Word\_(computer\_architecture)](https://en.wikipedia.org/wiki/Word_%28computer_architecture%29)
+* [https://en.wikipedia.org/wiki/Shogi](https://en.wikipedia.org/wiki/Shogi)
+* [https://www.chessprogramming.org/Stockfish\_NNUE](https://www.chessprogramming.org/Stockfish_NNUE)
+* [https://www.netlib.org/utk/lsi/pcwLSI/text/node351.html](https://www.netlib.org/utk/lsi/pcwLSI/text/node351.html)
+* [https://www.chessprogramming.org/Null\_Move\_Pruning#core-idea](https://www.chessprogramming.org/Null_Move_Pruning#core-idea)
+* [https://en.wikipedia.org/wiki/Horizon\_effect](https://en.wikipedia.org/wiki/Horizon_effect)
+* [https://en.wikipedia.org/wiki/Iterative\_deepening\_depth-first\_search](https://en.wikipedia.org/wiki/Iterative_deepening_depth-first_search)
+* [https://www.chessprogramming.org/Perft](https://www.chessprogramming.org/Perft)
